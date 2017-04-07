@@ -12,6 +12,7 @@
 8. AnimateCSS (https://daneden.github.io/animate.css/)
 9. Material Design Icons  (https://materialdesignicons.com/)
 10. SweetAlert (https://www.npmjs.com/package/sweetalert)
+11. Rodal (https://github.com/chenjiahan/rodal)
 
 #### Version Roadmap
 * 0.0.5 Replace "Event" with "Task" 
@@ -50,17 +51,10 @@
 
 #### What Needs Done
 * Replace Event for Task Everywhere
-* Make #add-task-form-nav 100%			  		 #
-* Left Side Task List (see Tadu 1)				 #
-	* Tasks on Selected Day / Tasks Ahead
-* Tag Button onClick Event -> create new task    #
-* Login/Register Screen 						 #
 * Mobile View (Responsiveness)
 * Large Desktop View (Responsiveness)
 * Find thinner font-icons (circles and squares)
 * On Task Click -> Modal Or Alert To Edit
-* Delete Task 									#
-* Complete Tasks 								#
 * Tadu Logo
 * Create New Tags if !exists
 
