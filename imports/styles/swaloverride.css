@@ -1,0 +1,70 @@
+/* Sweetalert override */
+.sweet-alert {
+  font-family: "Rajdhani", sans-serif;
+  border-radius: 0;
+  border: 1px solid #1de9b6;
+  color: white !important;
+  background: #212121;
+}
+.sweet-alert h2 {
+  color: #fff !important;
+}
+.sweet-alert button {
+  border-radius: 0;
+  border: 1px solid #1de9b6;
+  background: #212121 !important;
+  color: #1de9b6 !important;
+}
+.sweet-alert .sa-icon.sa-error .sa-line {
+  border-radius: 0;
+  background-color: #f44336 !important;
+  height: 2px;
+  top: 40px;
+}
+.sweet-alert .sa-icon.sa-error{
+  border-color: #f44336 !important;
+}
+.sweet-alert .sa-icon {
+  border: 2px solid gray;
+}
+.sweet-alert .sa-icon.sa-success .sa-placeholder {
+  border: #1de9b6;
+}
+.sweet-alert .sa-icon.sa-success::before, .sweet-alert .sa-icon.sa-success::after {
+  background-color: #212121 !important;
+
+}
+.sweet-alert .sa-icon.sa-success .sa-fix{
+  background-color: #212121 !important;
+}
+.sweet-alert .sa-icon.sa-success .sa-line {
+  height: 2px;
+  background-color: #1de9b6 !important;
+  border-radius: 0;
+}
+.sweet-alert .sa-icon.sa-success .sa-line.sa-long {
+  right: 5px;
+}
+.sweet-alert .sa-icon.sa-success {
+  border-color: #1de9b6 !important;
+}
+.sweet-alert.show-input input {
+  border: none;
+  border-bottom: 1px solid #1de9b6;
+  background: none;
+  border-radius: 0;
+  color: white;
+}
+.sweet-alert.show-input input:focus {
+  outline: none;
+  box-shadow: none;
+}
+.sweet-alert button.confirm:hover {
+  color: #424242 !important;
+  background: #1de9b6 !important;
+}
+.sweet-alert button.cancel:hover {
+  color: #424242 !important;
+  background: #f44336 !important;
+  border: #f44336 1px solid;
+}

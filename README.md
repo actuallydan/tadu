@@ -1,43 +1,70 @@
-# meteor-react-boilerplate
-A starter project for React &amp; Meteor
+# Tadu 
+## Be More Productive With Sensible Intelligence
 
-This repo aims to get you up and running with with React with little effort. It has sane defaults that
-most apps will use (router, accounts).
+#### Technologies & Tools:
+1. React
+2. Meteor
+3. MongoDB
+4. Electron
+5. React Native
+6. XCode & iOS Simulator
+7. Heroku
+8. AnimateCSS (https://daneden.github.io/animate.css/)
+9. Material Design Icons  (https://materialdesignicons.com/)
+10. SweetAlert (https://www.npmjs.com/package/sweetalert)
 
-Most of the content is in the 'imports' folder so that we can so serverside rendering more easily. Here's the
-rundown on what's included.
+#### Version Roadmap
+* 0.0.5 Replace "Event" with "Task" 
+* 0.1 Basic Schedule Function
+	* Basic CRUD functions by tags 
+* 0.2 Schedule Functions Update 1
+	* Add customization to tags
+* 0.3 Schedule Functions Update 2
+	* Ability to create new tags
+	* Suggest/Enforce use of exisiting tags
+* 0.5 Sensibility Integration
+	* Integrate SI Learning to Optimize Task Scheduling
+	* Prioritize Soonest, Most Efficient Time-Slot
+* 1.0 Heroku Deployed Meteor Server and Web App 
+* 1.2 iOS App deployed using Meteor backend
+* 1.2.5 Android deployed using Meteor backend
+* 1.3 Electron App for Windows, MacOS, Linux
+* 1.4 Migration of Server
+	* VPS or Dedicated Heroku Server
+* 1.5 Full Release
+* 1.6 Sensibility Update 1
+	* Create Repeated Tasks Automatically
+* 1.7 Sensibility Update 2
+	* Optimizer considers context of prospective task before and after time slot
+* 2.0 Location Aware
+	* May access location to learn daily behavior
+		* This will later be used to optimize schedule consider time/distance efficiency
+	* Routing to Task-Completers
+		* Grades Task-Completers on frequency of ability to complete a user's task
+* 2.1 Share & Assign Tasks
+	* Task-Chat System (see Pigeon)
+* 3.0 Enterprise Productivity Platform
+* 3.5 Voice to Task 
+* 4.0 Embedded Tadu List 
+* 5.0 Tadu Clerk 
 
-For an in-depth example of how to use Meteor with React see
-[React-ive Meteor](https://github.com/AdamBrodzinski/react-ive-meteor). For flux support see the [Flux Leaderboard](https://github.com/AdamBrodzinski/meteor-flux-leaderboard) example app.
+#### What Needs Done
+* Replace Event for Task Everywhere
+* Make #add-task-form-nav 100%			  		 #
+* Left Side Task List (see Tadu 1)				 #
+	* Tasks on Selected Day / Tasks Ahead
+* Tag Button onClick Event -> create new task    #
+* Login/Register Screen 						 #
+* Mobile View (Responsiveness)
+* Large Desktop View (Responsiveness)
+* Find thinner font-icons (circles and squares)
+* On Task Click -> Modal Or Alert To Edit
+* Delete Task 									#
+* Complete Tasks 								#
+* Tadu Logo
+* Create New Tags if !exists
 
-#### APIs & Packages
-- [Session](https://docs.meteor.com/api/session.html)
-- [Logging](https://atmospherejs.com/meteor/logging)
-- [Reload](https://atmospherejs.com/meteor/reload)
-- [Random](https://docs.meteor.com/packages/random.html)
-- [EJSON](https://docs.meteor.com/api/ejson.html)
-- [Spacebars](https://docs.meteor.com/packages/spacebars.html)
-- [Check](https://docs.meteor.com/api/check.html)
-- [Accounts Password](http://docs.meteor.com/api/passwords.html)
-- [Accounts UI](https://docs.meteor.com/packages/accounts-ui.html) (with React wrapper)
-- [gadicc:blaze-react-component](https://github.com/gadicc/meteor-blaze-react-component/)
 
-#### NPM
-- React
-- React DOM
-- [React Router](https://github.com/reactjs/react-router)
-- [Classnames](https://github.com/JedWatson/classnames)
-- [History](https://github.com/ReactTraining/history)
 
-#### Components
-- Header
-- LoginButtons
 
-#### Models
-- User
-- (See a more [complex example](https://github.com/AdamBrodzinski/react-ive-meteor/blob/master/both/models/post.js))
 
-#### Pages/Routes
-- Home, About
-- Not Found
-- Main Layout

