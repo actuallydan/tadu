@@ -1,7 +1,7 @@
 import React from 'react';
-import EventList from './EventList.jsx';
+import TaskList from './TaskList.jsx';
 import Calendar from './Calendar.jsx';
-import AddEvent from './AddEvent.jsx';
+import AddTask from './AddTask.jsx';
 import './styles/main.less';
 import 'animate.css';
 import swal from 'sweetalert';
@@ -89,13 +89,13 @@ export default class MainLayout extends React.Component {
 					?
 					<div>
 				<div id="left-wrapper">
-					<EventList show={viewEventList} showDetail={this.showDetail.bind(this)} selectedDate={this.state.selectedDate}/>
+					<TaskList show={viewEventList} showDetail={this.showDetail.bind(this)} selectedDate={this.state.selectedDate}/>
 				</div>
 				<div id="center-wrapper">
 					<Calendar show={viewCal} showAddTask={this.showAddTask.bind(this)} selectDate={this.selectDate.bind(this)}/>
 				</div>
 				<div id="right-wrapper" style={{zIndex : viewAddEvent ? 5 : -1}}>
-					<AddEvent show={viewAddEvent} hideAddTask={this.hideAddTask.bind(this)} selectedDate={this.state.selectedDate}/>
+					<AddTask show={viewAddEvent} hideAddTask={this.hideAddTask.bind(this)} selectedDate={this.state.selectedDate}/>
 				</div>
 				</div>
 				:

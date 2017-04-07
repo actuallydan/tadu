@@ -2,7 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 
-export default class AddEvent extends TrackerReact(React.Component) {
+export default class AddTask extends TrackerReact(React.Component) {
 	constructor(props) {
 		super(props);
 
