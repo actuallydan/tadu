@@ -48,6 +48,12 @@ export default class MainLayout extends React.Component {
 	componentDidMount() {
 		window.addEventListener('resize', this.handleResize.bind(this));
 
+		if (Notification.permission !== "granted")
+		    Notification.requestPermission();
+		if (!Notification) {
+			swal('Desktop notifications not available in your browser. Try Chromium.'); 
+			return;
+		}
 	}
 	showAddTask(){
 		// this.props.mobileView("addTask");
@@ -81,7 +87,6 @@ export default class MainLayout extends React.Component {
 		// console.log("Show Cal:", viewCal, "Show EventList:", viewEventList, "Show Add:", viewAddEvent);
 		let eventDetail = this.state.eventDetail !== null ? this.state.eventDetail : "" ;
 		// console.log("selected date: " + this.state.selectedDate);
-
 		return (
 			<div>
 

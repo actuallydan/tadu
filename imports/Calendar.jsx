@@ -2,7 +2,7 @@ import React from 'react';
 import Day from './Day.jsx';
 import ReactTooltip from 'react-tooltip';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
-
+import moment from 'moment';
 
 export default class Cal extends TrackerReact(React.Component) {
 	constructor(props){
@@ -15,6 +15,12 @@ export default class Cal extends TrackerReact(React.Component) {
 			eventsThisMonth: {},
 			events: []
 		};
+	}
+	// componentDidUpdate(){
+	// 	this.setAlarm();
+	// }
+	componentDidMount(){
+		this.setAlarm();
 	}
 	selectDate(date){
 		this.props.selectDate(date);
@@ -34,8 +40,34 @@ export default class Cal extends TrackerReact(React.Component) {
 
 
 	}
+	setAlarm(){
+		clearTimeout();
+		let nextTask = Tasks.findOne({dateStart: {$gte : new Date().toJSON().substring(0,10)}, timeStart: {$gt : moment().format("hh:mm")}}, {sort : {dateStart: 1, timeStart: 1}})
+		console.log(nextTask);
+		if(nextTask !== undefined){
+			let nextTaskDateTime = moment(nextTask.dateStart + "T" + nextTask.timeStart, "YYYY-MM-DDThh:mm").format("x");
+			console.log("alarm set");
+			setTimeout(()=>{ this.notify(nextTask); this.setAlarm()}, nextTaskDateTime - new Date().getTime());
+		}
+	}
+	notify(task){
+		if (Notification.permission !== "granted"){
+			swal(task.text, task.timeStart , "warning");
+		} else {
+			var notification = new Notification(task.tag, {
+				icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
+				body: task.text + " @ " + task.timeStart,
+			});
+
+			notification.onclick = function () {
+				console.log("uhhhh");      
+			};
+
+		}
+	}
 	render(){
 		let tasks = Tasks.find().fetch();
+
 		console.log(this.state.monthShowing);
 
 		let year = this.state.monthShowing.getFullYear(), month = this.state.monthShowing.getMonth(), day = this.state.monthShowing.getDate();
