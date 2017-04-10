@@ -74,7 +74,7 @@ export default class Cal extends TrackerReact(React.Component) {
 				<div id="action-bar">
 					<div id="add-event-button" className="nav-button mdi mdi-alarm" onClick={this.props.showAddTask.bind(this)} data-tip="Set Alarm"></div>
 					<div id="add-event-button" className="nav-button mdi mdi-view-dashboard" onClick={this.props.showAddTask.bind(this)} data-tip="Schedule"></div>
-					<div id="add-event-button" className="nav-button mdi mdi-plus" onClick={this.props.showAddTask.bind(this)} data-tip="Add Event"></div>
+					<div id="add-event-button" className="nav-button mdi mdi-plus hide-on-large" onClick={this.props.showAddTask.bind(this)} data-tip="Add Event"></div>
 				</div>
 				<ReactTooltip place="bottom" type="dark" effect="solid" style={{borderRadius : 0, color: '#1de9b6', opacity: 0, backgroundColor: '#000000'}}/>
 
