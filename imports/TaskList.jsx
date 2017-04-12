@@ -49,9 +49,12 @@ export default class TaskList extends TrackerReact(React.Component) {
 					})
 		return (
 			<div id="TaskList" className={this.props.show ? "animated slideInLeft" : "animated slideOutLeft"}>
+				<div className="hide-on-large hide-on-med"></div>
 				<div id="search-wrapper">
 				<i id="search-icon" className="mdi mdi-magnify"></i>
-					<input id="search" type="text" value={this.state.search} onChange={this.updateSearch.bind(this)} />
+				<input id="search" type="text" value={this.state.search} onChange={this.updateSearch.bind(this)} />
+				<i id="search-icon" className="mdi mdi-chevron-right hide-on-med hide-on-large"></i>
+
 				</div>
 				<ul id="tasks-wrapper">
 					{filteredTasks}

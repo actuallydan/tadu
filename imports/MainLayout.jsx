@@ -2,7 +2,10 @@ import React from 'react';
 import TaskList from './TaskList.jsx';
 import Calendar from './Calendar.jsx';
 import AddTask from './AddTask.jsx';
-import './styles/main.less';
+import './styles/main.normal.less';
+import './styles/main.large.less';
+import './styles/main.small.less';
+
 import 'animate.css';
 import swal from 'sweetalert';
 import 'sweetalert/dist/sweetalert.css';
@@ -54,14 +57,24 @@ export default class MainLayout extends TrackerReact(React.Component) {
 		if (Notification.permission !== "granted")
 			Notification.requestPermission();
 		if (!Notification) {
-			swal('Desktop notifications not available in your browser. Try Chromium.'); 
+			swal('Desktop notifications not available in your browser. Please download a modern browser like Chrome or Opera'); 
 			return;
 		}
+	}
+	showView(view){
+		this.setState({
+			viewMode : view
+		});
 	}
 	showAddTask(){
 		// this.props.mobileView("addTask");
 		this.setState({
-			viewMode : 'addEvent'
+			viewMode : 'addTask'
+		});
+	}
+	showTasks(){
+		this.setState({
+			viewMode : 'tasksList'
 		});
 	}
 	hideAddTask(){
@@ -143,8 +156,8 @@ export default class MainLayout extends TrackerReact(React.Component) {
   }
   render() {
   	let viewCal =  true;
-  	let viewEventList =  this.state.viewMode === 'events' ? true : window.innerWidth >= 992 ? true : false;
-  	let viewAddEvent = this.state.viewMode === 'addEvent' ? true : window.innerWidth >= 1400 ? true : false;
+  	let viewTaskList =  this.state.viewMode === 'tasksList' ? true : window.innerWidth >= 992 ? true : false;
+  	let viewAddEvent = this.state.viewMode === 'addTask' ? true : window.innerWidth >= 1400 ? true : false;
 		// console.log("Show Cal:", viewCal, "Show EventList:", viewEventList, "Show Add:", viewAddEvent);
 		let eventDetail = this.state.eventDetail !== null ? this.state.eventDetail : "" ;
 		// console.log("selected date: " + this.state.selectedDate);
@@ -155,11 +168,11 @@ export default class MainLayout extends TrackerReact(React.Component) {
 			{this.state.loggedIn 
 				?
 				<div>
-				<div id="left-wrapper">
-				<TaskList show={viewEventList} showDetail={this.showDetail.bind(this)} selectedDate={this.state.selectedDate}/>
+				<div id="left-wrapper" style={{zIndex: viewTaskList ? 3 : 0}}>
+				<TaskList show={viewTaskList} showDetail={this.showDetail.bind(this)} selectedDate={this.state.selectedDate}/>
 				</div>
 				<div id="center-wrapper">
-				<Calendar show={viewCal} showAddTask={this.showAddTask.bind(this)} selectDate={this.selectDate.bind(this)} notifications={notices}/>
+				<Calendar show={viewCal} showAddTask={this.showAddTask.bind(this)} selectDate={this.selectDate.bind(this)} notifications={notices} showTasks={this.showTasks.bind(this)}/>
 				</div>
 				<div id="right-wrapper" style={{zIndex : viewAddEvent ? 5 : -1}}>
 				<AddTask show={viewAddEvent} hideAddTask={this.hideAddTask.bind(this)} selectedDate={this.state.selectedDate}/>
@@ -170,7 +183,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
 				<LoginForm loggedInChange={this.loggedInChange.bind(this)}/>
 			}
 
-			<Rodal visible={this.state.visible} onClose={this.hideDetail.bind(this)} className="modal task-detail glow" animation="door" customStyles={{width: '80%',
+			<Rodal visible={this.state.eventDetail !== null} onClose={this.hideDetail.bind(this)} className="modal task-detail glow" animation="door" customStyles={{width: '80%',
 			height: '80%', borderRadius: 0, borderColor: '#1de9b6', borderWidth: 1, borderStyle : 'solid', background: '#242424', color: '#fff'}}>
 			<div className="text">{eventDetail.text}</div>
 			<div className="tag">{eventDetail.tag} </div>

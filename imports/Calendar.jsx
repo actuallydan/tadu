@@ -11,7 +11,7 @@ export default class Cal extends TrackerReact(React.Component) {
 		super(props);
 
 		this.state = {
-			today : new Date(),
+			today : new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000)).toJSON().substring(0, 10),
 			selectedDate : new Date().toJSON().substring(0, 10),
 			monthShowing : new Date(),
 			eventsThisMonth: {},
@@ -90,6 +90,7 @@ export default class Cal extends TrackerReact(React.Component) {
 
 			<div id="calendar-header">
 			<div id="action-bar">
+			<div id="add-event-button" className="nav-button mdi mdi-view-list hide-on-large hide-on-med" onClick={this.props.showTasks.bind(this)} data-tip="Tasks"></div>
 			<div id="add-event-button" className="nav-button mdi mdi-alarm" onClick={this.showNotice.bind(this)} data-tip="Notifications"></div>
 			<div id="add-event-button" className="nav-button mdi mdi-view-dashboard" onClick={this.props.showAddTask.bind(this)} data-tip="Schedule"></div>
 			<div id="add-event-button" className="nav-button mdi mdi-plus hide-on-large" onClick={this.props.showAddTask.bind(this)} data-tip="Add Event"></div>
@@ -124,7 +125,7 @@ export default class Cal extends TrackerReact(React.Component) {
 				calArray.map((day)=>{
 					n++;
 					let inThisMonth = parseInt(day.substring(5, 7)) === month + 1 ? true : false;
-					let isToday = day === this.state.today.toJSON().substring(0, 10) ? true : false;
+					let isToday = day === this.state.today ? true : false;
 					let isSelected = day === this.state.selectedDate ? true : false;
 					let dayStyles = {
 						color: !inThisMonth ? "#424242" : !isToday ? "#FFFFFF" : isSelected ? "#FFFFFF" : "#1de9b6",
