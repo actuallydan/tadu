@@ -18,7 +18,6 @@ export default class TaskList extends TrackerReact(React.Component) {
 		this.setState({search: event.target.value});
 	}
   showDetail(event){
-  	console.log(event);
   	this.props.showDetail(event);
   }
 	componentWillUnmount(){
@@ -28,7 +27,7 @@ export default class TaskList extends TrackerReact(React.Component) {
 		let tasks = [];
 		Meteor.call("getTasks", (err, data)=>{
 			if(err){
-				console.log("error");
+				console.log("error", err);
 			} else {
 				tasks = data;
 			}

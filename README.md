@@ -57,6 +57,9 @@
 * On Task Click -> Modal Or Alert To Edit
 * Tadu Logo
 * Create New Tags if !exists
+* Login and Register Button are same size
+* trim function on login
+* FF issues?
 
 
 

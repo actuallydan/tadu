@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import moment from 'moment';
 
 Meteor.startup(() => {
   // code to run on server at startup
@@ -13,6 +14,32 @@ Meteor.startup(() => {
   } else {
   	console.log("TAG STATUS: 200 -- Default Tags Set");
   }
+
+  SyncedCron.add({
+  name: 'Send Out Alerts',
+  schedule: function(parser) {
+    // parser is a later.parse object
+    return parser.text('every 1 min');
+  },
+  job: function() {
+    
+    let allAlerts = Tasks.find({dateStart: {$eq : new Date().toJSON().substring(0,10)}, timeStart: {$eq : moment().format("HH:mm")}}).fetch();
+    console.log("Date: " + new Date().toJSON().substring(0,10), "Time: " + moment().format("HH:mm"))
+    allAlerts.map((task)=>{
+      Notifications.insert({
+        userId: task.userId,
+        type: "taskAlert",
+        data : task,
+        seen: false
+      });
+    })
+
+
+  }
+});
+SyncedCron.start();
+
+
 });
 
 

@@ -48,5 +48,13 @@ Meteor.methods({
 	},
 	getTags(){
 		return TagTypes.find().fetch();
+	},
+	seeNotification(notice){
+		if(Meteor.userId() !== notice.userId){
+			throw new Meteor.Error('not-authorized');
+		}
+		Notifications.update(notice._id, {
+			$set: {seen: true }
+		})
 	}
 });

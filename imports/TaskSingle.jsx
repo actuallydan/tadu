@@ -26,8 +26,6 @@ export default class TaskSingle extends Component {
 		if(goodTarg.indexOf(targ) === -1){
 			// Do nothing
 		} else {
-			console.log(this.props.task);
-			//placeholder for displayDetail
 			this.props.showDetail(this.props.task);
 		}
 	}

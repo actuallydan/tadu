@@ -3,6 +3,8 @@ import Day from './Day.jsx';
 import ReactTooltip from 'react-tooltip';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import moment from 'moment';
+import Rodal from 'rodal';
+import 'rodal/lib/rodal.css';
 
 export default class Cal extends TrackerReact(React.Component) {
 	constructor(props){
@@ -13,14 +15,9 @@ export default class Cal extends TrackerReact(React.Component) {
 			selectedDate : new Date().toJSON().substring(0, 10),
 			monthShowing : new Date(),
 			eventsThisMonth: {},
-			events: []
+			events: [],
+			showNotifications: false
 		};
-	}
-	// componentDidUpdate(){
-	// 	this.setAlarm();
-	// }
-	componentDidMount(){
-		this.setAlarm();
 	}
 	selectDate(date){
 		this.props.selectDate(date);
@@ -40,36 +37,25 @@ export default class Cal extends TrackerReact(React.Component) {
 
 
 	}
+	showNotice() {
+		this.setState({ showNotifications : true });
+	}
+
+	hideNotice() {
+		this.setState({showNotifications : false});
+	}
 	setAlarm(){
-		clearTimeout();
 		let nextTask = Tasks.findOne({dateStart: {$gte : new Date().toJSON().substring(0,10)}, timeStart: {$gt : moment().format("hh:mm")}}, {sort : {dateStart: 1, timeStart: 1}})
 		console.log(nextTask);
 		if(nextTask !== undefined){
 			let nextTaskDateTime = moment(nextTask.dateStart + "T" + nextTask.timeStart, "YYYY-MM-DDThh:mm").format("x");
 			console.log("alarm set");
-			setTimeout(()=>{ this.notify(nextTask); this.setAlarm()}, nextTaskDateTime - new Date().getTime());
+			setTimeout(()=>{ this.notify(nextTask);}, nextTaskDateTime - new Date().getTime());
 		}
 	}
-	notify(task){
-		if (Notification.permission !== "granted"){
-			swal(task.text, task.timeStart , "warning");
-		} else {
-			var notification = new Notification(task.tag, {
-				icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
-				body: task.text + " @ " + task.timeStart,
-			});
 
-			notification.onclick = function () {
-				console.log("uhhhh");      
-			};
-
-		}
-	}
 	render(){
 		let tasks = Tasks.find().fetch();
-
-		console.log(this.state.monthShowing);
-
 		let year = this.state.monthShowing.getFullYear(), month = this.state.monthShowing.getMonth(), day = this.state.monthShowing.getDate();
 		let cal = [];
 		// See if the first day of the week is a Sunday, if not get the days preceding it so we can have a contiguous block
@@ -103,35 +89,35 @@ export default class Cal extends TrackerReact(React.Component) {
 		return (<div id="calendar">
 
 			<div id="calendar-header">
-				<div id="action-bar">
-					<div id="add-event-button" className="nav-button mdi mdi-alarm" onClick={this.props.showAddTask.bind(this)} data-tip="Set Alarm"></div>
-					<div id="add-event-button" className="nav-button mdi mdi-view-dashboard" onClick={this.props.showAddTask.bind(this)} data-tip="Schedule"></div>
-					<div id="add-event-button" className="nav-button mdi mdi-plus hide-on-large" onClick={this.props.showAddTask.bind(this)} data-tip="Add Event"></div>
-				</div>
-				<ReactTooltip place="bottom" type="dark" effect="solid" style={{borderRadius : 0, color: '#1de9b6', opacity: 0, backgroundColor: '#000000'}}/>
+			<div id="action-bar">
+			<div id="add-event-button" className="nav-button mdi mdi-alarm" onClick={this.showNotice.bind(this)} data-tip="Notifications"></div>
+			<div id="add-event-button" className="nav-button mdi mdi-view-dashboard" onClick={this.props.showAddTask.bind(this)} data-tip="Schedule"></div>
+			<div id="add-event-button" className="nav-button mdi mdi-plus hide-on-large" onClick={this.props.showAddTask.bind(this)} data-tip="Add Event"></div>
+			</div>
+			<ReactTooltip place="bottom" type="dark" effect="solid" style={{borderRadius : 0, color: '#1de9b6', opacity: 0, backgroundColor: '#000000'}}/>
 
-				<div id="calendar-header-month">
-					{months[this.state.monthShowing.getMonth()]}
-				</div>
-				<div id="calendar-header-year"> 
-					{this.state.monthShowing.getFullYear()}
-				</div>
+			<div id="calendar-header-month">
+			{months[this.state.monthShowing.getMonth()]}
+			</div>
+			<div id="calendar-header-year"> 
+			{this.state.monthShowing.getFullYear()}
+			</div>
 			</div>
 			<div id="calendar-header-days">
-				<div id="prev-month-button" className="mdi mdi-chevron-left" onClick={this.prevMonth.bind(this)}></div>
-				{
-					daysOfWeek.map((dayText)=> {
-						return (
-							<span className="cal-block cal-header" key={"day-header-"+dayText}>	
-							<p className="cal-day-text">
-							{dayText === "Thursday" ? "Th" : dayText === "Saturday" ? "Sa" : dayText === "Sunday" ? "Su" : dayText[0]} 				
-							</p>
-							</span>
-							)
-					}
-					)
+			<div id="prev-month-button" className="mdi mdi-chevron-left" onClick={this.prevMonth.bind(this)}></div>
+			{
+				daysOfWeek.map((dayText)=> {
+					return (
+						<span className="cal-block cal-header" key={"day-header-"+dayText}>	
+						<p className="cal-day-text">
+						{dayText === "Thursday" ? "Th" : dayText === "Saturday" ? "Sa" : dayText === "Sunday" ? "Su" : dayText[0]} 				
+						</p>
+						</span>
+						)
 				}
-				<div id="next-month-button" className="mdi mdi-chevron-right" onClick={this.nextMonth.bind(this)}></div>
+				)
+			}
+			<div id="next-month-button" className="mdi mdi-chevron-right" onClick={this.nextMonth.bind(this)}></div>
 			</div>
 			<div id="calendar-body" className="animated fadeIn">
 			{
@@ -155,7 +141,16 @@ export default class Cal extends TrackerReact(React.Component) {
 				)
 			}
 			</div>
-
+			{this.state.showNotifications ? 
+				<Rodal visible={this.state.showNotifications} onClose={this.hideNotice.bind(this)} className="modal task-detail glow" animation="door" customStyles={{width: '80%',
+				height: '80%', borderRadius: 0, borderColor: '#1de9b6', borderWidth: 1, borderStyle : 'solid', background: '#242424', color: '#fff'}}>
+				{this.props.notifications.map((notice)=>{
+					return (<div key={notice._id}>Notice</div>)
+				})}
+				</Rodal>
+				:
+				""
+			}
 			</div>)
 	}
 }
