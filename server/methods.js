@@ -11,7 +11,8 @@ Meteor.methods({
 			completed: false,
 			createdAt: new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000)).getTime(),
 			userId : Meteor.userId(),
-			desc : task.desc
+			desc : task.desc,
+			timeUTC: task.timeUTC
 		});
 		let tag = TagTypes.findOne({type: task.tagType});
 			TagTypes.update(tag._id, {

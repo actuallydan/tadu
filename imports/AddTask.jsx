@@ -32,7 +32,8 @@ export default class AddTask extends TrackerReact(React.Component) {
 				tagType : this.state.tagType,
 				userId: Meteor.userId(),
 				desc: this.refs.desc.value.trim(),
-				completed: false
+				completed: false,
+				timeUTC: moment(this.refs.dateStart.value.trim() + "T" + this.refs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").utc().format().substring(0,16)
 			};
 
 			Meteor.call("addTask", task, (err, data)=>{

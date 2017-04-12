@@ -22,9 +22,11 @@ Meteor.startup(() => {
     return parser.text('every 1 min');
   },
   job: function() {
+    let nowUTC = moment().utc().format().substring(0,16);
+
+    let allAlerts = Tasks.find({timeUTC: {$eq : nowUTC}}).fetch();
+    console.log(nowUTC);
     
-    let allAlerts = Tasks.find({dateStart: {$eq : new Date().toJSON().substring(0,10)}, timeStart: {$eq : moment().format("HH:mm")}}).fetch();
-    console.log("Date: " + new Date().toJSON().substring(0,10), "Time: " + moment().format("HH:mm"))
     allAlerts.map((task)=>{
       Notifications.insert({
         userId: task.userId,
