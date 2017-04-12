@@ -31,16 +31,12 @@ export default class LoginForm extends React.Component {
 	}
 	tryRegister(event){
 		event.preventDefault();
-		console.log("breakpoint 1");
-
 		if (this.refs.username.value.trim() !== null && this.refs.password.value.trim() !== null && this.refs.email.value.trim() !== null) {
 			let user = {
 				username: this.refs.username.value.trim(),
 				password: this.refs.password.value.trim(),
 				email: this.refs.email.value.trim(),
 			};
-			console.log("breakpoint 1");
-
 			try{
 			Accounts.createUser(user, (err)=> {
 					if(err){

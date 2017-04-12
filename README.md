@@ -50,15 +50,11 @@
 * 5.0 Tadu Clerk 
 
 #### What Needs Done
-* Replace Event for Task Everywhere
-* Mobile View (Responsiveness)
-* Large Desktop View (Responsiveness)
 * Find thinner font-icons (circles and squares)
 * On Task Click -> Modal Or Alert To Edit
 * Tadu Logo
 * Create New Tags if !exists
 * Login and Register Button are same size
-* trim function on login
 * FF issues?
 
 
