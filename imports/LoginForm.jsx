@@ -54,15 +54,18 @@ export default class LoginForm extends React.Component {
 	render(){
 		if(this.state.showLogin){
 			return (<div className={this.state.showLogin ? 'container animated fadeIn' : 'container animated fadeOut'} id="login-form">
-				<div className='logo-login mdi mdi mdi-blur-linear'></div>
+				<div className='logo-login'>
+					<img className="logo-img" src="../img/tadu_logo.png"/>
+					<p className="logo-text">tadu</p>
+				</div>
 				<div className="login-header">Login to get back to it</div>
 				<form onSubmit={this.tryLogin.bind(this)}>
 				<input className='form-input' type="text" ref="email" placeholder="Email" />
 				<input className='form-input' type="password" ref="password" placeholder="Password" />
-				<p className="center"><input className="button" type="submit" value="Login" /></p>
+				<p className="login-register-button"><input className="button glow" type="submit" value="Login" /></p>
 
 				</form>
-				<p onClick={this.handleChangeForm.bind(this)} className="text-grey">Need to register?</p>
+				<p onClick={this.handleChangeForm.bind(this)} className="toggle-login">Need to register?</p>
 
 
 				</div>
@@ -70,17 +73,20 @@ export default class LoginForm extends React.Component {
 				)
 		} else {
 			return ( <div className={this.state.showLogin ? 'container animated fadeOut' : 'container animated fadeIn'} id="register-form">
-				<div className='logo-login mdi mdi mdi-blur-linear'></div>
+				<div className='logo-login'>
+					<img className="logo-img" src="../img/tadu_logo.png"/>
+					<p className="logo-text">tadu</p>
+				</div>
 				<div className="login-header">Register to get started</div>
 				<form onSubmit={this.tryRegister.bind(this)}>
 				<input className='form-input' type="text" ref="email" placeholder="Email" />
 				<input className='form-input' type="password" ref="password" placeholder="Password" />
 				<input className='form-input' type="text" ref="username" placeholder="Username" />
-				<p className="center"><input className="button" type="submit" value="Register" /></p>
+				<p className="login-register-button"><input className="button glow" type="submit" value="Register" /></p>
 
 				</form>
 
-				<p onClick={this.handleChangeForm.bind(this)} className="text-grey">Already registered?</p>
+				<p onClick={this.handleChangeForm.bind(this)} className="toggle-login">Already registered?</p>
 
 				</div>
 				)
