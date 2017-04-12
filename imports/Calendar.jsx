@@ -1,5 +1,12 @@
+/* Calendar view for Tadu App 
+*
+* Displays current month, current day, selected day, and switches views in parent component 
+*
+*/
 import React from 'react';
 import Day from './Day.jsx';
+
+/* 3rd party plugins*/
 import ReactTooltip from 'react-tooltip';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import moment from 'moment';
@@ -10,80 +17,98 @@ export default class Cal extends TrackerReact(React.Component) {
 	constructor(props){
 		super(props);
 
+		/* Keep track of the current day (adjusted for timezone differences and Firefox's abiltiy to ruin everything)
+		* track the date we want to create a task on or see what tasks we have on that day
+		* the current month to view
+		* and whether or not to display notifications tray
+		*/
 		this.state = {
 			today : new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000)).toJSON().substring(0, 10),
 			selectedDate : new Date().toJSON().substring(0, 10),
 			monthShowing : new Date(),
-			eventsThisMonth: {},
-			events: [],
 			showNotifications: false
 		};
 	}
+	/* Triggers update in parent to tell app what day we are concerned with (changes current tasks view) 
+	* Also updates state to delegate the coveted "selected-day" theme to child Day components
+	*/
 	selectDate(date){
 		this.props.selectDate(date);
 		this.setState({
 			selectedDate : date
 		});
 	}
+	/* Move back 1 month 
+	* Set state to date object 1 month prior
+	* This should not update the selectedDate
+	*/
 	prevMonth(){
 		this.setState({
 			monthShowing : new Date(this.state.monthShowing.getFullYear(), this.state.monthShowing.getMonth() - 1, this.state.monthShowing.getDate())
 		});
 	}
+	/* Move forward 1 month 
+	* Set state to date object of 1 month in the future
+	* This should not change selectedDate
+	*/
 	nextMonth(){
 		this.setState({
 			monthShowing : new Date(this.state.monthShowing.getFullYear(), this.state.monthShowing.getMonth() + 1, this.state.monthShowing.getDate())
 		});
-
-
 	}
+	/* Display the notifications tray
+	* Should probably condensed into a single toggle method
+	*/	
 	showNotice() {
 		this.setState({ showNotifications : true });
 	}
-
+	/* Hide the notifications tray
+	* Should probably condensed into a single toggle method
+	*/	
 	hideNotice() {
 		this.setState({showNotifications : false});
 	}
-	setAlarm(){
-		let nextTask = Tasks.findOne({dateStart: {$gte : new Date().toJSON().substring(0,10)}, timeStart: {$gt : moment().format("hh:mm")}}, {sort : {dateStart: 1, timeStart: 1}})
-		console.log(nextTask);
-		if(nextTask !== undefined){
-			let nextTaskDateTime = moment(nextTask.dateStart + "T" + nextTask.timeStart, "YYYY-MM-DDThh:mm").format("x");
-			console.log("alarm set");
-			setTimeout(()=>{ this.notify(nextTask);}, nextTaskDateTime - new Date().getTime());
-		}
-	}
-
 	render(){
-		let tasks = Tasks.find().fetch();
+		/* Get tasks so we can map them over the current month to show them on the calendar 
+		* Refined to only search for tasks in this current month
+		*/
+		let tasks = Tasks.find({"dateStart" : {$regex: this.state.monthShowing.toJSON().substring(0,8) + ".*"}}).fetch();
 		let year = this.state.monthShowing.getFullYear(), month = this.state.monthShowing.getMonth(), day = this.state.monthShowing.getDate();
-		let cal = [];
-		// See if the first day of the week is a Sunday, if not get the days preceding it so we can have a contiguous block
+		/* Create an array that will hold day objects to represent each Day Component */
+		let cal = {};
+
+		/* See if the first day of the month is a Sunday, if not get the days preceding it so we can have a contiguous block */
 		let daysBeforeInBlock = new Date(year, month, 1).getDay() ;
 
+		/* Get the days in this week that are in the previous month if any, and add them to our calendar object 
+		* Deprecated: From the array of tasks, give each day object an array of it's  respective tasks
+		*/
 		for(let i = daysBeforeInBlock; i > 0; --i){
 			cal[new Date(year, month, -1 * i + 1).toJSON().substring(0, 10)] = {
 				events : tasks.filter((event)=>{return event.dateStart === new Date(year, month, -1 * i + 1).toJSON().substring(0, 10) })
 			};
 		}
+		/* Get the rest of the days in this month and any that would complete the 6th row of our calendar as needed, and add them to our calendar object 
+		*  From the array of tasks, give each day object an array of it's respective tasks
+		*/
 		for(let i = 0; i < 35 + (7 - daysBeforeInBlock) ; i++){
 			cal[new Date(year, month, 1 + i).toJSON().substring(0, 10)] = {
 				events : tasks.filter((event)=>{return event.dateStart === new Date(year, month, i + 1).toJSON().substring(0, 10) })
 			};
 		}
+		/* Create iterable array from our calendar object*/
 		let calArray = Object.keys(cal);
-		for (let i = 0; i < 31; i++) {
-			this.state.eventsThisMonth[new Date(year, month, 1 + i).toJSON().substring(0, 10)] = {
-				events : tasks.filter((event)=>{return event.dateStart === new Date(year, month, i + 1).toJSON().substring(0, 10)})
-			};
-		}
+
+		/* The days of the week so we can iterate over them instead of having 7 tags which is maybe superflous 
+		 Maybe useful if someone wants to add a localization starts-on-monday bit of nonsense #westerncentric */
 		const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-		let n = 0;
-		// this.renderTasks();
-
+		/* indicates to each Day component how it should be styled: white for the current month, grey for other months */
 		const thisMonth = new Date(this.props.month)
 
+		/* Because the Date Object doesn't have an option to ge the full name of the month we have it here 
+		* Also potential place for localization/language thing
+		*/
 		const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 		return (<div id="calendar">
@@ -107,6 +132,7 @@ export default class Cal extends TrackerReact(React.Component) {
 			<div id="calendar-header-days">
 			<div id="prev-month-button" className="mdi mdi-chevron-left" onClick={this.prevMonth.bind(this)}></div>
 			{
+				/* Create calendar header */
 				daysOfWeek.map((dayText)=> {
 					return (
 						<span className="cal-block cal-header" key={"day-header-"+dayText}>	
@@ -122,8 +148,8 @@ export default class Cal extends TrackerReact(React.Component) {
 			</div>
 			<div id="calendar-body" className="animated fadeIn">
 			{
+				/* Create calendar days with Day components, each has it's own style depending on whether its in the month, is selected, or is today */
 				calArray.map((day)=>{
-					n++;
 					let inThisMonth = parseInt(day.substring(5, 7)) === month + 1 ? true : false;
 					let isToday = day === this.state.today ? true : false;
 					let isSelected = day === this.state.selectedDate ? true : false;
@@ -137,12 +163,18 @@ export default class Cal extends TrackerReact(React.Component) {
 						width : '1.2em'
 					};
 
-					return (<Day date={day} style={dayStyles} key={n} selectDate={this.selectDate.bind(this)} isSelected={isSelected} events={cal[day].events}/>)
+					return (<Day date={day} style={dayStyles} key={day} selectDate={this.selectDate.bind(this)} isSelected={isSelected} events={cal[day].events}/>)
 				}
 				)
 			}
 			</div>
-			{this.state.showNotifications ? 
+			{
+				/* Crammed down here like the dirty after-thought it is, is the nofitications icon tray
+				* (I bet you forgot about it too didnt' you?)
+				* One of the gnarliest ternary opertators I've written to decide whether or not to rear it's ugly face
+				* TODO: style should be passed in from parent that also has a Rodal style object
+				*/
+				this.state.showNotifications ? 
 				<Rodal visible={this.state.showNotifications} onClose={this.hideNotice.bind(this)} className="modal task-detail glow" animation="door" customStyles={{width: '80%',
 				height: '80%', borderRadius: 0, borderColor: '#1de9b6', borderWidth: 1, borderStyle : 'solid', background: '#242424', color: '#fff'}}>
 				{this.props.notifications.map((notice)=>{

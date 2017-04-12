@@ -1,22 +1,33 @@
+/* Main Structure file for Tadu App 
+*
+* Manages Logged in state and holds 3 main views of app: Calendar, Tasks List, and Add Task.
+* Also holds React Modal "Rodal" for viewing task details for editing 
+*
+*/
+
 import React from 'react';
 import TaskList from './TaskList.jsx';
 import Calendar from './Calendar.jsx';
 import AddTask from './AddTask.jsx';
+import LoginForm from './LoginForm.jsx';
+
+/*  CSS split up for now but should be refactored later to minimize redundancies */
 import './styles/main.normal.less';
 import './styles/main.large.less';
 import './styles/main.small.less';
 
+/* 3rd party CSS libraries */
 import 'animate.css';
 import swal from 'sweetalert';
 import 'sweetalert/dist/sweetalert.css';
+/* Fix to change alerts to fit theme */
 import './styles/swaloverride.css';
-import LoginForm from './LoginForm.jsx';
-
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import moment from 'moment';
 import Rodal from 'rodal';
 import 'rodal/lib/rodal.css';
 
+/* Instantiate MiniMongo local database collections */
 Tasks = new Mongo.Collection('Tasks');
 TagTypes = new Mongo.Collection("TagTypes");
 Notifications = new Mongo.Collection("Notifications");
@@ -44,61 +55,90 @@ export default class MainLayout extends TrackerReact(React.Component) {
 		console.log(this.state.width);
 	}
 	loggedInChange(flag){
+		/* Tell out app that we're changing our logged in state and that Meteor knows we're logged in / out and need to change views 
+		* Methods tha log the user in should provide true as a parameter or false if they're logging out
+		*/
 		this.setState({
 			loggedIn: flag
 		});
 	}
-	componentWillUnmount(){
+	componentWillUnmount(){ 
+		/* Always remove window listeners when not in use, but this is not likely to be needed at the moment */
 		window.removeEventListener('resize');
 	}
 	componentDidMount() {
+		/* Create event listener to update the state when the window resizes. 
+		* This way we can store window width in one place instead on constantly having to look it up with window.innerWidth
+		* This gives responsiveness to larger organizational components */
 		window.addEventListener('resize', this.handleResize.bind(this));
 
+		/* Get the user's permission for notifications early on */
 		if (Notification.permission !== "granted")
 			Notification.requestPermission();
 		if (!Notification) {
+			/* Inform the user not to use a lame browser like Firefox, IE, or Safari that ruins JavaScript Dates and has full modern API support */
 			swal('Desktop notifications not available in your browser. Please download a modern browser like Chrome or Opera'); 
 			return;
 		}
 	}
+	/* All purpose change view method
+	* TODO: This should be used in place of show/hide addtask/tasklist/calendar
+	* Use "calendar" | "addTask" | "tasksList" as parameter values
+	*/
 	showView(view){
 		this.setState({
 			viewMode : view
 		});
 	}
+	/* Should be replaced with showView("addTask") */
 	showAddTask(){
-		// this.props.mobileView("addTask");
 		this.setState({
 			viewMode : 'addTask'
 		});
 	}
+	/* Should be replaced with showView("tasksList") */
 	showTasks(){
 		this.setState({
 			viewMode : 'tasksList'
 		});
 	}
+	/* Should be replaced with showView("calendar") */
 	hideAddTask(){
-		// this.props.mobileView("calendar");
 		this.setState({
 			viewMode : 'calendar'
 		});
 	}
+	/* Shows Task detail Modal (Rodal) at bottom of page 
+	* A valid Task Object must be passed to display it's full details to the user
+	* Shold maybe be condensed into a toggleDetail view?
+	*/
 	showDetail(event) {
-		console.log(event);
 		this.setState({eventDetail : event });
 	}
-
+	/* Hides Task detail Modal (Rodal) at bottom of page 
+	* Removes task object from state to signal Rodal to close
+	* See notes from showDetail()
+	*/
 	hideDetail() {
 		this.setState({eventDetail : null});
 	}
+	/* Gets a date string in "YYYY-MM-DD" format from Calendar and updates the state so the whole app is aware of the date we're looking at as opposed to the current date */
 	selectDate(date){
 		this.setState({
 			selectedDate: date
 		})
 	}
+	/* Multipurpose method for handling notifications triggered in the MainLayout component or elsewhere
+	* Takes in a valid Notifications object and may contain a task, message, or system alert
+	* Should implement a switch statement for how notification is handled depending on type of alert (the data property)
+	* Currently only implemented for Task Alarm notifications
+	* Should also be spun into it's own functional component or imported method for brevity
+	* Accomodates for both Notifcation users and otherwise
+	*/
 	notify(notice){
-  	// add switch(type) for different types of notifications
+  	// add switch(notice.type) for different types of notifications
   	if (Notification.permission !== "granted"){
+  		// Tell the user their task is due
   		swal({
   			title: notice.data.tag,
   			text: notice.data.text + "<br/> Have you completed it?",
@@ -113,21 +153,26 @@ export default class MainLayout extends TrackerReact(React.Component) {
   		function(isConfirm){
   			if (isConfirm) {
   				swal("Good job!", "I'm so proud of you", "success");
-				Meteor.call('toggleTask', notice.data);
+  				// Update task completion status to true
+  				Meteor.call('toggleTask', notice.data);
   			} else {
   				swal("Rescheduling...", "Don't worry. I'll set up a different time", "success");
+  				// TODO: update task startTime
   			}
-  			 Meteor.call("seeNotification", notice);
+  			// Mark this notification as seen and do not re-show it
+  			Meteor.call("seeNotification", notice);
 
   		});
 
   	} else {
-  		var notification = new Notification(notice.data.tag, {
-  			icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
+  		/* the only difference being that the notification will get the user's attention better */
+  		const notification = new Notification(notice.data.tag, {
+  			icon: '../img/tadu_logo.png',
   			body: notice.data.tag + " @ " + moment(notice.data.timeStart, "HH:mm").format("h:mm a"),
   		});
 
   		notification.onclick = ()=>{
+  			/* Switch to Tadu tab if need be */
   			window.focus();
   			swal({
   				title: notice.data.tag,
@@ -143,11 +188,14 @@ export default class MainLayout extends TrackerReact(React.Component) {
   			function(isConfirm){
   				if (isConfirm) {
   					swal("Good job!", "I'm so proud of you", "success");
-					Meteor.call('toggleTask', notice.data);
-  				} else {
-  					swal("Rescheduling...", "Don't worry. I'll set up a different time", "success");
-  				}
-  			});
+	  				// Update task completion status to true
+	  				Meteor.call('toggleTask', notice.data);
+	  			} else {
+	  				swal("Rescheduling...", "Don't worry. I'll set up a different time", "success");
+	  				// TODO: update task startTime
+	  			}
+	  		});
+  			// Mark this notification as seen and do not re-show it
   			Meteor.call("seeNotification", notice);
   			notification.close();
   		};
@@ -155,43 +203,45 @@ export default class MainLayout extends TrackerReact(React.Component) {
   	}
   }
   render() {
-  	let viewCal =  true;
+  	/* Based on screen size and current state, determine which windows should be open */
   	let viewTaskList =  this.state.viewMode === 'tasksList' ? true : window.innerWidth >= 992 ? true : false;
   	let viewAddEvent = this.state.viewMode === 'addTask' ? true : window.innerWidth >= 1400 ? true : false;
-		// console.log("Show Cal:", viewCal, "Show EventList:", viewEventList, "Show Add:", viewAddEvent);
-		let eventDetail = this.state.eventDetail !== null ? this.state.eventDetail : "" ;
-		// console.log("selected date: " + this.state.selectedDate);
-		let notices = Notifications.find().fetch();
-		return (
-			<div>
 
-			{this.state.loggedIn 
-				?
-				<div>
-				<div id="left-wrapper" style={{zIndex: viewTaskList ? 3 : 0}}>
-				<TaskList show={viewTaskList} showDetail={this.showDetail.bind(this)} selectedDate={this.state.selectedDate}/>
-				</div>
-				<div id="center-wrapper">
-				<Calendar show={viewCal} showAddTask={this.showAddTask.bind(this)} selectDate={this.selectDate.bind(this)} notifications={notices} showTasks={this.showTasks.bind(this)}/>
-				</div>
-				<div id="right-wrapper" style={{zIndex : viewAddEvent ? 5 : -1}}>
-				<AddTask show={viewAddEvent} hideAddTask={this.hideAddTask.bind(this)} selectedDate={this.state.selectedDate}/>
-				</div>
-				{notices.length !== 0 ? notices.filter((notice)=>{return notice.seen === false}).map((notice)=>{this.notify(notice)}) : ""}
-				</div>
-				:
-				<LoginForm loggedInChange={this.loggedInChange.bind(this)}/>
-			}
+  	/* Whether or not task detail modal should be visible right now  is based on whether there is a task currently in state */
+  	let eventDetail = this.state.eventDetail !== null ? this.state.eventDetail : "" ;
 
-			<Rodal visible={this.state.eventDetail !== null} onClose={this.hideDetail.bind(this)} className="modal task-detail glow" animation="door" customStyles={{width: '80%',
-			height: '80%', borderRadius: 0, borderColor: '#1de9b6', borderWidth: 1, borderStyle : 'solid', background: '#242424', color: '#fff'}}>
-			<div className="text">{eventDetail.text}</div>
-			<div className="tag">{eventDetail.tag} </div>
-			<div className="dateStart"> {moment(eventDetail.dateStart, "YYYY-MM-DD").format("M/DD/YYYY")} </div>
-			<div className="timeStart">{moment(eventDetail.timeStart, "HH:mm").format("h:mm a")}</div>
-			<div className="desc">{eventDetail.desc === "" ? "No description" : eventDetail.desc}</div>
-			</Rodal>
-			</div>
-			);
-	}
+  	/* Get notifications to see if the user has any that need resolved and to display old notifications in tray at top of Calendar */
+  	let notices = Notifications.find().fetch();
+  	return (
+  		<div>
+
+  		{this.state.loggedIn 
+  			?
+  			<div>
+  			<div id="left-wrapper" style={{zIndex: viewTaskList ? 3 : 0}}>
+  			<TaskList show={viewTaskList} showDetail={this.showDetail.bind(this)} selectedDate={this.state.selectedDate}/>
+  			</div>
+  			<div id="center-wrapper">
+  			<Calendar show={true} showAddTask={this.showAddTask.bind(this)} selectDate={this.selectDate.bind(this)} notifications={notices} showTasks={this.showTasks.bind(this)}/>
+  			</div>
+  			<div id="right-wrapper" style={{zIndex : viewAddEvent ? 5 : -1}}>
+  			<AddTask show={viewAddEvent} hideAddTask={this.hideAddTask.bind(this)} selectedDate={this.state.selectedDate}/>
+  			</div>
+  			{notices.length !== 0 ? notices.filter((notice)=>{return notice.seen === false}).map((notice)=>{this.notify(notice)}) : ""}
+  			</div>
+  			:
+  			<LoginForm loggedInChange={this.loggedInChange.bind(this)}/>
+  		}
+
+  		<Rodal visible={this.state.eventDetail !== null} onClose={this.hideDetail.bind(this)} className="modal task-detail glow" animation="door" customStyles={{width: '80%',
+  		height: '80%', borderRadius: 0, borderColor: '#1de9b6', borderWidth: 1, borderStyle : 'solid', background: '#242424', color: '#fff'}}>
+  		<div className="text">{eventDetail.text}</div>
+  		<div className="tag">{eventDetail.tag} </div>
+  		<div className="dateStart"> {moment(eventDetail.dateStart, "YYYY-MM-DD").format("M/DD/YYYY")} </div>
+  		<div className="timeStart">{moment(eventDetail.timeStart, "HH:mm").format("h:mm a")}</div>
+  		<div className="desc">{eventDetail.desc === "" ? "No description" : eventDetail.desc}</div>
+  		</Rodal>
+  		</div>
+  		);
+  }
 }
