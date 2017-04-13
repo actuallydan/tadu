@@ -52,9 +52,6 @@
 #### What Needs Done
 * Find thinner font-icons (circles and squares)
 * On Task Click -> Modal Or Alert To Edit
-* Reduce global tag types to 9 (dialpad)
-* fix spacer between add task search and top tags
-* Create New Tags if !exists for each user
 * FF issues?
 * Documentation
 * Notificiations tray change color and populate 
