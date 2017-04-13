@@ -66,7 +66,7 @@ export default class AddTask extends TrackerReact(React.Component) {
 		/* Method to move to stage 2 of task creation which is additional and optional details */
 		taskStage2(e) {
 			/* grab the tag type and save it fin state for task creation (see addTask() )*/
-			let tag = e.target.getAttribute("data-tag").trim();
+			let tag = e.target.getAttribute("data-tag") === null ? e.target.parentElement.getAttribute("data-tag").trim() : e.target.getAttribute("data-tag").trim();
 			/* Setting the state to stage1 = false re-renders the component to show stage 2 */
 			this.setState({
 				stage1 : false,
@@ -83,15 +83,48 @@ export default class AddTask extends TrackerReact(React.Component) {
 			this.props.hideAddTask();
 			this.setState({
 						stage1 : true,
-						tagType : null
+						tagType : null,
+						search: ""
 					});
+		}
+		/* Method to create a new tag for the user if not available*/
+		createNewTag(){
+			let context = this;
+			swal({
+			  title: "Create A New Tag",
+			  text: "Please enter a name for your new tag",
+			  type: "input",
+			  showCancelButton: true,
+			  closeOnConfirm: false,
+			  inputPlaceholder: "Hula-hooping? Ebay sniping?"
+			},
+			function(inputValue){
+			  if (inputValue === false) {
+			  	return false;
+			  }
+			  if (inputValue === "") {
+			    swal.showInputError("Please give your tag a name!");
+			    return false
+			  }
+			  Meteor.call("addTag", inputValue.trim(), (err, res)=>{
+			  	if(err){
+			  		swal("Uh Oh!", err, "error");
+			  	} else {
+			  		swal("Tag Created!", "We'll pick up where you left off", "success");
+			  		context.setState({
+						stage1 : false,
+						tagType : inputValue.trim()
+					});
+			  	}
+			  })
+			});
 		}
 		/* Relevant parts of AddTask stage 1; this should probably be spun off into it's own component */
 		renderStage1(){
 			/* Get allthe tags by this user and sort by most often used for quicker selection */
-			let tags = TagTypes.find({}, { sort : {"uses" : -1}}).fetch();
+			let myTags = TagTypes.findOne();
 			let n = 0;
-
+			// myTags = myTags[0].tags.sort((a , b)=>{return a.uses > b.uses});
 			return (
 				<div>
 				<div id="search-wrapper">
@@ -99,27 +132,87 @@ export default class AddTask extends TrackerReact(React.Component) {
 					<input id="search" type="text" value={this.state.search} onChange={this.updateSearch.bind(this)} placeholder="Select Category or Search"/>
 				</div>
 				{
-					//TODO: clean up A LOT
-					tags.filter((tag)=>{ return tag.type.toLowerCase().indexOf(this.state.search.toLowerCase()) !== -1}).map((tag)=>{ 
+					/* If the user hasn't started searching give them the dialpad, otherwise show them the most used results */
+					this.state.search !== "" ? "" :
+				<div id="global-tags">
+					<p className="global-tag-wrapper" data-tag="Homework" onClick={this.taskStage2.bind(this)}>
+						<i className="tag-icon mdi mdi-pencil"></i>
+						<span className="global-tag-label">Homework</span>
+					</p>
+
+					<p className="global-tag-wrapper" onClick={this.taskStage2.bind(this)} data-tag="Study">
+						<i className="tag-icon mdi mdi-book-open-variant"></i>
+						<span className="global-tag-label">Study</span>
+					</p>					
+					<p className="global-tag-wrapper" onClick={this.taskStage2.bind(this)} data-tag="Doctor">
+						<i className="tag-icon mdi mdi-stethoscope"></i>
+						<span className="global-tag-label">Doctor</span>
+					</p>
+
+					<p className="global-tag-wrapper" onClick={this.taskStage2.bind(this)} data-tag="Exercise">
+						<i className="tag-icon mdi mdi-run"></i>
+						<span className="global-tag-label">Exercise</span>
+					</p>					
+					<p className="global-tag-wrapper" onClick={this.taskStage2.bind(this)} data-tag="Meeting">
+						<i className="tag-icon mdi mdi-account-multiple"></i>
+						<span className="global-tag-label">Meeting</span>
+					</p>					
+					<p className="global-tag-wrapper" onClick={this.taskStage2.bind(this)} data-tag="Groceries">
+						<i className="tag-icon mdi mdi-food-apple"></i>
+						<span className="global-tag-label">Groceries</span>
+					</p>
+
+					<p className="global-tag-wrapper" onClick={this.taskStage2.bind(this)} data-tag="Errands">
+						<i className="tag-icon mdi mdi-car"></i>
+						<span className="global-tag-label">Errands</span>
+					</p>					
+					<p className="global-tag-wrapper" onClick={this.taskStage2.bind(this)} data-tag="Music Practice">
+						<i className="tag-icon mdi mdi-music-note"></i>
+						<span className="global-tag-label">Music Practice</span>
+					</p>					
+					<p className="global-tag-wrapper" onClick={this.taskStage2.bind(this)} data-tag="Cleaning">
+						<i className="tag-icon mdi mdi-cup-water"></i>
+						<span className="global-tag-label">Cleaning</span>
+					</p>
+
+
+				</div>
+				}
+				{
+					myTags === undefined ? "" :
+					// TODO: clean up A LOT
+					myTags.tags.filter((tag)=>{ 
+						return (this.state.search === "" && tag.type.indexOf(tags) === -1) || 
+						(this.state.search.toLowerCase().trim() !== "" && tag.type.toLowerCase().indexOf(this.state.search.toLowerCase())) !== -1})
+					.sort((a, b)=> {
+						return a.uses > b.uses;
+					})
+					.map((tag)=>{ 
 						n++;
 						let colorClass = "green";
-			switch(Math.floor(Math.random() * 3)){
-				case 0:
-				colorClass = "green";
-				break;
-				case 1:
-				colorClass = "dark-green";
-				break;
-				case 2:
-				colorClass = "light-green";
-				break;
-			}
-						return (<div className={"event-tag-tile " + colorClass} key={tag._id} data-uses={tag.uses} data-id={tag._id} data-tag={tag.type} onClick={this.taskStage2.bind(this)}> {tag.type}</div>)
+						switch(Math.floor(Math.random() * 3)){
+							case 0:
+							colorClass = "green";
+							break;
+							case 1:
+							colorClass = "dark-green";
+							break;
+							case 2:
+							colorClass = "light-green";
+							break;
+						}
+						return (<div className={"event-tag-tile " + colorClass} key={tag.type} data-uses={tag.uses} data-id={tag._id} data-tag={tag.type} onClick={this.taskStage2.bind(this)}> {tag.type}</div>)
 					}
 					)
 				}
 				{
-					n === 0 ? <div> No Tags </div> : ""
+					n === 0 ? 
+					<p className="global-tag-wrapper" onClick={this.createNewTag.bind(this)}>
+						<i className="tag-icon mdi mdi-tag"></i>
+						<span className="global-tag-label">Create New Tag</span>
+					</p>
+					: 
+					""
 				}
 				</div>
 				)
@@ -150,3 +243,5 @@ export default class AddTask extends TrackerReact(React.Component) {
 
 		}
 	}
+	let tags = ["Homework", "Study", "Doctor", "Exercise", "Meeting", "Groceries", "Errands", "Music Practice", "Cleaning"];
+

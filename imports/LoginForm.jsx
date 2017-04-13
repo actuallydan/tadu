@@ -72,8 +72,9 @@ export default class LoginForm extends React.Component {
 					} else {
 						/* Meteor will automagically sign in users after successful account creation so we can trigger state update in parent to escape this prison*/
 						this.props.loggedInChange(true);
+						Meteor.call("addDefaultTags");
 					}
-				});
+				});				
 			} catch (e){
 				/* There was a non-meteor related issue, likely Error: 500 */
 				swal("Oops...", e, "error");

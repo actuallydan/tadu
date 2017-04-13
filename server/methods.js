@@ -14,10 +14,21 @@ Meteor.methods({
 			desc : task.desc,
 			timeUTC: task.timeUTC
 		});
-		let tag = TagTypes.findOne({type: task.tagType});
-			TagTypes.update(tag._id, {
-				$set: {uses: tag.uses + 1 }
-			})
+
+		// Get this user's tags
+		let user = TagTypes.findOne({"userId" : Meteor.userId()});
+		console.log(user.tags[0].uses);
+		// Find tag in array 
+		let index = user.tags.findIndex((tag)=>{return tag.type === task.tagType});
+		console.log("Index: " + index);
+		// Increment
+		user.tags[index].uses++;
+		console.log("Tag to increment:" + user.tags[index], "Uses after incrementing: " + user.tags[index].uses);
+		// Update user's tags
+		TagTypes.update(user._id, {
+			$set: {tags: user.tags }
+		});
+
 	},
 	toggleTask(task){
 		if(Meteor.userId() !== task.userId){
@@ -40,15 +51,21 @@ Meteor.methods({
 		if(!Meteor.userId()){
 			throw new Meteor.Error('not-authorized');
 		} 
-		TagTypes.insert(
-		{
-			"type" : tag.type,
-			"uses" : 0
-		}
-		);
+		let user = TagTypes.findOne({"userId" : Meteor.userId()});
+		user.tags.push({"type" : tag, "uses" : 0});
+
+		TagTypes.update(user._id, {
+			$set: {tags: user.tags }
+		});
 	},
-	getTags(){
-		return TagTypes.find().fetch();
+	addDefaultTags(){
+		let myTags = {
+			userId: Meteor.userId(),
+			tags: []
+		};
+		tags.map((tag)=>{ myTags.tags.push({"type" : tag, "uses" : 0})  });
+
+		TagTypes.insert(myTags);
 	},
 	seeNotification(notice){
 		if(Meteor.userId() !== notice.userId){
@@ -59,3 +76,6 @@ Meteor.methods({
 		})
 	}
 });
+
+let tags = ["Homework", "Study", "Doctor", "Exercise", "Meeting", "Groceries", "Errands", "Music Practice", "Cleaning"];
+

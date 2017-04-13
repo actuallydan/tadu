@@ -26,7 +26,7 @@ Meteor.startup(() => {
 
     let allAlerts = Tasks.find({timeUTC: {$eq : nowUTC}}).fetch();
     console.log(nowUTC);
-    
+
     allAlerts.map((task)=>{
       Notifications.insert({
         userId: task.userId,
@@ -45,4 +45,4 @@ SyncedCron.start();
 });
 
 
-let defaultTags = ["Take a Nap","Take Out Trash","Work on Paper","Homework","Group Study","Tutoring","Dinner","Lunch","Breakfast","Weight Training","Study","Work Meeting","Go Running","Do dishes","Go Out to Eat","Get a Haircut","Doctor Appointment","Conference","Groceries","Pet Supplies","Office Party","School Meeting","Work on Poster","Work on Project","Group Project","Fill Up Tank"];
+

@@ -7,7 +7,7 @@ Meteor.publish("userTasks", function(){
 	return Tasks.find({userId: this.userId});
 });
 Meteor.publish("tagTypes", function(){
-	return TagTypes.find();
+	return TagTypes.find({userId: this.userId});
 });
 Meteor.publish("notifications", function(){
 	return Notifications.find({userId: this.userId});
