@@ -24,7 +24,7 @@ Meteor.startup(() => {
   job: function() {
     let nowUTC = moment().utc().format().substring(0,16);
 
-    let allAlerts = Tasks.find({timeUTC: {$eq : nowUTC}}).fetch();
+    let allAlerts = Tasks.find({timeUTC: {$eq : nowUTC}, "completed" : false}).fetch();
     console.log(nowUTC);
 
     allAlerts.map((task)=>{

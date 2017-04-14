@@ -219,7 +219,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
   			?
   			<div>
   			<div id="left-wrapper" style={{zIndex: viewTaskList ? 3 : 0}}>
-  			<TaskList show={viewTaskList} showDetail={this.showDetail.bind(this)} selectedDate={this.state.selectedDate}/>
+  			<TaskList show={viewTaskList} showDetail={this.showDetail.bind(this)} selectedDate={this.state.selectedDate} showCal={this.showView.bind(this)}/>
   			</div>
   			<div id="center-wrapper">
   			<Calendar show={true} showAddTask={this.showAddTask.bind(this)} selectDate={this.selectDate.bind(this)} notifications={notices} showTasks={this.showTasks.bind(this)}/>

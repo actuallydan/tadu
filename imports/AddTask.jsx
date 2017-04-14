@@ -207,7 +207,8 @@ export default class AddTask extends TrackerReact(React.Component) {
 				}
 				{
 					n === 0 ? 
-					<p className="global-tag-wrapper" onClick={this.createNewTag.bind(this)}>
+					<p className="global-tag-wrapper no-tags" onClick={this.createNewTag.bind(this)}>
+						<label>Looking for something else? Create a new tag for next time!</label>
 						<i className="tag-icon mdi mdi-tag"></i>
 						<span className="global-tag-label">Create New Tag</span>
 					</p>

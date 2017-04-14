@@ -34,6 +34,9 @@ export default class TaskList extends TrackerReact(React.Component) {
 		});
 		return tasks;
 	}
+	showCal(){
+		this.props.showCal("calendar");
+	}
 	render(){
 		let filteredTasks = Tasks.find().fetch().filter(
 			(task) => {
@@ -44,16 +47,16 @@ export default class TaskList extends TrackerReact(React.Component) {
 				return a.dateStart + "T" + a.timeStart > b.dateStart + "T" +b.timeStart;
 			}
 			);
-			filteredTasks = filteredTasks.length === 0 ? <div id="no-tasks-message"><p>You're free all day!</p><div className="mdi mdi-checkbox-marked-circle-outline no-tasks-icon"></div></div> : filteredTasks.map( (task) => {
+			filteredTasks = filteredTasks.length === 0 ? <div id="no-tasks-message"><p>You're free all day!</p><img src="../img/tadu_logo.png" className="no-tasks-icon"></img></div> : filteredTasks.map( (task) => {
 						return <TaskSingle key={task._id} task={task} showDetail={this.showDetail.bind(this)}/>
-					})
+					});
 		return (
 			<div id="TaskList" className={this.props.show ? "animated slideInLeft" : "animated slideOutLeft"}>
 				<div className="hide-on-large hide-on-med"></div>
 				<div id="search-wrapper">
 				<i id="search-icon" className="mdi mdi-magnify"></i>
 				<input id="search" type="text" value={this.state.search} onChange={this.updateSearch.bind(this)} />
-				<i id="search-icon" className="mdi mdi-chevron-right hide-on-med hide-on-large"></i>
+				<i id="search-icon" className="mdi mdi-chevron-right hide-on-med hide-on-large" onClick={this.showCal.bind(this)}></i>
 
 				</div>
 				<ul id="tasks-wrapper">
