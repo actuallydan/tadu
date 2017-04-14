@@ -5,6 +5,7 @@
 */
 import React from 'react';
 import Day from './Day.jsx';
+import Notice from './Notice.jsx';
 
 /* 3rd party plugins*/
 import ReactTooltip from 'react-tooltip';
@@ -178,7 +179,7 @@ export default class Cal extends TrackerReact(React.Component) {
 				<Rodal visible={this.state.showNotifications} onClose={this.hideNotice.bind(this)} className="modal task-detail glow" animation="door" customStyles={{width: '80%',
 				height: '80%', borderRadius: 0, borderColor: '#1de9b6', borderWidth: 1, borderStyle : 'solid', background: '#242424', color: '#fff'}}>
 				{this.props.notifications.map((notice)=>{
-					return (<div key={notice._id}>Notice</div>)
+					return (<Notice key={notice._id} data={notice} />)
 				})}
 				</Rodal>
 				:

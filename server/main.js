@@ -39,6 +39,17 @@ Meteor.startup(() => {
 
   }
 });
+  SyncedCron.add({
+  name: 'Clear Old Cron History',
+  schedule: function(parser) {
+    // parser is a later.parse object
+    return parser.text('every 5 minutes');
+  },
+  job: function() {
+    let nowUTC = moment().subtract(3, "d").utc().format();
+    SyncedCron._collection.remove({"finishedAt": {"date" : {$lt: nowUTC}} });
+  }
+});
 SyncedCron.start();
 
 

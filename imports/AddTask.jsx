@@ -123,6 +123,7 @@ export default class AddTask extends TrackerReact(React.Component) {
 		renderStage1(){
 			/* Get allthe tags by this user and sort by most often used for quicker selection */
 			let myTags = TagTypes.findOne();
+			let tags = ["Homework", "Study", "Doctor", "Exercise", "Meeting", "Groceries", "Errands", "Music Practice", "Cleaning"];
 			let n = 0;
 			// myTags = myTags[0].tags.sort((a , b)=>{return a.uses > b.uses});
 			return (
@@ -182,8 +183,13 @@ export default class AddTask extends TrackerReact(React.Component) {
 					myTags === undefined ? "" :
 					// TODO: clean up A LOT
 					myTags.tags.filter((tag)=>{ 
-						return (this.state.search === "" && tag.type.indexOf(tags) === -1) || 
-						(this.state.search.toLowerCase().trim() !== "" && tag.type.toLowerCase().indexOf(this.state.search.toLowerCase())) !== -1})
+						if(this.state.search.trim() === ""){
+							// return if not in array
+							return !tags.includes(tag.type);
+						} else {
+							return tag.type.toLowerCase().indexOf(this.state.search.toLowerCase()) !== -1;
+						}
+					})
 					.sort((a, b)=> {
 						return a.uses > b.uses;
 					})
@@ -244,5 +250,4 @@ export default class AddTask extends TrackerReact(React.Component) {
 
 		}
 	}
-	let tags = ["Homework", "Study", "Doctor", "Exercise", "Meeting", "Groceries", "Errands", "Music Practice", "Cleaning"];
 
