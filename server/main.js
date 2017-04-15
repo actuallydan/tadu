@@ -46,7 +46,7 @@ Meteor.startup(() => {
     return parser.text('every 5 minutes');
   },
   job: function() {
-    let nowUTC = moment().subtract(3, "d").utc().format();
+    let nowUTC = moment().subtract(3, "h").utc().format();
     SyncedCron._collection.remove({"finishedAt": {"date" : {$lt: nowUTC}} });
   }
 });
