@@ -12,6 +12,9 @@
 
 * {
 	-webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */
+	font-family: "Rajdhani", sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 ::-webkit-scrollbar { 
 	display: none; 
@@ -32,12 +35,6 @@ input {
 	// url("/fonts/Quattrocento-Sans/Quattrocento-Sans-Regular.woff") format("woff"), 
 	// url("/fonts/Quattrocento-Sans/Quattrocento-Sans-Regular.ttf") format("truetype");
 	font-weight: 400;
-}
-html, body, h1, h2, h3, h4, h5, p, span, p, li, a, input, textarea {
-	// font-family: "Quattrocento Sans", Helvetica, Arial, sans-serif;
-	font-family: "Rajdhani", sans-serif;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
 }
 html, body, #app{
 	width: 100%;
@@ -343,8 +340,9 @@ input:focus, textarea:focus, button:focus {
 		#calendar-header {
 			padding: 0.2em 1em;
 			width: 100%;
+			position: fixed;
 			#action-bar{
-				position: absolute;
+				position: fixed;
 				right: 0;	
 				margin: 0 0.5em;
 				font-size: 1.4em;

@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 Meteor.methods({
 	addTask(task){
 		if(!Meteor.userId()){
@@ -114,9 +116,37 @@ Meteor.methods({
 			$set : {schedule : mySchedule.schedule}
 		});
 	},
-	scheduleBestTime(tag){
-		let mySched = Schedules.findOne().schedule;
+	scheduleBestTime(data){
+		let mySched = Schedules.findOne({userId : Meteor.userId()});
+		let possibleTimes = [];
+		const offset = data.today.getDay();
 
+		/* Populate array of all possible times */
+		for( let i = 0; i < daysOfWeek.length; i++) {
+			let pointer = (i + offset) % daysOfWeek.length; 
+
+			hours.map((hour)=>{
+				if(mySched.schedule[daysOfWeek[pointer]][hour] === null){
+				 	possibleTimes.push({"day" : pointer, "time": hour});
+				 } 
+			})
+		}
+
+
+		/* Filter out all times to remove hours where user has less than 50% of completing task */
+		possibleTimes = possibleTimes.filter((coord)=>{
+			return mySched.thresholds[daysOfWeek[coord.day]][coord.time][data.tag] >= 0.5
+		});
+
+		/* Filter out all times to remove hours where task is already set */
+		possibleTimes = possibleTimes.filter((coord)=>{
+			let daysFromToday = coord.day - new Date().getDay();
+			let bestDate = moment().add(daysFromToday, "days").format();	
+		
+			return Tasks.findOne({dateStart : bestDate.substring(0,10) , timeStart: {$regex: coord.time.substring(0,2) + ".*"}}) === undefined ? true : false;
+		});
+		console.log(possibleTimes[0], possibleTimes.length)
+		return possibleTimes[0];
 
 	}
 });
@@ -140,8 +170,8 @@ const Block = ()=>{
 
 	hours.map((hour)=>{
 		self[hour] = null
-})
- 	return self;
+	})
+	return self;
 };
 
 const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -149,4 +179,6 @@ const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const hours = ["00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"];
 
 let tags = ["Homework", "Study", "Doctor", "Exercise", "Meeting", "Groceries", "Errands", "Music Practice", "Cleaning"];
+
+
 

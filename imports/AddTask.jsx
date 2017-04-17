@@ -22,7 +22,8 @@ export default class AddTask extends TrackerReact(React.Component) {
 			subscription: {
 				tagTypes: Meteor.subscribe("tagTypes")
 			},
-			search: ""
+			search: "",
+			hasBeenOptimized: false
 		};
 	}
 	/* Update the parameter of our search for the perfect tag */
@@ -68,9 +69,22 @@ export default class AddTask extends TrackerReact(React.Component) {
 			/* grab the tag type and save it fin state for task creation (see addTask() )*/
 			let tag = e.target.getAttribute("data-tag") === null ? e.target.parentElement.getAttribute("data-tag").trim() : e.target.getAttribute("data-tag").trim();
 			/* Setting the state to stage1 = false re-renders the component to show stage 2 */
-			this.setState({
-				stage1 : false,
-				tagType : tag
+
+			Meteor.call("scheduleBestTime", {"tag": tag , "today": new Date() }, (err, res)=>{
+				if(err){
+					swal("Oops...", err, "error")
+				} else {
+					let daysFromToday = res.date - new Date().getDay();
+					let bestDate = moment(res.time, "HH:mm").add(daysFromToday, "days").format();
+					this.setState({
+						stage1 : false,
+						tagType : tag,
+						hasBeenOptimized : true
+					});
+					document.getElementById("new-task-date").value = bestDate.substring(0, 10);
+					document.getElementById("new-task-time").value = bestDate.substring(11, 16);
+
+				}
 			});
 		}
 		showDueDate(event){
@@ -235,7 +249,9 @@ export default class AddTask extends TrackerReact(React.Component) {
 				<div className="form-item"><span className='form-item-label'> Title </span><input className="typeable" type="text" ref="newTask" defaultValue={this.state.tagType}  required maxLength="75"/> </div>
 				<div className="form-item"><span className='form-item-label'> Date </span><input className="typeable" id="new-task-date" type="date" ref="dateStart" defaultValue={this.props.selectedDate} /> </div>
 				<div className="form-item"><span className='form-item-label'> Time </span><input className="typeable" id="new-task-time" type="time" ref="timeStart"  defaultValue={nowTime} /> </div>
-
+				
+				{this.state.hasBeenOptimized ? <div className="form-item" style={{"color": "#1de9b6", "fontSize" : "0.6em", "textAlign" : "center"}}><span className='form-item-label mdi mdi-alert-circle'></span><span> {'\u00A0'} This date and time has been optimized for you! </span> </div> : ""}
+				
 				<div className="form-item desc"><textarea type="text" ref="desc" placeholder="Description" maxLength="300"></textarea> </div>
 
 				<div  className="form-item"><button type="submit" className="button">Add Task</button> </div>

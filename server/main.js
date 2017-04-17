@@ -3,18 +3,7 @@ import moment from 'moment';
 
 Meteor.startup(() => {
   // code to run on server at startup
-  if(TagTypes.find().fetch().length === 0){
-  	console.log("TAG STATUS: 404 -- Default Tags Missing", "Attempting to populate tags");
-  	defaultTags.map((tag)=>{
-  		TagTypes.insert({
-  			type: tag,
-  			uses: 0
-  		});
-  	});
-  } else {
-  	console.log("TAG STATUS: 200 -- Default Tags Set");
-  }
-
+ 
  SyncedCron.config({
     // Log job run details to console
     log: false,

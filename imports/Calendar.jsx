@@ -4,9 +4,9 @@
 *
 */
 import React from 'react';
-import Day from './Day.jsx';
 import Notice from './Notice.jsx';
 import Schedule from './Schedule.jsx';
+import MonthView from './MonthView.jsx';
 
 /* 3rd party plugins*/
 import ReactTooltip from 'react-tooltip';
@@ -29,7 +29,8 @@ export default class Cal extends TrackerReact(React.Component) {
 			selectedDate : new Date().toJSON().substring(0, 10),
 			monthShowing : new Date(),
 			showNotifications: false,
-			showSchedule: false
+			showSchedule: false,
+			weekView: false
 		};
 	}
 	/* Triggers update in parent to tell app what day we are concerned with (changes current tasks view) 
@@ -71,8 +72,8 @@ export default class Cal extends TrackerReact(React.Component) {
 	hideNotice() {
 		this.setState({showNotifications : false});
 	}
-	toggleSchedule(){
-		this.setState({showSchedule : !this.state.showSchedule})
+	toggleWeekView(){
+		this.setState({weekView : !this.state.weekView})
 	}
 	render(){
 		/* Get tasks so we can map them over the current month to show them on the calendar 
@@ -118,14 +119,25 @@ export default class Cal extends TrackerReact(React.Component) {
 		const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 		return (<div id="calendar">
 
-			<div id="calendar-header">
+			<div id="calendar-header" style={{"backgroundColor" : "#242424", "zIndex" : 3}}>
 			<div id="action-bar">
 			<div id="add-event-button" className="nav-button mdi mdi-view-list hide-on-large hide-on-med" onClick={this.props.showTasks.bind(this)} data-tip="Tasks"></div>
 			<div id="add-event-button" className="nav-button mdi mdi-alarm" onClick={this.showNotice.bind(this)} data-tip="Notifications"></div>
-			<div id="add-event-button" className="nav-button mdi mdi-view-dashboard" onClick={this.toggleSchedule.bind(this)} data-tip="Schedule"></div>
+			{
+				this.state.weekView ?  
+							<div id="add-event-button" className="nav-button mdi mdi-calendar" onClick={this.toggleWeekView.bind(this)} data-tip="Calendar"></div>
+
+				: 
+							<div id="add-event-button" className="nav-button mdi mdi-view-dashboard" onClick={this.toggleWeekView.bind(this)} data-tip="Schedule"></div>
+
+			}
+
 			<div id="add-event-button" className="nav-button mdi mdi-plus hide-on-large" onClick={this.props.showAddTask.bind(this)} data-tip="Add Event"></div>
 			</div>
-			<ReactTooltip place="bottom" type="dark" effect="solid" style={{borderRadius : 0, color: '#1de9b6', opacity: 0, backgroundColor: '#000000'}}/>
+			<div className="hide-on-small">
+			<ReactTooltip place="bottom" type="dark" effect="solid" style={{borderRadius : 0, color: '#1de9b6', opacity: 0, backgroundColor: '#000000'}}>
+			</ReactTooltip>
+			</div>
 
 			<div id="calendar-header-month">
 			{months[this.state.monthShowing.getMonth()]}
@@ -134,45 +146,20 @@ export default class Cal extends TrackerReact(React.Component) {
 			{this.state.monthShowing.getFullYear()}
 			</div>
 			</div>
-			<div id="calendar-header-days">
-			<div id="prev-month-button" className="mdi mdi-chevron-left" onClick={this.prevMonth.bind(this)}></div>
-			{
-				/* Create calendar header */
-				daysOfWeek.map((dayText)=> {
-					return (
-						<span className="cal-block cal-header" key={"day-header-"+dayText}>	
-						<p className="cal-day-text">
-						{dayText === "Thursday" ? "Th" : dayText === "Saturday" ? "Sa" : dayText === "Sunday" ? "Su" : dayText[0]} 				
-						</p>
-						</span>
-						)
-				}
-				)
+			{this.state.weekView ? 
+				<Schedule />
+				:
+				<MonthView 
+				calArray={calArray} 
+				today={this.state.today} 
+				selectedDate={this.state.selectedDate} 
+				cal={cal} 
+				month={month} 
+				selectDate={this.selectDate.bind(this)}
+				prevMonth={this.prevMonth.bind(this)}
+				nextMonth={this.nextMonth.bind(this)}
+				/>
 			}
-			<div id="next-month-button" className="mdi mdi-chevron-right" onClick={this.nextMonth.bind(this)}></div>
-			</div>
-			<div id="calendar-body" className="animated fadeIn">
-			{
-				/* Create calendar days with Day components, each has it's own style depending on whether its in the month, is selected, or is today */
-				calArray.map((day)=>{
-					let inThisMonth = parseInt(day.substring(5, 7)) === month + 1 ? true : false;
-					let isToday = day === this.state.today ? true : false;
-					let isSelected = day === this.state.selectedDate ? true : false;
-					let dayStyles = {
-						color: !inThisMonth ? "#424242" : !isToday ? "#FFFFFF" : isSelected ? "#FFFFFF" : "#1de9b6",
-						borderWidth: 1,
-						borderStyle: 'solid',
-						borderColor: isSelected ? "#1de9b6" : "transparent",
-						backgroundColor: isToday && isSelected ? "#1de9b6" : "transparent",
-						padding: 10,
-						width : '1.2em'
-					};
-
-					return (<Day date={day} style={dayStyles} key={day} selectDate={this.selectDate.bind(this)} isSelected={isSelected} events={cal[day].events}/>)
-				}
-				)
-			}
-			</div>
 			{
 				/* Crammed down here like the dirty after-thought it is, is the nofitications icon tray
 				* (I bet you forgot about it too didnt' you?)

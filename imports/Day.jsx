@@ -19,7 +19,6 @@ export default class Day extends Component {
 		this.setState({
 			selected : true
 		});
-		// document.getElementById("new-task-date").value = this.props.date;
 	}
 	render() {
 		/* Inform the user whether or not there are any tasks set for this day and if so how many 
@@ -31,7 +30,7 @@ export default class Day extends Component {
 				<p className="cal-day-text" style={this.props.style}>
 					{this.props.date.substring(8, 10) < 10 ? this.props.date.substring(9, 10) : this.props.date.substring(8, 10)}
 				</p>				
-				<p className={"event-indicator " + eventCounter} style={{"color" : this.props.style.backgroundColor === "#1de9b6" ? "#242424" : "#1de9b6"}}></p>
+				<p className={"event-indicator " + eventCounter}></p>
 			</div>
 			);
 	}
