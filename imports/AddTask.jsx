@@ -96,7 +96,7 @@ export default class AddTask extends TrackerReact(React.Component) {
 			  type: "input",
 			  showCancelButton: true,
 			  closeOnConfirm: false,
-			  inputPlaceholder: "Hula-hooping? Ebay sniping?"
+			  inputPlaceholder: document.getElementById("search").value.trim()
 			},
 			function(inputValue){
 			  if (inputValue === false) {
@@ -109,6 +109,8 @@ export default class AddTask extends TrackerReact(React.Component) {
 			  Meteor.call("addTag", inputValue.trim(), (err, res)=>{
 			  	if(err){
 			  		swal("Uh Oh!", err, "error");
+			  	} else if(res === "exists"){
+			  		swal("Awkward...", "This tag already exists", "warning");
 			  	} else {
 			  		swal("Tag Created!", "We'll pick up where you left off", "success");
 			  		context.setState({
@@ -212,7 +214,7 @@ export default class AddTask extends TrackerReact(React.Component) {
 					)
 				}
 				{
-					n === 0 ? 
+					n === 0 && this.state.search !== "" ? 
 					<p className="global-tag-wrapper no-tags" onClick={this.createNewTag.bind(this)}>
 						<label>Looking for something else? Create a new tag for next time!</label>
 						<i className="tag-icon mdi mdi-tag"></i>

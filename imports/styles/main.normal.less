@@ -70,12 +70,12 @@ input:focus, textarea:focus, button:focus {
 }
 .logo-img{
 	width: 2.2em;
-    margin: 0;
-    padding: 0;
+	margin: 0;
+	padding: 0;
 }
 .logo-text{
-	    margin: 0;
-    font-size: 1.2em;
+	margin: 0;
+	font-size: 1.2em;
 }
 
 .login-register-button {
@@ -186,6 +186,12 @@ input:focus, textarea:focus, button:focus {
 			width: 20vw;
 			position: fixed;
 			z-index: 4;
+			#task-list-header {
+				font-size: 0.8em;
+				padding: 0.2em;
+				width : 99.6%;
+				text-align : center;
+			}
 		}
 		#search-icon{
 			color: white;
@@ -203,13 +209,13 @@ input:focus, textarea:focus, button:focus {
 			padding-left: 0.25em;
 		}
 		#no-tasks-message {
-			padding: 98% 1em;
-    		font-size: 0.8em;
-    		text-align: center;
-    		.no-tasks-icon{
-    			color: @green;
-    			width: 3em
-    		}
+			padding: 80% 1em;
+			font-size: 0.8em;
+			text-align: center;
+			.no-tasks-icon{
+				color: @green;
+				width: 3em
+			}
 		}
 		#tasks-wrapper {
 			margin: 0;
@@ -492,15 +498,16 @@ input:focus, textarea:focus, button:focus {
 			line-height: 2em;
 		}
 		#search-wrapper{
-		background-color: #242424;
-	    color: white;
-	    display: inline-flex;
-	    border-bottom: 1px solid @grey;
-	    margin: 0;
-	    padding: 0;
-	    height: 1.4em;
-	    width: 100%;
+			background-color: #242424;
+			color: white;
+			display: inline-flex;
+			border-bottom: 1px solid @grey;
+			margin: 0;
+			padding: 0;
+			height: 1.4em;
+			width: 100%;
 		}
+		
 		#search-icon{
 			color: white;
 			line-height: 1.4em;
@@ -510,12 +517,12 @@ input:focus, textarea:focus, button:focus {
 		}
 		#search{
 			color: white;
-    line-height: 1.4em;
-    font-size: 1em;
-    background-color: @dark-grey;
-    border: none;
-    padding-left: 0.25em;
-    width: 86%;
+			line-height: 1.4em;
+			font-size: 1em;
+			background-color: @dark-grey;
+			border: none;
+			padding-left: 0.25em;
+			width: 86%;
 		}
 		.event-tag-tile {
 			display: inline-block;
@@ -684,19 +691,19 @@ input:focus, textarea:focus, button:focus {
 }
 .global-tag-wrapper {
 	width: 33%;
-    display: inline-block;
-    color: @light-grey;
-    text-align: center;
-    margin: 0.3em 0;
-    .tag-icon {
-    	width: 100%;
-    	font-size: 1.5em;
-    }
-    .global-tag-label {
-    	width: 100%;
-    	display: inline-block;
-    font-size: 0.7em;
-    }
+	display: inline-block;
+	color: @light-grey;
+	text-align: center;
+	margin: 0.3em 0;
+	.tag-icon {
+		width: 100%;
+		font-size: 1.5em;
+	}
+	.global-tag-label {
+		width: 100%;
+		display: inline-block;
+		font-size: 0.7em;
+	}
 }
 .global-tag-wrapper:hover {
 	color: @green;
@@ -704,9 +711,32 @@ input:focus, textarea:focus, button:focus {
 }
 .no-tags{
 	width: auto;
-    margin: 0 1em;
+	margin: 0 1em;
 	label {
 		font-size: 0.8em
+	}
+}
+#schedule {
+	width: 100%;
+	text-align: center;
+	tr {
+		td{
+			border-right: 1px solid @grey;
+			border-bottom: 1px solid @grey;
+			width: calc(((100% - 7px) - 5em)/ 7);
+		}
+		td:last-of-type {
+			border-right: transparent;
+		}
+		td:hover {
+			background-color: rgba(255, 255, 255, 0.2)
+		}
+		.header{
+			width: 5em;
+		}
+		.header:hover {
+			background-color: transparent;
+		}
 	}
 }
 /*flow text*/ 

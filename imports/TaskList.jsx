@@ -1,6 +1,7 @@
 import React from 'react';
 import TaskSingle from './TaskSingle.jsx';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
+import moment from 'moment';
 
 export default class TaskList extends TrackerReact(React.Component) {
 	constructor(props) {
@@ -38,6 +39,8 @@ export default class TaskList extends TrackerReact(React.Component) {
 		this.props.showCal("calendar");
 	}
 	render(){
+		/* <i id="search-icon" className="mdi mdi-magnify"></i>
+				<input id="search" type="text" value={this.state.search} onChange={this.updateSearch.bind(this)} />*/
 		let filteredTasks = Tasks.find().fetch().filter(
 			(task) => {
 				return task.dateStart === this.props.selectedDate;
@@ -54,9 +57,8 @@ export default class TaskList extends TrackerReact(React.Component) {
 			<div id="TaskList" className={this.props.show ? "animated slideInLeft" : "animated slideOutLeft"}>
 				<div className="hide-on-large hide-on-med"></div>
 				<div id="search-wrapper">
-				<i id="search-icon" className="mdi mdi-magnify"></i>
-				<input id="search" type="text" value={this.state.search} onChange={this.updateSearch.bind(this)} />
-				<i id="search-icon" className="mdi mdi-chevron-right hide-on-med hide-on-large" onClick={this.showCal.bind(this)}></i>
+				<div id="task-list-header"> Tasks on {moment(this.props.selectedDate, "YYYY-MM-DD").format("M/DD/YYYY")} </div>
+				<i className="mdi mdi-chevron-right hide-on-med hide-on-large" onClick={this.showCal.bind(this)} style={{"width" : "20%", "padding" : "0.2em", "textAlign" : "center"}}></i>
 
 				</div>
 				<ul id="tasks-wrapper">

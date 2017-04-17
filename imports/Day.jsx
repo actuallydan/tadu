@@ -31,7 +31,7 @@ export default class Day extends Component {
 				<p className="cal-day-text" style={this.props.style}>
 					{this.props.date.substring(8, 10) < 10 ? this.props.date.substring(9, 10) : this.props.date.substring(8, 10)}
 				</p>				
-				<p className={"event-indicator " + eventCounter}></p>
+				<p className={"event-indicator " + eventCounter} style={{"color" : this.props.style.backgroundColor === "#1de9b6" ? "#242424" : "#1de9b6"}}></p>
 			</div>
 			);
 	}

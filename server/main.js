@@ -15,6 +15,12 @@ Meteor.startup(() => {
   	console.log("TAG STATUS: 200 -- Default Tags Set");
   }
 
+ SyncedCron.config({
+    // Log job run details to console
+    log: false,
+    logger: null
+  });
+
   SyncedCron.add({
   name: 'Send Out Alerts',
   schedule: function(parser) {

@@ -73,6 +73,7 @@ export default class LoginForm extends React.Component {
 						/* Meteor will automagically sign in users after successful account creation so we can trigger state update in parent to escape this prison*/
 						this.props.loggedInChange(true);
 						Meteor.call("addDefaultTags");
+						Meteor.call("addDefaultSchedule");
 					}
 				});				
 			} catch (e){
@@ -96,7 +97,7 @@ export default class LoginForm extends React.Component {
 				<form onSubmit={this.tryLogin.bind(this)}>
 				<input className='form-input' type="text" ref="email" placeholder="Email" />
 				<input className='form-input' type="password" ref="password" placeholder="Password" />
-				<p className="login-register-button"><input className="button glow" type="submit" value="Login" /></p>
+				<p className="login-register-button"><input className="button" type="submit" value="Login" /></p>
 
 				</form>
 				<p onClick={this.handleChangeForm.bind(this)} className="toggle-login">Need to register?</p>
@@ -116,7 +117,7 @@ export default class LoginForm extends React.Component {
 				<input className='form-input' type="text" ref="email" placeholder="Email" />
 				<input className='form-input' type="password" ref="password" placeholder="Password" />
 				<input className='form-input' type="text" ref="username" placeholder="Username" />
-				<p className="login-register-button"><input className="button glow" type="submit" value="Register" /></p>
+				<p className="login-register-button"><input className="button" type="submit" value="Register" /></p>
 
 				</form>
 

@@ -54,6 +54,7 @@
   background: none;
   border-radius: 0;
   color: white;
+  text-align: center;
 }
 .sweet-alert.show-input input:focus {
   outline: none;

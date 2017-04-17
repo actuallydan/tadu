@@ -6,6 +6,7 @@
 import React from 'react';
 import Day from './Day.jsx';
 import Notice from './Notice.jsx';
+import Schedule from './Schedule.jsx';
 
 /* 3rd party plugins*/
 import ReactTooltip from 'react-tooltip';
@@ -27,7 +28,8 @@ export default class Cal extends TrackerReact(React.Component) {
 			today : new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000)).toJSON().substring(0, 10),
 			selectedDate : new Date().toJSON().substring(0, 10),
 			monthShowing : new Date(),
-			showNotifications: false
+			showNotifications: false,
+			showSchedule: false
 		};
 	}
 	/* Triggers update in parent to tell app what day we are concerned with (changes current tasks view) 
@@ -69,6 +71,9 @@ export default class Cal extends TrackerReact(React.Component) {
 	hideNotice() {
 		this.setState({showNotifications : false});
 	}
+	toggleSchedule(){
+		this.setState({showSchedule : !this.state.showSchedule})
+	}
 	render(){
 		/* Get tasks so we can map them over the current month to show them on the calendar 
 		* Refined to only search for tasks in this current month
@@ -101,7 +106,7 @@ export default class Cal extends TrackerReact(React.Component) {
 		let calArray = Object.keys(cal);
 
 		/* The days of the week so we can iterate over them instead of having 7 tags which is maybe superflous 
-		 Maybe useful if someone wants to add a localization starts-on-monday bit of nonsense #westerncentric */
+		Maybe useful if someone wants to add a localization starts-on-monday bit of nonsense #westerncentric */
 		const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 		/* indicates to each Day component how it should be styled: white for the current month, grey for other months */
@@ -111,14 +116,13 @@ export default class Cal extends TrackerReact(React.Component) {
 		* Also potential place for localization/language thing
 		*/
 		const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
 		return (<div id="calendar">
 
 			<div id="calendar-header">
 			<div id="action-bar">
 			<div id="add-event-button" className="nav-button mdi mdi-view-list hide-on-large hide-on-med" onClick={this.props.showTasks.bind(this)} data-tip="Tasks"></div>
 			<div id="add-event-button" className="nav-button mdi mdi-alarm" onClick={this.showNotice.bind(this)} data-tip="Notifications"></div>
-			<div id="add-event-button" className="nav-button mdi mdi-view-dashboard" onClick={this.props.showAddTask.bind(this)} data-tip="Schedule"></div>
+			<div id="add-event-button" className="nav-button mdi mdi-view-dashboard" onClick={this.toggleSchedule.bind(this)} data-tip="Schedule"></div>
 			<div id="add-event-button" className="nav-button mdi mdi-plus hide-on-large" onClick={this.props.showAddTask.bind(this)} data-tip="Add Event"></div>
 			</div>
 			<ReactTooltip place="bottom" type="dark" effect="solid" style={{borderRadius : 0, color: '#1de9b6', opacity: 0, backgroundColor: '#000000'}}/>
@@ -185,6 +189,16 @@ export default class Cal extends TrackerReact(React.Component) {
 				:
 				""
 			}
+			{
+				/* Schedule */
+				this.state.showSchedule ? 
+				<Rodal visible={this.state.showSchedule} onClose={this.toggleSchedule.bind(this)} className="modal task-detail" animation="door" customStyles={{width: '80%',
+				height: '80%', borderRadius: 0, borderColor: '#1de9b6', borderWidth: 1, borderStyle : 'solid', background: '#242424', color: '#fff'}}>
+				<Schedule />
+				</Rodal>
+				:
+				""
+			}
 			</div>)
-	}
+}
 }

@@ -31,6 +31,7 @@ import 'rodal/lib/rodal.css';
 Tasks = new Mongo.Collection('Tasks');
 TagTypes = new Mongo.Collection("TagTypes");
 Notifications = new Mongo.Collection("Notifications");
+Schedules = new Mongo.Collection("Schedules");
 
 export default class MainLayout extends TrackerReact(React.Component) {
 	constructor(props) {
@@ -43,7 +44,8 @@ export default class MainLayout extends TrackerReact(React.Component) {
 			subscription: {
 				tasks: Meteor.subscribe("userTasks"),
 				tagTypes: Meteor.subscribe("tagTypes"),
-				notifications: Meteor.subscribe("notifications")
+				notifications: Meteor.subscribe("notifications"),
+				schedules: Meteor.subscribe("schedules")
 			},
 			eventDetail : null
 		};

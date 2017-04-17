@@ -10,6 +10,12 @@
 @lavender : #00ffff;
 @blue: #3399ff;
 
+input, button {
+    -webkit-appearance: none;
+}
+input, button {
+    border-radius: 0;
+}
 /* small screens */
 @media screen and (max-width: 992px){
 	/* Login Form */
@@ -99,6 +105,14 @@
 			width: 100%;
 			position: fixed;
 			z-index: 4;
+
+			#task-list-header {
+				font-size: 0.8em;
+				padding: 0.2em;
+				 width : 79.6%;
+				 text-align : center;
+				 padding-left : calc(20% + 0.2em);
+			}
 		}
 		#search-icon{
 			color: white;
@@ -288,6 +302,9 @@
 				z-index: 4;
 				font-size: 1.3em;
 				margin: 0.4em 0 0 0.2em;
+				position: absolute;
+    top: 1.2em;
+    right: 2.3em;
 			}
 			#next-month-button{
 				width: 1em;
@@ -298,6 +315,9 @@
 				right: 0;
 				font-size: 1.3em;
 				margin: 0.4em 0 0 0.2em;
+				position: absolute;
+    top: 1.2em;
+    right: 0.4em;
 			}
 		}
 		.cal-block {
