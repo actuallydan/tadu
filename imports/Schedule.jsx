@@ -30,8 +30,8 @@ export default class Schedule extends TrackerReact(React.Component) {
 		const fakeDaysofWeek = ["Blank", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 		mySched = Schedules.findOne();
 		return(
-			<table id="schedule" style={{"marginTop" : "3.1em"}}>
-			<thead style={{"position" : "fixed", "backgroundColor" : "#242424", "width" : "initial", zIndex: 3}}>
+			<table id="schedule" className="animated fadeIn">
+			<thead id="schedule-header">
 			<tr><td className="header"></td><td>S</td><td>M</td><td>T</td><td>W</td><td>Th</td><td>F</td><td>S</td></tr>
 			</thead>
 			<tbody style={{"marginTop" : "1em"}} id="schedule-body">
@@ -42,7 +42,7 @@ export default class Schedule extends TrackerReact(React.Component) {
 					{
 						fakeDaysofWeek.map((day)=>{
 							return day === "Blank" ? 
-							 <td className="header" key={day + "T" + hour}>{moment(hour, "HH:mm").format("h:mm a")}</td>
+							 <td className="header" key={day + "T" + hour}>{moment(hour, "HH:mm").format("h a")}</td>
 							 : <td key={day + "T" + hour} 
 								 data-coords={day + "T" + hour} 
 								 onClick={this.modifySchedule.bind(this)}

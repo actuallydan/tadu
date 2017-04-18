@@ -55,7 +55,7 @@ Meteor.methods({
 		} 
 		let user = TagTypes.findOne({"userId" : Meteor.userId()});
 		/* Make sure tag isn't already in DB */
-		if(user.tags.findIndex((tag)=>{ return tag.type.toLowerCase() === "homework".toLowerCase()}) !== -1){
+		if(user.tags.findIndex((thisTag)=>{ return thisTag.type.toLowerCase() === tag.toLowerCase()}) !== -1){
 			return "exists";
 		}
 		user.tags.push({"type" : tag, "uses" : 0});
@@ -120,6 +120,7 @@ Meteor.methods({
 		let mySched = Schedules.findOne({userId : Meteor.userId()});
 		let possibleTimes = [];
 		const offset = data.today.getDay();
+		const thisHour = data.today.toJSON().substring(11,16);
 
 		/* Populate array of all possible times */
 		for( let i = 0; i < daysOfWeek.length; i++) {
@@ -127,7 +128,13 @@ Meteor.methods({
 
 			hours.map((hour)=>{
 				if(mySched.schedule[daysOfWeek[pointer]][hour] === null){
-				 	possibleTimes.push({"day" : pointer, "time": hour});
+
+					/* If we're looking at hours in today's block, make sure we're not looking at blocks that have already occured */
+					if(i === 0 && hour > thisHour){
+						possibleTimes.push({"day" : pointer, "time": hour});
+					} else if(i > 0){
+						possibleTimes.push({"day" : pointer, "time": hour});
+					}
 				 } 
 			})
 		}

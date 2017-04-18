@@ -57,7 +57,7 @@ export default class TaskList extends TrackerReact(React.Component) {
 			<div id="TaskList" className={this.props.show ? "animated slideInLeft" : "animated slideOutLeft"}>
 				<div className="hide-on-large hide-on-med"></div>
 				<div id="search-wrapper">
-				<div id="task-list-header"> Tasks on {moment(this.props.selectedDate, "YYYY-MM-DD").format("ddd MMMM Do")} </div>
+				<div id="task-list-header">{moment(this.props.selectedDate, "YYYY-MM-DD").format("ddd MMMM Do")} </div>
 				<i className="mdi mdi-chevron-right hide-on-med hide-on-large" onClick={this.showCal.bind(this)} style={{"width" : "20%", "padding" : "0.2em", "textAlign" : "center"}}></i>
 
 				</div>

@@ -119,7 +119,7 @@ export default class Cal extends TrackerReact(React.Component) {
 		const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 		return (<div id="calendar">
 
-			<div id="calendar-header" style={{"backgroundColor" : "#242424", "zIndex" : 3}}>
+			<div id="calendar-header">
 			<div id="action-bar">
 			<div id="add-event-button" className="nav-button mdi mdi-view-list hide-on-large hide-on-med" onClick={this.props.showTasks.bind(this)} data-tip="Tasks"></div>
 			<div id="add-event-button" className="nav-button mdi mdi-alarm" onClick={this.showNotice.bind(this)} data-tip="Notifications"></div>

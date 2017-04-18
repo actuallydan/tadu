@@ -50,11 +50,15 @@
 * 5.0 Tadu Clerk 
 
 #### What Needs Done
-* Find thinner font-icons (circles and squares)
-* On Task Click -> Modal Or Alert To Edit
+* On Task Click -> Modal Or Alert To Edit 
+	* Style
 * FF issues?
 * Documentation
 * Notificiations tray change color and populate 
+	* Style
+* Large Screen Responsiveness
+* Figure out what to do with blank space at bottom on some screens
+
 
 
 

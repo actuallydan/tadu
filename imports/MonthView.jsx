@@ -6,8 +6,8 @@ export default class MonthView extends React.Component {
 				const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 		return (
-			<div style={{"marginTop" : "3.1em"}}>
-			<div id="calendar-header-days" style={{"position" : "fixed", "backgroundColor" : "#242424", "width" : "80%", zIndex: 3}}>
+			<div id="calendar-wrapper">
+			<div id="calendar-header-days">
 			<div id="prev-month-button" className="mdi mdi-chevron-left" onClick={this.props.prevMonth.bind(this)}></div>
 			{
 				/* Create calendar header */
@@ -37,10 +37,7 @@ export default class MonthView extends React.Component {
 						borderStyle: 'solid',
 						borderColor: isSelected ? "#1de9b6" : "transparent",
 						backgroundColor: isToday && isSelected ? "#1de9b6" : "transparent",
-						padding: "5px 10px 10px 10px",
-						width : '1.2em',
-						height: '1.2em',
-
+						width : "calc(100% / 7 - 2px)",
 					};
 
 					return (<Day date={day} style={dayStyles} key={day} selectDate={this.props.selectDate.bind(this)} isSelected={isSelected} events={this.props.cal[day].events}/>)

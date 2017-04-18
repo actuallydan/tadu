@@ -24,13 +24,15 @@ export default class Day extends Component {
 		/* Inform the user whether or not there are any tasks set for this day and if so how many 
 		* TODO: Ideally I'd like to find a way to present different types of tasks with different icons
 		*/
+
+		// backup give style={this.props.style} to cal-day-text
 		let eventCounter = this.props.events.length > 0 ? "mdi mdi-numeric-" + this.props.events.length + "-box-outline" : "no-events" ;
 		return (
-			<div className="cal-block cal-day" onClick={this.selectDate.bind(this)}>
-				<p className="cal-day-text" style={this.props.style}>
+			<div className="cal-block cal-day" onClick={this.selectDate.bind(this)} style={this.props.style}>
+				<p className="cal-day-text">
 					{this.props.date.substring(8, 10) < 10 ? this.props.date.substring(9, 10) : this.props.date.substring(8, 10)}
 				</p>				
-				<p className={"event-indicator " + eventCounter}></p>
+				<p className={"event-indicator " + eventCounter} style={{color: this.props.style.backgroundColor === "#1de9b6"? "#424242" : "#1de9b6"}}></p>
 			</div>
 			);
 	}

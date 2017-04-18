@@ -11,10 +11,10 @@
 @blue: #3399ff;
 
 input, button {
-    -webkit-appearance: none;
+	-webkit-appearance: none;
 }
 input, button {
-    border-radius: 0;
+	border-radius: 0;
 }
 /* small screens */
 @media screen and (max-width: 992px){
@@ -109,9 +109,9 @@ input, button {
 			#task-list-header {
 				font-size: 0.8em;
 				padding: 0.2em;
-				 width : 79.6%;
-				 text-align : center;
-				 padding-left : calc(20% + 0.2em);
+				width : 79.6%;
+				text-align : center;
+				padding-left : calc(20% + 0.2em);
 			}
 		}
 		#search-icon{
@@ -135,14 +135,14 @@ input, button {
 			font-size: 0.8em;
 			text-align: center;
 			.no-tasks-icon{
-    			color: @green;
-    			width: 3em
-    		}
+				color: @green;
+				width: 3em
+			}
 		}
 		#tasks-wrapper {
 			margin: 0;
 			padding: 0;
-			padding-top: 40px;
+			padding-top: 1.4em;
 
 		}
 		.task-single{
@@ -161,6 +161,7 @@ input, button {
 			display: inline-block;
 			overflow: hidden;
 			text-overflow: ellipsis;
+			margin: 0.4em 0 0 0.5em;
 		}
 		.task-secondary{
 			float: right;
@@ -262,12 +263,33 @@ input, button {
 		height: 100%;
 		background: @dark-grey;
 		color: white;
+		#calendar-wrapper, #schedule-body{
+			margin-top : 3.5em;
+		}
+		#schedule {
+			margin-top: 5em;
+		}
+		#schedule tr .header {
+			font-size: 0.8em;
+		}
+		#schedule-header{
+			position : fixed;
+			background-color : #242424;
+			width : initial;
+			z-index: 3;
+			top: 0;
+			margin-top: 3.5em
+		}
 		#calendar-header {
-			padding: 0.2em 1em;
-			width: 100%;
+			padding: 0.5em 0 0 0.5em;
+		    width: 100%;
+		    z-index: 4;
+		    position: fixed;
+		    background: #242424;
+		    top: 0;
 			#action-bar{
 				position: absolute;
-				right: -0.5em;	
+				right: 0em;	
 				margin: 0;
 				font-size: 1.2em;
 				#add-event-button {
@@ -287,6 +309,10 @@ input, button {
 			}
 		}
 		#calendar-header-days {
+			position : fixed;
+			background-color : #242424;
+			width : 100%;
+			z-index: 3;
 			.cal-header {
 				color: @green;
 				border-bottom: 1px solid @grey;
@@ -298,26 +324,24 @@ input, button {
 				width: 1em;
 				font-size: 1em;
 				float: left;
-				position: absolute;
 				z-index: 4;
 				font-size: 1.3em;
 				margin: 0.4em 0 0 0.2em;
-				position: absolute;
-    top: 1.2em;
-    right: 2.3em;
+				position: fixed;
+				top: 1.2em;
+				right: 2.8em;
 			}
 			#next-month-button{
 				width: 1em;
 				font-size: 1em;
 				float: right;
-				position: absolute;
+				position: fixed;
 				z-index: 4;
 				right: 0;
 				font-size: 1.3em;
 				margin: 0.4em 0 0 0.2em;
-				position: absolute;
-    top: 1.2em;
-    right: 0.4em;
+				top: 1.2em;
+				right: 0.8em;
 			}
 		}
 		.cal-block {
@@ -344,7 +368,7 @@ input, button {
 					margin: 0.1em;
 					position: absolute;
 					bottom: 0;
-					right: 0;
+					right: 20%;
 				}
 				.no-events {
 					height: 0.8em;
@@ -456,7 +480,7 @@ input, button {
 			width: 50%;
 			color: white;
 			padding: 1.1em 0em;
-			font-size: 0.7em;
+			font-size: 1em;
 			text-align: center;
 			cursor: pointer;
 		}
@@ -464,14 +488,21 @@ input, button {
 			// box-shadow: inset 0 0 300px 300px rgba(255, 255, 255, 0.1);
 			filter: drop-shadow(0 0 20px rgba(0,0,0,0.5));
 		}
+		#add-task-form-nav{
+			display: inline-flex;
+			width: 100%;
+		}
 		#add-task-form-nav i{
 			position: relative;
 			top: 0.2em;
 			font-size: 1.25em;
 			cursor: pointer;
+			width: 10%;
 		}
-		#add-task-form-nav span {
-			margin-left: 6em;
+		#add-task-form-nav div {
+			// margin-left: 6em;
+			width: 76%;
+		    text-align: center;
 		}
 		#priority-radio-wrapper {
 			display: flex;
@@ -616,3 +647,20 @@ input, button {
 		}
 	}
 }
+@media screen and (max-width: 768px){
+	.event-indicator {
+		right: 35% !important;
+	}
+}
+@media screen and (max-width: 414px){
+	.event-indicator {
+		right: 26% !important;
+	}
+}
+@media screen and (max-width: 375px){
+	.event-indicator {
+		right: 25% !important;
+	}
+}
+
+

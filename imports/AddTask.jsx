@@ -250,7 +250,7 @@ export default class AddTask extends TrackerReact(React.Component) {
 				<div className="form-item"><span className='form-item-label'> Date </span><input className="typeable" id="new-task-date" type="date" ref="dateStart" defaultValue={this.props.selectedDate} /> </div>
 				<div className="form-item"><span className='form-item-label'> Time </span><input className="typeable" id="new-task-time" type="time" ref="timeStart"  defaultValue={nowTime} /> </div>
 				
-				{this.state.hasBeenOptimized ? <div className="form-item" style={{"color": "#1de9b6", "fontSize" : "0.6em", "textAlign" : "center"}}><span className='form-item-label mdi mdi-alert-circle'></span><span> {'\u00A0'} This date and time has been optimized for you! </span> </div> : ""}
+				{this.state.hasBeenOptimized ? <div className="form-item" style={{"color": "#1de9b6", "fontSize" : "0.6em", "textAlign" : "center"}}><span className='form-item-label mdi mdi-alert-circle'></span><span> {'\u00A0'} This date and time has been optimized for you! div</span> </div> : ""}
 				
 				<div className="form-item desc"><textarea type="text" ref="desc" placeholder="Description" maxLength="300"></textarea> </div>
 
@@ -261,7 +261,7 @@ export default class AddTask extends TrackerReact(React.Component) {
 		render(){
 			return (		
 				<div id="AddTaskForm" className={this.props.show ? "animated slideInRight" : "animated slideOutRight hidden"}>
-				<div className="form-item hide-on-large" id="add-task-form-nav"><i className="mdi mdi-close" onClick={this.clearTask.bind(this)}></i><span>New Event</span></div>
+				<div className="form-item hide-on-large" id="add-task-form-nav"><i className="mdi mdi-close" onClick={this.clearTask.bind(this)}></i><div>New Event</div></div>
 				{this.state.stage1 ? this.renderStage1() : this.renderStage2()}
 				</div>
 				)
