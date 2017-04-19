@@ -169,9 +169,12 @@ export default class Cal extends TrackerReact(React.Component) {
 				this.state.showNotifications ? 
 				<Rodal visible={this.state.showNotifications} onClose={this.hideNotice.bind(this)} className="modal task-detail glow" animation="door" customStyles={{width: '80%',
 				height: '80%', borderRadius: 0, borderColor: '#1de9b6', borderWidth: 1, borderStyle : 'solid', background: '#242424', color: '#fff'}}>
-				{this.props.notifications.map((notice)=>{
-					return (<Notice key={notice._id} data={notice} />)
-				})}
+					<div id="notice-header">Notifications</div>	
+					<div id="notice-wrapper">
+						{this.props.notifications.sort((a, b)=>{return a.timestamp < b.timestamp}).map((notice)=>{
+							return (<Notice key={notice._id} data={notice} />)
+						})}
+					</div>
 				</Rodal>
 				:
 				""

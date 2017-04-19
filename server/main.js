@@ -27,7 +27,8 @@ Meteor.startup(() => {
         userId: task.userId,
         type: "taskAlert",
         data : task,
-        seen: false
+        seen: false,
+        timestamp: new Date().getTime()
       });
     })
 

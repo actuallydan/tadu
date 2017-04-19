@@ -1,6 +1,6 @@
 # Tadu 
 ## Be More Productive With Sensible Intelligence
-
+### Current Build Version : 0.5
 #### Technologies & Tools:
 1. React
 2. Meteor
@@ -15,7 +15,7 @@
 11. Rodal (https://github.com/chenjiahan/rodal)
 
 #### Version Roadmap
-* 0.0.5 Replace "Event" with "Task" 
+* 0.0.0.0.5 Replace "Event" with "Task" 
 * 0.1 Basic Schedule Function
 	* Basic CRUD functions by tags 
 * 0.2 Schedule Functions Update 1
@@ -47,15 +47,13 @@
 * 3.0 Enterprise Productivity Platform
 * 3.5 Voice to Task 
 * 4.0 Embedded Tadu List 
-* 5.0 Tadu Clerk 
+* 5.0 Tadu Concierge 
 
 #### What Needs Done
 * On Task Click -> Modal Or Alert To Edit 
 	* Style
 * FF issues?
 * Documentation
-* Notificiations tray change color and populate 
-	* Style
 * Large Screen Responsiveness
-* Figure out what to do with blank space at bottom on some screen
+* Figure out what to do with blank space at bottom on some screens
 
