@@ -3,7 +3,7 @@ import moment from 'moment';
 
 Meteor.startup(() => {
   // code to run on server at startup
- 
+  
  SyncedCron.config({
     // Log job run details to console
     log: false,

@@ -5,8 +5,10 @@
 * Tests should be done to make sure user's don't have to sign in too often if on the same device
 */
 import React from 'react';
+import Login from './Login.jsx';
+import Register from './Register.jsx';
 
-export default class LoginForm extends React.Component {
+export default class EntryPortal extends React.Component {
 	constructor(props) {
 		super(props);
 		/* Single state value to switch out login for register view or vice versa */ 
@@ -21,9 +23,10 @@ export default class LoginForm extends React.Component {
 
 	/* After user submit's login form we attempt to sign them in */
 	tryLogin(event){
+				console.log(this, event.target);
+
 		/* Stop from from submitting and page from refreshing. What is this 2012? */
 		event.preventDefault();
-
 		/* Because this works weird in JS, i'm making sure it points to the current component we're in, not a meteor method or something else */
 		const context = this;
 
@@ -87,44 +90,15 @@ export default class LoginForm extends React.Component {
 		/* Swaps out which form should be visible based on this component's state: register or login
 		* TODO: make transitions more appealing and maybe spin each into it's own component
 		*/
-		if(this.state.showLogin){
-			return (<div className={this.state.showLogin ? 'container animated fadeIn' : 'container animated fadeOut'} id="login-form">
-				<div className='logo-login'>
-				<img className="logo-img" src="../img/tadu_logo.png"/>
-				<p className="logo-text">tadu</p>
-				</div>
-				<div className="login-header">Login to get back to it</div>
-				<form onSubmit={this.tryLogin.bind(this)}>
-				<input className='form-input' type="text" ref="email" placeholder="Email" />
-				<input className='form-input' type="password" ref="password" placeholder="Password" />
-				<p className="login-register-button"><input className="button" type="submit" value="Login" /></p>
-
-				</form>
-				<p onClick={this.handleChangeForm.bind(this)} className="toggle-login">Need to register?</p>
-
-
-				</div>
-
-				)
-		} else {
-			return ( <div className={this.state.showLogin ? 'container animated fadeOut' : 'container animated fadeIn'} id="register-form">
-				<div className='logo-login'>
-				<img className="logo-img" src="../img/tadu_logo.png"/>
-				<p className="logo-text">tadu</p>
-				</div>
-				<div className="login-header">Register to get started</div>
-				<form onSubmit={this.tryRegister.bind(this)}>
-				<input className='form-input' type="text" ref="email" placeholder="Email" />
-				<input className='form-input' type="password" ref="password" placeholder="Password" />
-				<input className='form-input' type="text" ref="username" placeholder="Username" />
-				<p className="login-register-button"><input className="button" type="submit" value="Register" /></p>
-
-				</form>
-
-				<p onClick={this.handleChangeForm.bind(this)} className="toggle-login">Already registered?</p>
-
-				</div>
-				)
-		}
+		return (
+			<div id="entry-portal"> 
+			{this.state.showLogin ? 
+			<Login showLogin={this.state.showLogin} tryLogin={this.tryLogin} handleChangeForm={this.handleChangeForm.bind(this)} loggedInChange={this.props.loggedInChange.bind(this)}/> 
+			:
+			 <Register showLogin={this.state.showLogin} tryRegister={this.tryRegister} handleChangeForm={this.handleChangeForm.bind(this)}  loggedInChange={this.props.loggedInChange.bind(this)}/>
+			 }
+			 </div>
+			  ) 
+	
 	}
 }

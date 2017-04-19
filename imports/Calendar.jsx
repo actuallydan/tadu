@@ -176,16 +176,6 @@ export default class Cal extends TrackerReact(React.Component) {
 				:
 				""
 			}
-			{
-				/* Schedule */
-				this.state.showSchedule ? 
-				<Rodal visible={this.state.showSchedule} onClose={this.toggleSchedule.bind(this)} className="modal task-detail" animation="door" customStyles={{width: '80%',
-				height: '80%', borderRadius: 0, borderColor: '#1de9b6', borderWidth: 1, borderStyle : 'solid', background: '#242424', color: '#fff'}}>
-				<Schedule />
-				</Rodal>
-				:
-				""
-			}
 			</div>)
 }
 }

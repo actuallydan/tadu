@@ -19,23 +19,63 @@ input, button {
 /* small screens */
 @media screen and (max-width: 992px){
 	/* Login Form */
+	#login-form, #register-form {
+		padding: 1em;
+		width: initial;
+		form {
+			background-color: rgba(0, 0, 0, 0.5);
+			padding: 0.3em;
+		.form-input-wrapper{
+		width: 80%;
+		margin: 0 auto;
+		height: 2.5em;
+		border-bottom: 1px solid @grey;
+		text-align: left;
+		label {
+			color: @green;
+			font-size: 1.5em;
+			width: 19%;
+		}
+		input {
+			border: none;
+			background: transparent;
+			color: white;
+			height: 100%;
+			width: 80%;
+			font-size: 1em;
+		}
+		.login-register-button {
+	width: 100%;
+    display: block;
+    margin: 0 auto;
+}
+.toggle-login {
+	color: @grey;
+	 width: 100%;
+    display: block;
+    margin: 0 auto;
+}
+
+	}
+		}
+	}
 	.logo-login{
 		margin-bottom: 0;
 		color: #1de9b6;
 	}
 	#login-form {
-		margin: 1em auto;
 		height: 50%;
-		width: 95%;
 		text-align: center;
-		form p {
-			font-size: 1em;
-			width: 80%;
-			margin: 5% 10%;
-		}
-		form input {
-			text-align: center;
-		}
+		// form p {
+		// 	font-size: 1em;
+		// 	width: 80%;
+		// 	margin: 5% 10%;
+		// }
+		// form input {
+		// 	text-align: center;
+		// 	line-height: 1em;
+		//     padding: 1em 0.5em;
+		// }
 		.button {
 			font-size: 1.3em;
 			text-align: center;
@@ -43,18 +83,18 @@ input, button {
 		}
 	}
 	#register-form {
-		margin: 1em auto;
 		height: 50%;
-		width: 96%;
 		text-align: center;
-		form p {
-			font-size: 1em;
-			width: 80%;
-			margin: 5% 10%;
-		}
-		form input {
-			text-align: center;
-		}
+		// form p {
+		// 	font-size: 1em;
+		// 	width: 80%;
+		// 	margin: 5% 10%;
+		// }
+		// form input {
+		// 	text-align: center;
+		// 	line-height: 1em;
+  //   padding: 1em 0.5em;
+		// }
 		.button {
 			font-size: 1.3em;
 			text-align: center;
@@ -65,18 +105,6 @@ input, button {
 		font-size: 1em;
 		margin: 1em auto;
 		color: @grey;
-	}
-	.form-input{
-		background-color: transparent;
-		color: #fff;
-		border: none;
-		border-bottom: 1px solid #424242;
-		font-size: 1em;
-		line-height: 1em;
-		padding: 0.25em;
-		height: 1em;
-		width: 70%;
-		margin-bottom: 1.5em;
 	}
 
 	/* Loggedin Dash */
@@ -282,11 +310,11 @@ input, button {
 		}
 		#calendar-header {
 			padding: 0.5em 0 0 0.5em;
-		    width: 100%;
-		    z-index: 4;
-		    position: fixed;
-		    background: #242424;
-		    top: 0;
+			width: 100%;
+			z-index: 4;
+			position: fixed;
+			background: #242424;
+			top: 0;
 			#action-bar{
 				position: absolute;
 				right: 0em;	
@@ -312,7 +340,7 @@ input, button {
 			position : fixed;
 			background-color : #242424;
 			width : 100%;
-			z-index: 3;
+			z-index: 4;
 			.cal-header {
 				color: @green;
 				border-bottom: 1px solid @grey;
@@ -329,7 +357,7 @@ input, button {
 				margin: 0.4em 0 0 0.2em;
 				position: fixed;
 				top: 1.2em;
-				right: 2.8em;
+				right: 2.4em;
 			}
 			#next-month-button{
 				width: 1em;
@@ -341,7 +369,7 @@ input, button {
 				font-size: 1.3em;
 				margin: 0.4em 0 0 0.2em;
 				top: 1.2em;
-				right: 0.8em;
+				right: 0.4em;
 			}
 		}
 		.cal-block {
@@ -448,6 +476,20 @@ input, button {
 		}
 		#add-task-form-nav{
 			line-height: 2em;
+			display: inline-flex;
+			width: 100%;
+		}
+		#add-task-form-nav i{
+			position: relative;
+			top: 0.2em;
+			font-size: 1.25em;
+			cursor: pointer;
+			width: 10%;
+		}
+		#add-task-form-nav div {
+			// margin-left: 6em;
+			width: 76%;
+			text-align: center;
 		}
 		#search-wrapper{
 			background-color: #242424;
@@ -469,7 +511,7 @@ input, button {
 		#search{
 			color: white;
 			line-height: 1.4em;
-			font-size: 1em;
+			font-size: 0.8em;
 			background-color: @dark-grey;
 			border: none;
 			padding-left: 0.25em;
@@ -487,22 +529,6 @@ input, button {
 		.event-tag-tile:hover {
 			// box-shadow: inset 0 0 300px 300px rgba(255, 255, 255, 0.1);
 			filter: drop-shadow(0 0 20px rgba(0,0,0,0.5));
-		}
-		#add-task-form-nav{
-			display: inline-flex;
-			width: 100%;
-		}
-		#add-task-form-nav i{
-			position: relative;
-			top: 0.2em;
-			font-size: 1.25em;
-			cursor: pointer;
-			width: 10%;
-		}
-		#add-task-form-nav div {
-			// margin-left: 6em;
-			width: 76%;
-		    text-align: center;
 		}
 		#priority-radio-wrapper {
 			display: flex;
@@ -656,11 +682,33 @@ input, button {
 	.event-indicator {
 		right: 26% !important;
 	}
+	.login-register-button {
+	width: 100%;
+    display: block;
+    margin: 1em auto;
+}
+.toggle-login {
+	color: @grey;
+	 width: 100%;
+    display: block;
+    margin: 0 auto;
+}
 }
 @media screen and (max-width: 375px){
 	.event-indicator {
 		right: 25% !important;
 	}
+	.login-register-button {
+	width: 100%;
+    display: block;
+    margin: 1em auto;
+}
+.toggle-login {
+	color: @grey;
+	 width: 100%;
+    display: block;
+    margin: 0 auto;
+}
 }
 
 

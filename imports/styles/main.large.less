@@ -12,24 +12,44 @@
 
 /* large screens */
 @media screen and (min-width: 1400px){
+		#login-form, #register-form {
+		padding: 1em;
+		width: initial;
+		form {
+			background-color: rgba(0, 0, 0, 0.5);
+			padding: 0.3em;
+			.form-input-wrapper{
+				width: 80%;
+				margin: 0 auto;
+				height: 2.5em;
+				border-bottom: 1px solid @grey;
+				text-align: left;
+				label {
+					color: @green;
+					font-size: 1.5em;
+					width: 4%;
+				}
+				input {
+					border: none;
+					background: transparent;
+					color: white;
+					height: 100%;
+					width: 90%;
+					font-size: 1em;
+					text-indent: 1em;
+				}
+
+			}
+		}
+	}
 		/* Login Form */
 	.logo-login{
 		margin-bottom: 0;
 		color: #1de9b6;
 	}
 	#login-form {
-		margin: 1em auto;
 		height: 50%;
-		width: 95%;
 		text-align: center;
-		form p {
-			font-size: 1em;
-			width: 80%;
-			margin: 5% 10%;
-		}
-		form input {
-			text-align: center;
-		}
 		.button {
 			font-size: 1.3em;
 			text-align: center;
@@ -37,18 +57,9 @@
 		}
 	}
 	#register-form {
-		margin: 1em auto;
 		height: 50%;
-		width: 96%;
 		text-align: center;
-		form p {
-			font-size: 0.7em;
-			width: 80%;
-			margin: 5% 10%;
-		}
-		form input {
-			text-align: center;
-		}
+		
 		.button {
 			font-size: 1.2em;
 			text-align: center;
@@ -60,19 +71,6 @@
 		margin: 1em auto;
 		color: @grey;
 	}
-	.form-input{
-		background-color: transparent;
-		color: #fff;
-		border: none;
-		border-bottom: 1px solid #424242;
-		font-size: 0.7em;
-		line-height: 0.7em;
-		padding: 0.5em;
-		height: 0.7em;
-		width: 49%;
-		margin-bottom: 1em;
-	}
-
 	/* Loggedin Dash */
 	#left-wrapper{
 		width: 20%;

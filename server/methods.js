@@ -19,13 +19,13 @@ Meteor.methods({
 
 		// Get this user's tags
 		let user = TagTypes.findOne({"userId" : Meteor.userId()});
-		console.log(user.tags[0].uses);
+		console.log("has been used: " + user.tags[0].uses);
 		// Find tag in array 
 		let index = user.tags.findIndex((tag)=>{return tag.type === task.tagType});
-		console.log("Index: " + index);
+		// console.log("Index: " + index);
 		// Increment
 		user.tags[index].uses++;
-		console.log("Tag to increment:" + user.tags[index], "Uses after incrementing: " + user.tags[index].uses);
+		// console.log("Tag to increment:" + user.tags[index]toString(), "Uses after incrementing: " + user.tags[index].uses);
 		// Update user's tags
 		TagTypes.update(user._id, {
 			$set: {tags: user.tags }
@@ -39,6 +39,18 @@ Meteor.methods({
 		Tasks.update(task._id, {
 			$set: {completed: !task.completed }
 		})
+	},
+	updateTask(task){
+		Tasks.update(task._id, {
+			$set: {
+				text : task.text,
+				dateStart : task.dateStart,
+				timeStart : task.timeStart,
+				desc : task.desc,
+				timeUTC : task.timeUTC
+			}
+		});
+		console.log("new task date and time: " + Tasks.findOne({_id: task._id}));
 	},
 	deleteTask(task){
 		if(Meteor.userId() !== task.userId){
@@ -97,9 +109,7 @@ Meteor.methods({
 			schedule : Schedule(),
 			thresholds: Thresholds()
 		};
-		console.log("imma create da default schedule");
 		Schedules.insert(schedule);
-		console.log("i created a default schedule");
 	},
 	modifySchedule(coords){
 		if(!Meteor.userId()){
@@ -120,7 +130,7 @@ Meteor.methods({
 		let mySched = Schedules.findOne({userId : Meteor.userId()});
 		let possibleTimes = [];
 		const offset = data.today.getDay();
-		const thisHour = data.today.toJSON().substring(11,16);
+		const thisHour = data.today.toJSON().substring(11,13) - new Date().getTimezoneOffset() / 60 + ":00";
 
 		/* Populate array of all possible times */
 		for( let i = 0; i < daysOfWeek.length; i++) {
@@ -138,13 +148,10 @@ Meteor.methods({
 				 } 
 			})
 		}
-
-
 		/* Filter out all times to remove hours where user has less than 50% of completing task */
 		possibleTimes = possibleTimes.filter((coord)=>{
 			return mySched.thresholds[daysOfWeek[coord.day]][coord.time][data.tag] >= 0.5
 		});
-
 		/* Filter out all times to remove hours where task is already set */
 		possibleTimes = possibleTimes.filter((coord)=>{
 			let daysFromToday = coord.day - new Date().getDay();
@@ -153,8 +160,20 @@ Meteor.methods({
 			return Tasks.findOne({dateStart : bestDate.substring(0,10) , timeStart: {$regex: coord.time.substring(0,2) + ".*"}}) === undefined ? true : false;
 		});
 		console.log(possibleTimes[0], possibleTimes.length)
+		/* For now, return the first best time */
 		return possibleTimes[0];
 
+	},
+	changeThreshold(data){
+		let mySched = Schedules.findOne({userId : Meteor.userId()});
+		let weekDay = moment(data.date, "YYYY-MM-DD").format("E");
+		let hour = data.time.substring(0,2) + ":00";
+		/* Update Action Potential at given weekday, at given time, for given tag */
+		mySched.thresholds[daysOfWeek[weekDay]][hour][data.tag] === 1 && data.amt > 0 ? 1 : mySched.thresholds[daysOfWeek[weekDay]][hour][data.tag] += data.amt > 1 ? 1 : mySched.thresholds[daysOfWeek[weekDay]][hour][data.tag] += data.amt;
+		Schedules.update(mySched._id, {
+			$set: {thresholds : mySched.thresholds}
+		});
+		console.log(mySched.thresholds[daysOfWeek[weekDay]][hour][data.tag])
 	}
 });
 

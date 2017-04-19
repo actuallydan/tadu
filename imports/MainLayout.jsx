@@ -9,7 +9,7 @@ import React from 'react';
 import TaskList from './TaskList.jsx';
 import Calendar from './Calendar.jsx';
 import AddTask from './AddTask.jsx';
-import LoginForm from './LoginForm.jsx';
+import EntryPortal from './EntryPortal.jsx';
 
 /*  CSS split up for now but should be refactored later to minimize redundancies */
 import './styles/main.normal.less';
@@ -192,9 +192,32 @@ export default class MainLayout extends TrackerReact(React.Component) {
   					swal("Good job!", "I'm so proud of you", "success");
 	  				// Update task completion status to true
 	  				Meteor.call('toggleTask', notice.data);
+					Meteor.call("changeThreshold", {tag: notice.data.tag, date: notice.data.dateStart, time: notice.data.timeStart, amt: 0.1})
 	  			} else {
 	  				swal("Rescheduling...", "Don't worry. I'll set up a different time", "success");
-	  				// TODO: update task startTime
+	  				/* update task startTime */
+	  				Meteor.call("scheduleBestTime", {tag: notice.data.tag, today: new Date()}, (err, res)=>{
+	  					if(err){
+	  						swal("So..", "There was an issue rescheduling..." + "<br/>" + err, "error");
+	  					} else {
+	  						let daysFromToday = res.date - new Date().getDay();
+							let bestDate = moment(res.time, "HH:mm").add(daysFromToday, "days");
+							// Change threshold
+							/* Provide tag (notice.data.tag), date and time (notice.data.dateStart, notice.data.timeStart) and signed amount to change */
+							Meteor.call("changeThreshold", {tag: notice.data.tag, date: notice.data.dateStart, time: notice.data.timeStart, amt: -0.1})
+							// Update task
+							let newTask = {
+								_id: notice.data._id,
+								text : notice.data.text,
+								dateStart : bestDate.format("YYYY-MM-DD"),
+								timeStart : bestDate.format("HH:mm"),
+								desc : notice.data.desc,
+								timeUTC : bestDate.utc().format().substring(0,16),
+	
+							}
+							Meteor.call("updateTask", newTask);
+	  					}
+	  				});
 	  			}
 	  		});
   			// Mark this notification as seen and do not re-show it
@@ -213,7 +236,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
   	let eventDetail = this.state.eventDetail !== null ? this.state.eventDetail : "" ;
 
   	/* Get notifications to see if the user has any that need resolved and to display old notifications in tray at top of Calendar */
-  	let notices = Notifications.find().fetch();
+  	let notices = Notifications.find({}, {limit: 20}).fetch();
   	return (
   		<div>
 
@@ -232,7 +255,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
   			{notices.length !== 0 ? notices.filter((notice)=>{return notice.seen === false}).map((notice)=>{this.notify(notice)}) : ""}
   			</div>
   			:
-  			<LoginForm loggedInChange={this.loggedInChange.bind(this)}/>
+  			<EntryPortal loggedInChange={this.loggedInChange.bind(this)}/>
   		}
 
   		<Rodal visible={this.state.eventDetail !== null} onClose={this.hideDetail.bind(this)} className="modal task-detail glow" animation="door" customStyles={{width: '80%',

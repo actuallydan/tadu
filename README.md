@@ -57,10 +57,5 @@
 * Notificiations tray change color and populate 
 	* Style
 * Large Screen Responsiveness
-* Figure out what to do with blank space at bottom on some screens
-
-
-
-
-
+* Figure out what to do with blank space at bottom on some screen
 
