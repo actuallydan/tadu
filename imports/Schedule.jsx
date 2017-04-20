@@ -29,11 +29,27 @@ export default class Schedule extends TrackerReact(React.Component) {
 
 		const fakeDaysofWeek = ["Blank", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 		mySched = Schedules.findOne();
+		const styles = {
+			month: {
+				width: window.innerWidth > 1400 ? "60%" : window.innerWidth > 992 ? "80%" : "100%",
+				position: "fixed",
+				display: "inline-flex",
+				backgroundColor: "rgba(36, 36, 36, 0.8)",
+				zIndex : 3,
+				top: "3.5em"
+			},
+			day: {
+				color: "#1de9b6",
+				textAlign: "center",
+				width: "calc((100% - 7px) / 8)"
+			}
+		};
 		return(
+			<div>
+			<div style={styles.month}>
+			<div style={styles.day}></div><div style={styles.day}>S</div><div style={styles.day}>M</div><div style={styles.day}>T</div><div style={styles.day}>W</div><div style={styles.day}>Th</div><div style={styles.day}>F</div><div style={styles.day}>S</div>
+			</div>
 			<table id="schedule" className="animated fadeIn">
-			<thead id="schedule-header">
-			<tr><td className="header"></td><td>S</td><td>M</td><td>T</td><td>W</td><td>Th</td><td>F</td><td>S</td></tr>
-			</thead>
 			<tbody style={{"marginTop" : "1em"}} id="schedule-body">
 			{
 				mySched === undefined ? "" : 
@@ -58,6 +74,7 @@ export default class Schedule extends TrackerReact(React.Component) {
 			}
 			</tbody>
 			</table>
+			</div>
 			)
 	}
 }
