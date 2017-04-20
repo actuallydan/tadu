@@ -50,7 +50,6 @@ Meteor.methods({
 				timeUTC : task.timeUTC
 			}
 		});
-		console.log("new task date and time: " + Tasks.findOne({_id: task._id}));
 	},
 	deleteTask(task){
 		if(Meteor.userId() !== task.userId){

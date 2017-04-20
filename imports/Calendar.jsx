@@ -26,7 +26,7 @@ export default class Cal extends TrackerReact(React.Component) {
 		*/
 		this.state = {
 			today : new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000)).toJSON().substring(0, 10),
-			selectedDate : new Date().toJSON().substring(0, 10),
+			selectedDate : new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000)).toJSON().substring(0, 10),
 			monthShowing : new Date(),
 			showNotifications: false,
 			showSchedule: false,

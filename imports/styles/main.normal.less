@@ -80,14 +80,14 @@ input:focus, textarea:focus, button:focus {
 .login-register-button {
 	// margin: 1em auto 2em;
 	width: 41%;
-    display: inline-block;
-    margin: 1em 2%;
+	display: inline-block;
+	margin: 1em 2%;
 }
 .toggle-login {
 	color: @grey;
-    width: 41%;
-    display: inline-block;
-    margin: 1em 2%;
+	width: 41%;
+	display: inline-block;
+	margin: 1em 2%;
 }
 .toggle-login:hover {
 	color: @green;
@@ -706,29 +706,8 @@ input:focus, textarea:focus, button:focus {
 			}
 		}
 	}
-	.task-detail {
-		.text {
-			display: inline-block;
-			width: 75%;
-		}
-		.tag {
-			float: right;
-			position: absolute;
-			top: 0.6em;
-			right: 1.5em;
-			text-align: right;
-		}
-		.dateStart {
-			font-size: 0.7em;
-		}
-		.timeStart {
-			font-size: 0.7em;
-		}
-		.desc {
-
-		}
-	}
 }
+
 .global-tag-wrapper {
 	width: 33%;
 	display: inline-block;
@@ -756,6 +735,64 @@ input:focus, textarea:focus, button:focus {
 		font-size: 0.8em
 	}
 }
+.task-detail {
+		#update-task-header {
+			text-align: center;
+			color: white;
+		}
+		form {
+			height: 100%;
+			overflow: scroll;
+		}
+		.edit-item{
+			height: 2em;
+			background-color: @dark-grey;
+			border-bottom: 1px solid @grey;
+			color: #FFF;
+			font-size: 0.8em;
+			padding: 0.5em;
+			line-height: 2em;
+			box-shadow: none;
+			input {
+				text-align: left;
+				font-size: inherit;
+				background-color: @dark-grey;
+				border: none;
+				width: 80%;
+				color: #FFF;
+				line-height: 2em;
+				display: inline-block;
+			}
+			div {
+				width: 15%;
+				line-height: 2em;
+				display: inline-block;
+			}
+			button {
+				width: 100%;
+				height: 2em;
+				font-size: inherit;
+			}
+			button:hover {
+				background-color: @green;
+				color: @dark-grey;
+			}
+		}
+		.desc {
+		height: auto;
+		padding: 0.5em;
+		textarea {
+			height: 4em;
+			resize: none;
+			border: none;
+			font-size: 1em;
+			background-color: transparent;
+			border-bottom: 1px solid @green;
+			width: 100%;
+			color: #FFF;
+		}
+	}
+	}
 #schedule {
 	width: 100%;
 	text-align: center;
@@ -782,7 +819,7 @@ input:focus, textarea:focus, button:focus {
 }
 #notice-header{
 	text-align: center;
-    border-bottom: 1px solid #1de9b6;
+	border-bottom: 1px solid #1de9b6;
 
 }
 #notice-wrapper {
@@ -792,40 +829,40 @@ input:focus, textarea:focus, button:focus {
 .notice{
 	width: 100%;
 	margin-top: 1em;
-    border-bottom: 1px solid #424242;
-    transition: color 0.25s, filter 0.25s;
-.notice-icon{
-	display: inline-block;
-    width: 10%;
-    font-size: 2em;
-    text-align: center;
-}
-.notice-text{
-	width: 66%;
-    text-indent: 0.5em;
-    position: relative;
-    /* top: 0.5em; */
-    line-height: 2em;
-    white-space: nowrap;
-    display: inline-block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    padding-right: 0.5em;
-    vertical-align: top;
-}
-.notice-time{
-	    display: inline-block;
-    line-height: 2em;
-    position: relative;
-    bottom: 0.5em;
-    width: 20%;
-}
+	border-bottom: 1px solid #424242;
+	transition: color 0.25s, filter 0.25s;
+	.notice-icon{
+		display: inline-block;
+		width: 10%;
+		font-size: 2em;
+		text-align: center;
+	}
+	.notice-text{
+		width: 66%;
+		text-indent: 0.5em;
+		position: relative;
+		/* top: 0.5em; */
+		line-height: 2em;
+		white-space: nowrap;
+		display: inline-block;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		padding-right: 0.5em;
+		vertical-align: top;
+	}
+	.notice-time{
+		display: inline-block;
+		line-height: 2em;
+		position: relative;
+		bottom: 0.5em;
+		width: 20%;
+	}
 }
 .notice:hover {
 	border-bottom: 1px solid #1de9b6;
-    filter: drop-shadow(0px 0px 3px #1de9b6);
-    color: #1de9b6;
-    transition: color 0.25s, filter 0.25s;
+	filter: drop-shadow(0px 0px 3px #1de9b6);
+	color: #1de9b6;
+	transition: color 0.25s, filter 0.25s;
 }
 /*flow text*/ 
 body {font-weight: 300 } @media only screen and (min-width: 360px) {body {font-size:1.2rem } } @media only screen and (min-width: 390px) {body {font-size:1.224rem } } @media only screen and (min-width: 420px) {body {font-size:1.248rem } } @media only screen and (min-width: 450px) {body {font-size:1.272rem } } @media only screen and (min-width: 480px) {body {font-size:1.296rem } } @media only screen and (min-width: 510px) {body {font-size:1.32rem } } @media only screen and (min-width: 540px) {body {font-size:1.344rem } } @media only screen and (min-width: 570px) {body {font-size:1.368rem } } @media only screen and (min-width: 600px) {body {font-size:1.392rem } } @media only screen and (min-width: 630px) {body {font-size:1.416rem } } @media only screen and (min-width: 660px) {body {font-size:1.44rem } } @media only screen and (min-width: 690px) {body {font-size:1.464rem } } @media only screen and (min-width: 720px) {body {font-size:1.488rem } } @media only screen and (min-width: 750px) {body {font-size:1.512rem } } @media only screen and (min-width: 780px) {body {font-size:1.536rem } } @media only screen and (min-width: 810px) {body {font-size:1.56rem } } @media only screen and (min-width: 840px) {body {font-size:1.584rem } } @media only screen and (min-width: 870px) {body {font-size:1.608rem } } @media only screen and (min-width: 900px) {body {font-size:1.632rem } } @media only screen and (min-width: 930px) {body {font-size:1.656rem } } @media only screen and (min-width: 960px) {body {font-size:1.68rem } } @media only screen and (max-width: 360px) {body {font-size:1.2rem } }

@@ -4,12 +4,12 @@
 * Also holds React Modal "Rodal" for viewing task details for editing 
 *
 */
-
 import React from 'react';
 import TaskList from './TaskList.jsx';
 import Calendar from './Calendar.jsx';
 import AddTask from './AddTask.jsx';
 import EntryPortal from './EntryPortal.jsx';
+import TaskDetail from './TaskDetail.jsx';
 
 /*  CSS split up for now but should be refactored later to minimize redundancies */
 import './styles/main.normal.less';
@@ -39,7 +39,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
 		this.state = {
 			loggedIn: Meteor.userId() === null ? false : true,
 			viewMode: "calendar",
-			selectedDate: new Date().toJSON().substring(0,10),
+			selectedDate: new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000)).toJSON().substring(0, 10),
 			width: window.innerWidth > 1399 ? (window.innerWidth - 700) : window.innerWidth > 992 ? (window.innerWidth - 300) : window.innerWidth,
 			subscription: {
 				tasks: Meteor.subscribe("userTasks"),
@@ -47,7 +47,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
 				notifications: Meteor.subscribe("notifications"),
 				schedules: Meteor.subscribe("schedules")
 			},
-			eventDetail : null
+			taskDetail : null
 		};
 	}
 
@@ -114,15 +114,15 @@ export default class MainLayout extends TrackerReact(React.Component) {
 	* A valid Task Object must be passed to display it's full details to the user
 	* Shold maybe be condensed into a toggleDetail view?
 	*/
-	showDetail(event) {
-		this.setState({eventDetail : event });
+	showDetail(task) {
+		this.setState({taskDetail : task });
 	}
 	/* Hides Task detail Modal (Rodal) at bottom of page 
 	* Removes task object from state to signal Rodal to close
 	* See notes from showDetail()
 	*/
 	hideDetail() {
-		this.setState({eventDetail : null});
+		this.setState({taskDetail : null});
 	}
 	/* Gets a date string in "YYYY-MM-DD" format from Calendar and updates the state so the whole app is aware of the date we're looking at as opposed to the current date */
 	selectDate(date){
@@ -233,8 +233,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
   	let viewAddEvent = this.state.viewMode === 'addTask' ? true : window.innerWidth >= 1400 ? true : false;
 
   	/* Whether or not task detail modal should be visible right now  is based on whether there is a task currently in state */
-  	let eventDetail = this.state.eventDetail !== null ? this.state.eventDetail : "" ;
-
+  	let taskDetail = this.state.taskDetail !== null ? this.state.taskDetail : "" ;
   	/* Get notifications to see if the user has any that need resolved and to display old notifications in tray at top of Calendar */
   	let notices = Notifications.find({}, {limit: 20}).fetch();
   	return (
@@ -258,13 +257,9 @@ export default class MainLayout extends TrackerReact(React.Component) {
   			<EntryPortal loggedInChange={this.loggedInChange.bind(this)}/>
   		}
 
-  		<Rodal visible={this.state.eventDetail !== null} onClose={this.hideDetail.bind(this)} className="modal task-detail glow" animation="door" customStyles={{width: '80%',
+  		<Rodal visible={this.state.taskDetail !== null} onClose={this.hideDetail.bind(this)} className="modal task-detail glow" animation="door" customStyles={{width: '80%',
   		height: '80%', borderRadius: 0, borderColor: '#1de9b6', borderWidth: 1, borderStyle : 'solid', background: '#242424', color: '#fff'}}>
-  		<div className="text">{eventDetail.text}</div>
-  		<div className="tag">{eventDetail.tag} </div>
-  		<div className="dateStart"> {moment(eventDetail.dateStart, "YYYY-MM-DD").format("M/DD/YYYY")} </div>
-  		<div className="timeStart">{moment(eventDetail.timeStart, "HH:mm").format("h:mm a")}</div>
-  		<div className="desc">{eventDetail.desc === "" ? "No description" : eventDetail.desc}</div>
+  			<TaskDetail taskDetail={taskDetail} closeDetail={this.hideDetail}/>
   		</Rodal>
   		</div>
   		);
