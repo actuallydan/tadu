@@ -13,7 +13,7 @@ export default class EntryPortal extends React.Component {
 		super(props);
 		/* Single state value to switch out login for register view or vice versa */ 
 		this.state = {
-			showLogin: false
+			showLogin: true
 		};
 	}
 	/* Method that actually updates the state to show whichever form isn't present */
@@ -92,6 +92,9 @@ export default class EntryPortal extends React.Component {
 		*/
 		return (
 			<div id="entry-portal"> 
+			<video preload="true" loop muted autoPlay poster="../img/Underground-Traffic.jpg">
+		        <source src="../img/Underground-Traffic.mp4" type="video/mp4"/>
+		    </video>
 			{this.state.showLogin ? 
 			<Login showLogin={this.state.showLogin} tryLogin={this.tryLogin} handleChangeForm={this.handleChangeForm.bind(this)} loggedInChange={this.props.loggedInChange.bind(this)}/> 
 			:

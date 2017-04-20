@@ -84,7 +84,7 @@ input:focus, textarea:focus, button:focus {
 	margin: 1em 2%;
 }
 .toggle-login {
-	color: @grey;
+	color: #FFF;
 	width: 41%;
 	display: inline-block;
 	margin: 1em 2%;
@@ -94,14 +94,28 @@ input:focus, textarea:focus, button:focus {
 	cursor: pointer;
 }
 #entry-portal {
-	background: url(../img/login_background.jpg) no-repeat center center fixed; 
-	-webkit-background-size: cover;
-	-moz-background-size: cover;
-	-o-background-size: cover;
-	background-size: cover;
+	// background: url(../img/login_background.jpg) no-repeat center center fixed; 
+	// -webkit-background-size: cover;
+	// -moz-background-size: cover;
+	// -o-background-size: cover;
+	// background-size: cover;
+	// position: fixed;
+	// height: 100%;
+	// width: 100%;
 	position: fixed;
-	height: 100%;
-	width: 100%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    z-index: -100;
+	video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+}
 }
 /* normal screens */
 @media screen and (min-width: 993px){
@@ -109,7 +123,7 @@ input:focus, textarea:focus, button:focus {
 		padding: 1em;
 		width: initial;
 		form {
-			background-color: rgba(0, 0, 0, 0.5);
+			background-color: rgba(0, 0, 0, 0.8);
 			padding: 0.3em;
 			.form-input-wrapper{
 				width: 80%;
@@ -863,6 +877,19 @@ input:focus, textarea:focus, button:focus {
 	filter: drop-shadow(0px 0px 3px #1de9b6);
 	color: #1de9b6;
 	transition: color 0.25s, filter 0.25s;
+}
+@media (min-aspect-ratio: 16/9) {
+  #entry-portal video {
+    width: 100%;
+    height: auto;
+  }
+}
+
+@media (max-aspect-ratio: 16/9) {
+  #entry-portal video {
+    width: auto;
+    height: 100%;
+  }
 }
 /*flow text*/ 
 body {font-weight: 300 } @media only screen and (min-width: 360px) {body {font-size:1.2rem } } @media only screen and (min-width: 390px) {body {font-size:1.224rem } } @media only screen and (min-width: 420px) {body {font-size:1.248rem } } @media only screen and (min-width: 450px) {body {font-size:1.272rem } } @media only screen and (min-width: 480px) {body {font-size:1.296rem } } @media only screen and (min-width: 510px) {body {font-size:1.32rem } } @media only screen and (min-width: 540px) {body {font-size:1.344rem } } @media only screen and (min-width: 570px) {body {font-size:1.368rem } } @media only screen and (min-width: 600px) {body {font-size:1.392rem } } @media only screen and (min-width: 630px) {body {font-size:1.416rem } } @media only screen and (min-width: 660px) {body {font-size:1.44rem } } @media only screen and (min-width: 690px) {body {font-size:1.464rem } } @media only screen and (min-width: 720px) {body {font-size:1.488rem } } @media only screen and (min-width: 750px) {body {font-size:1.512rem } } @media only screen and (min-width: 780px) {body {font-size:1.536rem } } @media only screen and (min-width: 810px) {body {font-size:1.56rem } } @media only screen and (min-width: 840px) {body {font-size:1.584rem } } @media only screen and (min-width: 870px) {body {font-size:1.608rem } } @media only screen and (min-width: 900px) {body {font-size:1.632rem } } @media only screen and (min-width: 930px) {body {font-size:1.656rem } } @media only screen and (min-width: 960px) {body {font-size:1.68rem } } @media only screen and (max-width: 360px) {body {font-size:1.2rem } }

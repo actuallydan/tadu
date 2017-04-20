@@ -18,12 +18,25 @@ input, button {
 }
 /* small screens */
 @media screen and (max-width: 992px){
+	#entry-portal {
+		background: url(../img/Underground-Traffic.jpg) no-repeat center center fixed; 
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	position: fixed;
+	height: 100%;
+	width: 100%;
+	video{
+		display: none;
+	}
+}
 	/* Login Form */
 	#login-form, #register-form {
 		padding: 1em;
 		width: initial;
 		form {
-			background-color: rgba(0, 0, 0, 0.5);
+			background-color: rgba(0, 0, 0, 0.8);
 			padding: 0.3em;
 		.form-input-wrapper{
 		width: 80%;
