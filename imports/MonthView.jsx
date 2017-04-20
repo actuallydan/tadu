@@ -3,7 +3,7 @@ import Day from './Day.jsx';
 
 export default class MonthView extends React.Component {
 	render (){
-				const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+		const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 		return (
 			<div id="calendar-wrapper">

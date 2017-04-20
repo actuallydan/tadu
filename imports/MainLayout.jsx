@@ -54,7 +54,6 @@ export default class MainLayout extends TrackerReact(React.Component) {
 	handleResize(){
 		let newWidth = window.innerWidth > 1399 ? (window.innerWidth - 700) : window.innerWidth > 992 ? (window.innerWidth - 300) : window.innerWidth;
 		this.setState({width: newWidth});
-		console.log(this.state.width);
 	}
 	loggedInChange(flag){
 		/* Tell out app that we're changing our logged in state and that Meteor knows we're logged in / out and need to change views 

@@ -26,7 +26,6 @@ export default class TaskDetail extends React.Component{
 		this.props.closeDetail.bind(this);
 	}
 	componentDidUpdate(){
-		console.log(this.props.taskDetail);
 		if(this.props.taskDetail !== null){
 				document.getElementById("edit-task-title").value = this.props.taskDetail.text;
 				document.getElementById("edit-task-date").value = this.props.taskDetail.dateStart;

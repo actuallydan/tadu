@@ -261,7 +261,7 @@ export default class AddTask extends TrackerReact(React.Component) {
 		render(){
 			return (		
 				<div id="AddTaskForm" className={this.props.show ? "animated slideInRight" : "animated slideOutRight hidden"}>
-				<div className="form-item hide-on-large" id="add-task-form-nav"><i className="mdi mdi-close" onClick={this.clearTask.bind(this)}></i><div>New Event</div></div>
+				<div className="form-item" id="add-task-form-nav"><i className="mdi mdi-close hide-on-large" onClick={this.clearTask.bind(this)}></i><div>New Event</div></div>
 				{this.state.stage1 ? this.renderStage1() : this.renderStage2()}
 				</div>
 				)

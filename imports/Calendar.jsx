@@ -98,7 +98,7 @@ export default class Cal extends TrackerReact(React.Component) {
 		/* Get the rest of the days in this month and any that would complete the 6th row of our calendar as needed, and add them to our calendar object 
 		*  From the array of tasks, give each day object an array of it's respective tasks
 		*/
-		for(let i = 0; i < 35 + (7 - daysBeforeInBlock) ; i++){
+		for(let i = 0; i < 35 + (7 - daysBeforeInBlock); i++){
 			cal[new Date(year, month, 1 + i).toJSON().substring(0, 10)] = {
 				events : tasks.filter((event)=>{return event.dateStart === new Date(year, month, i + 1).toJSON().substring(0, 10) })
 			};
