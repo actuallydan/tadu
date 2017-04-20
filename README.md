@@ -13,6 +13,8 @@
 9. Material Design Icons  (https://materialdesignicons.com/)
 10. SweetAlert (https://www.npmjs.com/package/sweetalert)
 11. Rodal (https://github.com/chenjiahan/rodal)
+12. React-Tooltip (https://github.com/wwayne/react-tooltip)
+13. Meteor Electron (https://github.com/electron-webapps/meteor-electron)
 
 #### Version Roadmap
 * 0.0.0.0.5 Replace "Event" with "Task" 

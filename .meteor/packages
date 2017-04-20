@@ -34,3 +34,4 @@ ultimatejs:tracker-react
 shell-server@0.2.3
 percolate:synced-cron
 mobile-status-bar
+meson:electron
