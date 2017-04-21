@@ -15,8 +15,6 @@ import moment from 'moment';
 import Rodal from 'rodal';
 import 'rodal/lib/rodal.css';
 
-import ReactSwipe from 'react-swipe';
-
 export default class Cal extends TrackerReact(React.Component) {
 	constructor(props){
 		super(props);
