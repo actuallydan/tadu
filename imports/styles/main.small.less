@@ -44,10 +44,12 @@ input, button {
 				height: 2.5em;
 				border-bottom: 1px solid @grey;
 				text-align: left;
+				transition: border-bottom 0.25s;
 				label {
 					color: @green;
 					font-size: 1.2em;
 					width: 15%;
+					display: inline-flex;
 				}
 				input {
 					border: none;
@@ -56,6 +58,7 @@ input, button {
 					height: 100%;
 					width: 80%;
 					font-size: 1em;
+					display: inline-flex;
 				}
 				.login-register-button {
 					width: 100%;
@@ -483,13 +486,12 @@ input, button {
 		height: 100%;
 		background-color: @dark-grey;
 		#AddTaskForm {
-			border-left: 1px solid #424242;
 			width: 100%
 		}
 		#add-task-form-nav{
 			line-height: 2em;
 			display: inline-flex;
-			width: 100%;
+			width: 96%;
 		}
 		#add-task-form-nav i{
 			position: relative;
@@ -510,19 +512,21 @@ input, button {
 			border-bottom: 1px solid @grey;
 			margin: 0;
 			padding: 0;
-			height: 1.4em;
+			height: 2em;
 			width: 100%;
+			line-height: 2em;
 		}
 		#search-icon{
 			color: white;
-			line-height: 1.4em;
+			line-height: 2em;
 			font-size: 1em;
 			background-color: @dark-grey;
 			padding-left: 0.3em;
+			height: 2em;
 		}
 		#search{
 			color: white;
-			line-height: 1.4em;
+			line-height: 2em;
 			font-size: 0.8em;
 			background-color: @dark-grey;
 			border: none;
@@ -696,7 +700,7 @@ input, button {
 		margin: 1em auto;
 	}
 	.toggle-login {
-		color: @grey;
+		color: #FFF;
 		width: 100%;
 		display: block;
 		margin: 0 auto;
@@ -723,7 +727,7 @@ input, button {
 		margin: 1em auto;
 	}
 	.toggle-login {
-		color: @grey;
+		color: #FFF;
 		width: 100%;
 		display: block;
 		margin: 0 auto;

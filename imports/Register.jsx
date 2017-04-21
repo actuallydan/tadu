@@ -32,7 +32,7 @@ return (
 				<br/>
 				<div className="form-input-wrapper">
 				<label htmlFor="register-username" className="mdi mdi-account-circle"></label>
-				<input className='form-input' type="text" ref="username" placeholder="Username"  onFocus={this.highlight.bind(this)}/>
+				<input className='form-input' type="text"  id="register-username" ref="username" placeholder="Username"  onFocus={this.highlight.bind(this)}/>
 								</div>
 
 				<p className="login-register-button"><input className="button" type="submit" value="Register" /></p>
