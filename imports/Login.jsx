@@ -15,7 +15,7 @@ export default class Login extends React.Component {
 				<form onSubmit={this.props.tryLogin.bind(this)} autoComplete="off">
 				<div className='logo-login'>
 				<img className="logo-img" src="../img/tadu_logo.png"/>
-				<div className="logo-text">Tadu</div>
+				<div className="logo-text">TADU</div>
 				</div>
 				<div className="form-input-wrapper">
 				<label htmlFor="login-email" className="mdi mdi-email-outline"></label>

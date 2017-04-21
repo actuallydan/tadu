@@ -17,7 +17,7 @@ return (
 				<form onSubmit={this.props.tryRegister.bind(this)} autoComplete="off">
 				<div className='logo-login'>
 				<img className="logo-img" src="../img/tadu_logo.png"/>
-				<div className="logo-text">Tadu</div>
+				<div className="logo-text">TADU</div>
 				</div>
 				<div className="form-input-wrapper">
 				<label htmlFor="register-email" className="mdi mdi-email-outline"></label>
