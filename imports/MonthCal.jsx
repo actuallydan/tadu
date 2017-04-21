@@ -23,7 +23,7 @@ export default class MonthView extends React.Component {
 		var _calArray = Object.keys(tempCal); 
 		/* Create calendar days with Day components, each has it's own style depending on whether its in the month, is selected, or is today */
 		return(
-			<div className="month-wrapper">
+			<div className="month-wrapper animated fadeIn">
 			{
 				_calArray.map((day)=>{
 					let _inThisMonth = parseInt(day.substring(5, 7)) === this.props.monthShowing.getMonth() + 1 ? true : false;
