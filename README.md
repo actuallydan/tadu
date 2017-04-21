@@ -58,4 +58,15 @@
 * Documentation
 * Figure out what to do with blank space at bottom on some screens
 * Custom alert times (and tones for mobile)
+* iOS
+	*Add Task Search Bar needs to be bigger
+		* center align text
+		* Prevent focus from zooming
+		* overflow-x hidden (an issue with vertical scrolling?)
+	* Double Check that login fits on tiny phone (can use safari)
+	* Scheduler make 2 digit times fit (still stacking on tiny screens)
+	* try to relocate task list to bottom of screen
+* iPad
+	* set event-notice icon to be normal sized
+
 

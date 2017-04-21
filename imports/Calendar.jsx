@@ -15,6 +15,8 @@ import moment from 'moment';
 import Rodal from 'rodal';
 import 'rodal/lib/rodal.css';
 
+import ReactSwipe from 'react-swipe';
+
 export default class Cal extends TrackerReact(React.Component) {
 	constructor(props){
 		super(props);
@@ -135,6 +137,7 @@ export default class Cal extends TrackerReact(React.Component) {
 				<div id="next-month-button" className="mdi mdi-chevron-right" onClick={this.nextMonth.bind(this)}></div>
 				</div>
 				<div id="calendar-body" className="animated fadeIn" style={{"paddingTop" : "2.3em"}}>
+
 				<MonthView 
 				today={this.state.today} 
 				selectedDate={this.state.selectedDate} 
@@ -144,6 +147,8 @@ export default class Cal extends TrackerReact(React.Component) {
 				month={this.state.monthShowing.getMonth()}
 				tasks={tasks}
 				/>
+				
+
 				</div>
 				</div>
 				
@@ -168,7 +173,7 @@ export default class Cal extends TrackerReact(React.Component) {
 				""
 			}
 			</div>)
-	}
+}
 }
 const get20Years = ()=>{
 	var allYears = [];

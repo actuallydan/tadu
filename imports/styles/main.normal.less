@@ -445,12 +445,13 @@ input:focus, textarea:focus, button:focus {
 		.cal-block {
 			display: inline-block;
 			width: calc(100% / 7);
-				// margin: 0.1em auto;
-				position: relative;
-				top: 0;
-				left: 0;
-				z-index: 1;
-				height: 3.4em;
+			position: relative;
+			top: 0;
+			left: 0;
+			z-index: 1;
+			height: 3.4em;
+			text-align: center;
+			overflow: hidden;
 				.cal-day {
 					margin: 0.5em 0;
 				}
@@ -462,18 +463,13 @@ input:focus, textarea:focus, button:focus {
 					height: 1.2em;
 				}
 				.event-indicator {
-					float: right;
 					font-size: 1em;
 					color: #1de9b6;
-					margin: 0.1em;
-					position: absolute;
-					bottom: 0;
-					right: 0;
+					position: relative;
+					bottom: 1.2em;
 				}
 				.no-events {
-					height: 0.8em;
-					width: 0.8em;
-					color: #424242;
+					visibility: hidden;
 				}
 			}
 			.cal-block:after {

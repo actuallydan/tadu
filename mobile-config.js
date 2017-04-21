@@ -1,3 +1,3 @@
 App.setPreference('StatusBarOverlaysWebView', 'false');
-App.setPreference('StatusBarBackgroundColor', '#424242');
-App.setPreference("StatusBarStyle", "darkcontent");
+App.setPreference('StatusBarBackgroundColor', '#242424');
+App.setPreference("StatusBarStyle", "lightcontent");

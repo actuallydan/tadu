@@ -12,7 +12,7 @@
 
 /* large screens */
 @media screen and (min-width: 1400px){
-		#login-form, #register-form {
+	#login-form, #register-form {
 		padding: 1em;
 		width: initial;
 		form {
@@ -42,7 +42,7 @@
 			}
 		}
 	}
-		/* Login Form */
+	/* Login Form */
 	.logo-login{
 		margin-bottom: 0;
 		color: #1de9b6;
@@ -122,12 +122,12 @@
 		}
 		#no-tasks-message {
 			padding: 98% 1em;
-    		font-size: 0.8em;
-    		text-align: center;
-    		.no-tasks-icon{
-    			color: @green;
-    			width: 3em
-    		}
+			font-size: 0.8em;
+			text-align: center;
+			.no-tasks-icon{
+				color: @green;
+				width: 3em
+			}
 		}
 		#tasks-wrapper {
 			margin: 0;
@@ -261,7 +261,7 @@
 		#schedule-header{
 			position : fixed;
 			background-color : #242424;
-		    width: calc(72rem - 2px);
+			width: calc(72rem - 2px);
 			z-index: 3;
 		}
 		#calendar-header {
@@ -326,51 +326,47 @@
 		.cal-block {
 			display: inline-block;
 			width: calc(100% / 7);
-				// margin: 0.1em auto;
+			position: relative;
+			top: 0;
+			left: 0;
+			z-index: 1;
+			height: 3.4em;
+			text-align: center;
+			overflow: hidden;
+			.cal-day {
+				margin: 0.5em 0;
+			}
+			.cal-day-text{
+				text-align: center;
+				margin: 0.1em auto;
+				font-size: 1.5em;
+				padding: 5px 10px 10px 10px;
+				height: 1.2em;
+			}
+			.event-indicator {
+				font-size: 1em;
+				color: #1de9b6;
 				position: relative;
-				top: 0;
-				left: 0;
-				z-index: 1;
-				height: 3.4em;
-				.cal-day {
-					margin: 0.5em 0;
-				}
-				.cal-day-text{
-					text-align: center;
-					margin: 0.1em auto;
-					font-size: 1.5em;
-					padding: 5px 10px 10px 10px;
-					height: 1.2em;
-				}
-				.event-indicator {
-					float: right;
-					font-size: 1em;
-					color: #1de9b6;
-					margin: 0.1em;
-					position: absolute;
-					bottom: 0;
-					right: 0;
-				}
-				.no-events {
-					height: 0.8em;
-					width: 0.8em;
-					color: #424242;
-				}
+				bottom: 1.2em;
 			}
-			.cal-block:after {
-				content: "";
-				display: table;
-				clear: both;
+			.no-events {
+				visibility: hidden;
 			}
-			.cal-day:hover {
-				background: rgba(100, 100, 100, 0.2)
-			}
-			.thisMonth {
-				color: #FFF;
-			}
-			.notThisMonth {
-				color: @grey;
-			}
+		}
+		.cal-block:after {
+			content: "";
+			display: table;
+			clear: both;
+		}
+		.cal-day:hover {
+			background: rgba(100, 100, 100, 0.2)
+		}
+		.thisMonth {
+			color: #FFF;
+		}
+		.notThisMonth {
+			color: @grey;
+		}
 			// .cal-day:nth-of-type(3n+1){
 			// 	background-color: multiply(@green, #cccccc);
 			// 	.event-indicator {
@@ -634,49 +630,49 @@
 	}
 }
 .task-detail {
-		#update-task-header {
-			text-align: center;
-			color: white;
-		}
-		form {
-			height: 100%;
-			overflow: scroll;
-		}
-		.edit-item{
-			height: 2em;
+	#update-task-header {
+		text-align: center;
+		color: white;
+	}
+	form {
+		height: 100%;
+		overflow: scroll;
+	}
+	.edit-item{
+		height: 2em;
+		background-color: @dark-grey;
+		border-bottom: 1px solid @grey;
+		color: #FFF;
+		font-size: 0.8em;
+		padding: 0.5em;
+		line-height: 2em;
+		box-shadow: none;
+		input {
+			text-align: left;
+			font-size: inherit;
 			background-color: @dark-grey;
-			border-bottom: 1px solid @grey;
+			border: none;
+			width: 80%;
 			color: #FFF;
-			font-size: 0.8em;
-			padding: 0.5em;
 			line-height: 2em;
-			box-shadow: none;
-			input {
-				text-align: left;
-				font-size: inherit;
-				background-color: @dark-grey;
-				border: none;
-				width: 80%;
-				color: #FFF;
-				line-height: 2em;
-				display: inline-block;
-			}
-			div {
-				width: 15%;
-				line-height: 2em;
-				display: inline-block;
-			}
-			button {
-				width: 100%;
-				height: 2em;
-				font-size: inherit;
-			}
-			button:hover {
-				background-color: @green;
-				color: @dark-grey;
-			}
+			display: inline-block;
 		}
-		.desc {
+		div {
+			width: 15%;
+			line-height: 2em;
+			display: inline-block;
+		}
+		button {
+			width: 100%;
+			height: 2em;
+			font-size: inherit;
+		}
+		button:hover {
+			background-color: @green;
+			color: @dark-grey;
+		}
+	}
+	.desc {
 		height: auto;
 		padding: 0.5em;
 		textarea {
@@ -690,7 +686,7 @@
 			color: #FFF;
 		}
 	}
-	}
+}
 #schedule {
 	width: 100%;
 	text-align: center;
@@ -763,15 +759,15 @@
 	transition: color 0.25s, filter 0.25s;
 }
 @media (min-aspect-ratio: 16/9) {
-  #entry-portal video {
-    width: 100%;
-    height: auto;
-  }
+	#entry-portal video {
+		width: 100%;
+		height: auto;
+	}
 }
 
 @media (max-aspect-ratio: 16/9) {
-  #entry-portal video {
-    width: auto;
-    height: 100%;
-  }
+	#entry-portal video {
+		width: auto;
+		height: 100%;
+	}
 }

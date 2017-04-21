@@ -20,17 +20,17 @@ input, button {
 @media screen and (max-width: 992px){
 	#entry-portal {
 		background: url(../img/Underground-Traffic.jpg) no-repeat center center fixed; 
-	-webkit-background-size: cover;
-	-moz-background-size: cover;
-	-o-background-size: cover;
-	background-size: cover;
-	position: fixed;
-	height: 100%;
-	width: 100%;
-	video{
-		display: none;
+		-webkit-background-size: cover;
+		-moz-background-size: cover;
+		-o-background-size: cover;
+		background-size: cover;
+		position: fixed;
+		height: 100%;
+		width: 100%;
+		video{
+			display: none;
+		}
 	}
-}
 	/* Login Form */
 	#login-form, #register-form {
 		padding: 1em;
@@ -38,38 +38,38 @@ input, button {
 		form {
 			background-color: rgba(0, 0, 0, 0.8);
 			padding: 0.3em;
-		.form-input-wrapper{
-		width: 80%;
-		margin: 0 auto;
-		height: 2.5em;
-		border-bottom: 1px solid @grey;
-		text-align: left;
-		label {
-			color: @green;
-			font-size: 1.5em;
-			width: 19%;
-		}
-		input {
-			border: none;
-			background: transparent;
-			color: white;
-			height: 100%;
-			width: 80%;
-			font-size: 1em;
-		}
-		.login-register-button {
-	width: 100%;
-    display: block;
-    margin: 0 auto;
-}
-.toggle-login {
-	color: @grey;
-	 width: 100%;
-    display: block;
-    margin: 0 auto;
-}
+			.form-input-wrapper{
+				width: 80%;
+				margin: 0 auto;
+				height: 2.5em;
+				border-bottom: 1px solid @grey;
+				text-align: left;
+				label {
+					color: @green;
+					font-size: 1.2em;
+					width: 15%;
+				}
+				input {
+					border: none;
+					background: transparent;
+					color: white;
+					height: 100%;
+					width: 80%;
+					font-size: 1em;
+				}
+				.login-register-button {
+					width: 100%;
+					display: block;
+					margin: 0 auto;
+				}
+				.toggle-login {
+					color: @grey;
+					width: 100%;
+					display: block;
+					margin: 0 auto;
+				}
 
-	}
+			}
 		}
 	}
 	.logo-login{
@@ -388,49 +388,48 @@ input, button {
 		.cal-block {
 			display: inline-block;
 			width: calc(100% / 7);
-				// margin: 0.1em auto;
+			position: relative;
+			top: 0;
+			left: 0;
+			z-index: 1;
+			height: 3.4em;
+			text-align: center;
+			overflow: hidden;
+			height: calc(36vh / 6) !important;
+			padding-bottom: 0.2em !important;
+			font-size: 0.6em;
+			.cal-day {
+				margin: 0.5em 0;
+			}
+			.cal-day-text{
+				text-align: center;
+				margin: 0.1em auto;
+				font-size: 1.5em;
+			}
+			.event-indicator {
+				color: #1de9b6;
 				position: relative;
-				top: 0;
-				left: 0;
-				z-index: 1;
-				height: 3.4em;
-				.cal-day {
-					margin: 0.5em 0;
-				}
-				.cal-day-text{
-					text-align: center;
-					margin: 0.1em auto;
-					font-size: 1.5em;
-				}
-				.event-indicator {
-					float: right;
-					font-size: 1em;
-					color: #1de9b6;
-					margin: 0.1em;
-					position: absolute;
-					bottom: 0;
-					right: 20%;
-				}
-				.no-events {
-					height: 0.8em;
-					width: 0.8em;
-					color: #424242;
-				}
+				bottom: 1.5em !important;
+				font-size: 0.6em !important;
 			}
-			.cal-block:after {
-				content: "";
-				display: table;
-				clear: both;
+			.no-events {
+				visibility: hidden;
 			}
-			.cal-day:hover {
-				background: none;
-			}
-			.thisMonth {
-				color: #FFF;
-			}
-			.notThisMonth {
-				color: @grey;
-			}
+		}
+		.cal-block:after {
+			content: "";
+			display: table;
+			clear: both;
+		}
+		.cal-day:hover {
+			background: none;
+		}
+		.thisMonth {
+			color: #FFF;
+		}
+		.notThisMonth {
+			color: @grey;
+		}
 			// .cal-day:nth-of-type(3n+1){
 			// 	background-color: multiply(@green, #cccccc);
 			// 	.event-indicator {
@@ -687,24 +686,20 @@ input, button {
 	}
 }
 @media screen and (max-width: 768px){
-	.event-indicator {
-		right: 35% !important;
-	}
+
 }
 @media screen and (max-width: 414px){
-	.event-indicator {
-		right: 26% !important;
-	}
+
 	.login-register-button {
-	width: 100%;
-    display: block;
-    margin: 1em auto;
-}
+		width: 100%;
+		display: block;
+		margin: 1em auto;
+	}
 	.toggle-login {
 		color: @grey;
-		 width: 100%;
-	    display: block;
-	    margin: 0 auto;
+		width: 100%;
+		display: block;
+		margin: 0 auto;
 	}
 	.notice-icon{
 		width: 15% !important;
@@ -721,21 +716,19 @@ input, button {
 
 }
 @media screen and (max-width: 375px){
-	.event-indicator {
-		right: 25% !important;
-	}
+	
 	.login-register-button {
-	width: 100%;
-    display: block;
-    margin: 1em auto;
-}
-.toggle-login {
-	color: @grey;
-	 width: 100%;
-    display: block;
-    margin: 0 auto;
-}
-.notice-icon{
+		width: 100%;
+		display: block;
+		margin: 1em auto;
+	}
+	.toggle-login {
+		color: @grey;
+		width: 100%;
+		display: block;
+		margin: 0 auto;
+	}
+	.notice-icon{
 		width: 15% !important;
 	}
 

@@ -26,7 +26,7 @@ export default class Day extends Component {
 		*/
 
 		// backup give style={this.props.style} to cal-day-text
-		let eventCounter = this.props.events.length > 0 ? "mdi mdi-numeric-" + this.props.events.length + "-box-outline" : "no-events" ;
+		let eventCounter = this.props.events.length > 0 && window.innerWidth < 768 ? "mdi mdi-checkbox-blank-circle" : this.props.events.length > 0 ? "mdi mdi-numeric-" + this.props.events.length + "-box-outline" : "mdi mdi-checkbox-blank no-events" ;
 		return (
 			<div className="cal-block cal-day" onClick={this.selectDate.bind(this)} style={this.props.style}>
 				<p className="cal-day-text">
