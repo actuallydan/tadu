@@ -17,6 +17,7 @@ import Rodal from 'rodal';
 import 'rodal/lib/rodal.css';
 
 import SwipeableViews from 'react-swipeable-views';
+import { virtualize } from 'react-swipeable-views-utils';
 
 export default class Cal extends TrackerReact(React.Component) {
 	constructor(props){
@@ -33,7 +34,8 @@ export default class Cal extends TrackerReact(React.Component) {
 			monthShowing : new Date(),
 			showNotifications: false,
 			showSchedule: false,
-			weekView: false
+			weekView: false,
+			index: null
 		};
 	}
 	/* Triggers update in parent to tell app what day we are concerned with (changes current tasks view) 
@@ -87,6 +89,9 @@ export default class Cal extends TrackerReact(React.Component) {
 		// 	this.nextMonth()
 		// 	break;
 		// }
+		this.setState({
+			index: 1
+		});
 
 	}
 	render(){
@@ -164,7 +169,7 @@ export default class Cal extends TrackerReact(React.Component) {
 
 					<SwipeableViews
 					enableMouseEvents={true}
-					index={1}
+					index={this.state.index === null ? 1 : this.state.index}
 					onSwitching={this.updateMonth.bind(this)}>
 
 					<div>
@@ -237,12 +242,11 @@ export default class Cal extends TrackerReact(React.Component) {
 }
 const get20Years = ()=>{
 	var allYears = [];
-	var thisYear = moment(); 
-	for(var i = 240; i > 0; i--){ 
+	for(var i = 12; i > 0; i--){ 
 		allYears.push(moment().subtract(i, "months")) 
 	} 
 	allYears.push(moment()); 
-	for(var i = 0; i < 240; i++){ 
+	for(var i = 0; i < 12; i++){ 
 		allYears.push(moment().add(i, "months")) 
 	} 
 	return allYears 
