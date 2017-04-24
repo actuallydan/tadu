@@ -16,6 +16,8 @@ import moment from 'moment';
 import Rodal from 'rodal';
 import 'rodal/lib/rodal.css';
 
+import SwipeableViews from 'react-swipeable-views';
+
 export default class Cal extends TrackerReact(React.Component) {
 	constructor(props){
 		super(props);
@@ -76,6 +78,17 @@ export default class Cal extends TrackerReact(React.Component) {
 	toggleWeekView(){
 		this.setState({weekView : !this.state.weekView})
 	}
+	updateMonth(index, type){
+		// switch(index){
+		// 	case 0:
+		// 	this.prevMonth();
+		// 	break;
+		// 	case 2:
+		// 	this.nextMonth()
+		// 	break;
+		// }
+
+	}
 	render(){
 		/* Get tasks so we can map them over the current month to show them on the calendar 
 		* Refined to only search for tasks in this current month
@@ -95,79 +108,112 @@ export default class Cal extends TrackerReact(React.Component) {
 			}
 			);
 			filteredTasks = filteredTasks.length === 0 ? <div id="no-tasks-message"><p>You're free all day!</p><img src="../img/tadu_logo.png" className="no-tasks-icon"></img></div> : filteredTasks.map( (task) => {
-						return <TaskSingle key={task._id} task={task} showDetail={this.props.showDetail.bind(this)}/>
-					});
+				return <TaskSingle key={task._id} task={task} showDetail={this.props.showDetail.bind(this)}/>
+			});
 
-		return (<div id="calendar">
+			return (<div id="calendar">
 
-			<div id="calendar-header">
-			<div id="action-bar">
-			<div id="add-event-button" className="nav-button mdi mdi-alarm" onClick={this.showNotice.bind(this)} data-tip="Notifications"></div>
-			{
-				this.state.weekView ?  
-				<div id="add-event-button" className="nav-button mdi mdi-calendar" onClick={this.toggleWeekView.bind(this)} data-tip="Calendar"></div>
-
-				: 
-				<div id="add-event-button" className="nav-button mdi mdi-view-dashboard" onClick={this.toggleWeekView.bind(this)} data-tip="Schedule"></div>
-
-			}
-
-			<div id="add-event-button" className="nav-button mdi mdi-plus hide-on-large" onClick={this.props.showAddTask.bind(this)} data-tip="Add Event"></div>
-			</div>
-			<div className="hide-on-small">
-			<ReactTooltip place="bottom" type="dark" effect="solid" style={{borderRadius : 0, color: '#1de9b6', opacity: 0, backgroundColor: '#000000'}}>
-			</ReactTooltip>
-			</div>
-
-			<div id="calendar-header-month">
-			{months[this.state.monthShowing.getMonth()]}
-			</div>
-			<div id="calendar-header-year"> 
-			{this.state.monthShowing.getFullYear()}
-			</div>
-			</div>
-			{this.state.weekView ? 
-				<Schedule />
-				:
-				<div id="calendar-wrapper">
-				<div id="calendar-header-days">
-				<div id="prev-month-button" className="mdi mdi-chevron-left" onClick={this.prevMonth.bind(this)}></div>
+				<div id="calendar-header">
+				<div id="action-bar">
+				<div id="add-event-button" className="nav-button mdi mdi-alarm" onClick={this.showNotice.bind(this)} data-tip="Notifications"></div>
 				{
-					/* Create calendar header */
-					daysOfWeek.map((dayText)=> {
-						return (
-							<span className="cal-block cal-header" key={"day-header-"+dayText}>	
-							<p className="cal-day-text">
-							{dayText === "Thursday" ? "Th" : dayText === "Saturday" ? "Sa" : dayText === "Sunday" ? "Su" : dayText[0]} 				
-							</p>
-							</span>
-							)
-					}
-					)
+					this.state.weekView ?  
+					<div id="add-event-button" className="nav-button mdi mdi-calendar" onClick={this.toggleWeekView.bind(this)} data-tip="Calendar"></div>
+
+					: 
+					<div id="add-event-button" className="nav-button mdi mdi-view-dashboard" onClick={this.toggleWeekView.bind(this)} data-tip="Schedule"></div>
+
 				}
-				<div id="next-month-button" className="mdi mdi-chevron-right" onClick={this.nextMonth.bind(this)}></div>
-				</div>
-				<div id="calendar-body" style={{"paddingTop" : "3.25em"}}>
 
-				<MonthView 
-				today={this.state.today} 
-				selectedDate={this.state.selectedDate} 
-				selectDate={this.selectDate.bind(this)}
-				monthShowing={this.state.monthShowing}
-				year={this.state.monthShowing.getFullYear()}
-				month={this.state.monthShowing.getMonth()}
-				tasks={tasks}
-				/>
-				
+				<div id="add-event-button" className="nav-button mdi mdi-plus hide-on-large" onClick={this.props.showAddTask.bind(this)} data-tip="Add Event"></div>
+				</div>
+				<div className="hide-on-small">
+				<ReactTooltip place="bottom" type="dark" effect="solid" style={{borderRadius : 0, color: '#1de9b6', opacity: 0, backgroundColor: '#000000'}}>
+				</ReactTooltip>
+				</div>
 
+				<div id="calendar-header-month">
+				{months[this.state.monthShowing.getMonth()]}
 				</div>
-				<div id="quickTasks" style={{display: window.innerWidth > 768 ? "none" : "normal"}}>
-				{filteredTasks}
+				<div id="calendar-header-year"> 
+				{this.state.monthShowing.getFullYear()}
 				</div>
 				</div>
-				
-			}
-			{
+				{this.state.weekView ? 
+					<Schedule />
+					:
+					<div id="calendar-wrapper">
+					<div id="calendar-header-days">
+					<div id="prev-month-button" className="mdi mdi-chevron-left" onClick={this.prevMonth.bind(this)}></div>
+					{
+						/* Create calendar header */
+						daysOfWeek.map((dayText)=> {
+							return (
+								<span className="cal-block cal-header" key={"day-header-"+dayText}>	
+								<p className="cal-day-text">
+								{dayText === "Thursday" ? "Th" : dayText === "Saturday" ? "Sa" : dayText === "Sunday" ? "Su" : dayText[0]} 				
+								</p>
+								</span>
+								)
+						}
+						)
+					}
+					<div id="next-month-button" className="mdi mdi-chevron-right" onClick={this.nextMonth.bind(this)}></div>
+					</div>
+					<div id="calendar-body" style={{"paddingTop" : "3.25em"}}>
+
+					<SwipeableViews
+					enableMouseEvents={true}
+					index={1}
+					onSwitching={this.updateMonth.bind(this)}>
+
+					<div>
+					<MonthView 
+					today={this.state.today} 
+					selectedDate={this.state.selectedDate} 
+					selectDate={this.selectDate.bind(this)}
+					monthShowing={this.state.monthShowing}
+					year={this.state.monthShowing.getFullYear()}
+					month={this.state.monthShowing.getMonth() - 1}
+					tasks={tasks}
+					/>
+					</div>
+
+					<div>
+					<MonthView 
+					today={this.state.today} 
+					selectedDate={this.state.selectedDate} 
+					selectDate={this.selectDate.bind(this)}
+					monthShowing={this.state.monthShowing}
+					year={this.state.monthShowing.getFullYear()}
+					month={this.state.monthShowing.getMonth()}
+					tasks={tasks}
+					/>
+					</div>
+
+					<div>
+					<MonthView 
+					today={this.state.today} 
+					selectedDate={this.state.selectedDate} 
+					selectDate={this.selectDate.bind(this)}
+					monthShowing={this.state.monthShowing}
+					year={this.state.monthShowing.getFullYear()}
+					month={this.state.monthShowing.getMonth() + 1}
+					tasks={tasks}
+					/>
+					</div>
+
+
+					</SwipeableViews>
+
+					</div>
+					<div id="quickTasks" style={{display: window.innerWidth > 768 ? "none" : "normal"}}>
+					{filteredTasks}
+					</div>
+					</div>
+
+				}
+				{
 				/* Crammed down here like the dirty after-thought it is, is the nofitications icon tray
 				* (I bet you forgot about it too didnt' you?)
 				* One of the gnarliest ternary opertators I've written to decide whether or not to rear it's ugly face
@@ -193,11 +239,11 @@ const get20Years = ()=>{
 	var allYears = [];
 	var thisYear = moment(); 
 	for(var i = 240; i > 0; i--){ 
-		allYears.push(thisYear.subtract(i, "months")) 
+		allYears.push(moment().subtract(i, "months")) 
 	} 
-	allYears.push(thisYear); 
+	allYears.push(moment()); 
 	for(var i = 0; i < 240; i++){ 
-		allYears.push(thisYear.add(i, "months")) 
+		allYears.push(moment().add(i, "months")) 
 	} 
 	return allYears 
 };
