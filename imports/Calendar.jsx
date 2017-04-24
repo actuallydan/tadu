@@ -161,7 +161,7 @@ export default class Cal extends TrackerReact(React.Component) {
 				
 
 				</div>
-				<div id="quickTasks">
+				<div id="quickTasks" style={{display: window.innerWidth > 768 ? "none" : "normal"}}>
 				{filteredTasks}
 				</div>
 				</div>
