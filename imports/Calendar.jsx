@@ -212,7 +212,7 @@ export default class Cal extends TrackerReact(React.Component) {
 					</SwipeableViews>
 
 					</div>
-					<div id="quickTasks" style={{display: window.innerWidth > 768 ? "none" : "normal"}}>
+					<div id="quickTasks" style={{display: window.innerWidth > 993 ? "none" : "normal"}}>
 					{filteredTasks}
 					</div>
 					</div>

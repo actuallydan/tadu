@@ -56,16 +56,16 @@
 	* Style
 * FF issues?
 * Documentation
-* Figure out what to do with blank space at bottom on some screens
-* Custom alert times (and tones for mobile)
-* iOS
-	*Add Task Search Bar needs to be bigger
+	*Add Task 
 		* center align text
-		* Prevent focus from zooming
-		* overflow-x hidden (an issue with horizontal scrolling?)
+		* Custom alert times (and tones for mobile)
+			* main.js cron job uses "alert time" for timeUTC which is the UTC time of te alert date minus the tasks alert offset
+			* AddTasks include alert offset radio (see categories from tadu.2)
+			* Update AddTasks, addTask meteor method, and test cron job
+			* Add Toggle to not set alarm
+			* Cron looks for timeUTC that does not === null  and equals the current server time
+
 	* Scheduler make 2 digit times fit (still stacking on tiny screens)
-	* try to relocate task list to bottom of screen
-* iPad
-	* set event-notice icon to be normal sized
+
 
 
