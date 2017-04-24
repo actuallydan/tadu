@@ -7,6 +7,7 @@ import React from 'react';
 import Notice from './Notice.jsx';
 import Schedule from './Schedule.jsx';
 import MonthView from './MonthCal.jsx';
+import TaskSingle from './TaskSingle.jsx';
 
 /* 3rd party plugins*/
 import ReactTooltip from 'react-tooltip';
@@ -84,11 +85,23 @@ export default class Cal extends TrackerReact(React.Component) {
 
 		const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
+		let filteredTasks = tasks.filter(
+			(task) => {
+				return task.dateStart === this.state.selectedDate;
+			}
+			).sort(
+			(a, b) => {
+				return a.dateStart + "T" + a.timeStart > b.dateStart + "T" +b.timeStart;
+			}
+			);
+			filteredTasks = filteredTasks.length === 0 ? <div id="no-tasks-message"><p>You're free all day!</p><img src="../img/tadu_logo.png" className="no-tasks-icon"></img></div> : filteredTasks.map( (task) => {
+						return <TaskSingle key={task._id} task={task} showDetail={this.props.showDetail.bind(this)}/>
+					});
+
 		return (<div id="calendar">
 
 			<div id="calendar-header">
 			<div id="action-bar">
-			<div id="add-event-button" className="nav-button mdi mdi-view-list hide-on-large hide-on-med" onClick={this.props.showTasks.bind(this)} data-tip="Tasks"></div>
 			<div id="add-event-button" className="nav-button mdi mdi-alarm" onClick={this.showNotice.bind(this)} data-tip="Notifications"></div>
 			{
 				this.state.weekView ?  
@@ -134,7 +147,7 @@ export default class Cal extends TrackerReact(React.Component) {
 				}
 				<div id="next-month-button" className="mdi mdi-chevron-right" onClick={this.nextMonth.bind(this)}></div>
 				</div>
-				<div id="calendar-body" className="animated fadeIn" style={{"paddingTop" : "2.3em"}}>
+				<div id="calendar-body" style={{"paddingTop" : "3.25em"}}>
 
 				<MonthView 
 				today={this.state.today} 
@@ -147,6 +160,9 @@ export default class Cal extends TrackerReact(React.Component) {
 				/>
 				
 
+				</div>
+				<div id="quickTasks">
+				{filteredTasks}
 				</div>
 				</div>
 				

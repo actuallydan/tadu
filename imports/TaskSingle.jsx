@@ -33,7 +33,7 @@ export default class TaskSingle extends Component {
 		var taskClass = this.props.task.completed ? "completed-task" : "";
 		
 		return (
-			<li className="task-single" onClick={this.showDetail.bind(this)}>
+			<li className="task-single animated bounceInUp" onClick={this.showDetail.bind(this)}>
 			<div className="checkbox">
 				<input id={"task_"+this.props.task._id} type="checkbox" readOnly={true} checked={this.props.task.completed} onClick={this.toggleTask.bind(this)} />
 				 <label htmlFor={"task_"+this.props.task._id}></label>

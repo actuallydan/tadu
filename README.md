@@ -63,7 +63,6 @@
 		* center align text
 		* Prevent focus from zooming
 		* overflow-x hidden (an issue with horizontal scrolling?)
-	* Double Check that login fits on tiny phone (can use safari)
 	* Scheduler make 2 digit times fit (still stacking on tiny screens)
 	* try to relocate task list to bottom of screen
 * iPad

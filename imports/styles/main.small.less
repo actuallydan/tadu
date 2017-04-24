@@ -132,11 +132,11 @@ input, button, textarea {
 	}
 
 	/* Loggedin Dash */
-	#left-wrapper{
+	#left-wrapper, #center-wrapper{
 		width: 100%;
 		display: inline-flex;
 		display: -webkit-inline-flex;
-display: -ms-inline-flexbox;
+		display: -ms-inline-flexbox;
 		position: fixed;
 		overflow-y: scroll;
 		height: 100%;
@@ -153,7 +153,7 @@ display: -ms-inline-flexbox;
 			color: white;
 			display: inline-flex;
 			display: -webkit-inline-flex;
-display: -ms-inline-flexbox;
+			display: -ms-inline-flexbox;
 			border-bottom: none;
 			margin: 0;
 			padding: 0;
@@ -314,7 +314,7 @@ display: -ms-inline-flexbox;
 	width: 100%;
 	display: inline-flex;
 	display: -webkit-inline-flex;
-display: -ms-inline-flexbox;
+	display: -ms-inline-flexbox;
 	margin-left: 0;
 	#calendar {
 		width: 100%;
@@ -488,12 +488,27 @@ display: -ms-inline-flexbox;
 			// 	background: multiply(@green, #444);
 			// }
 		}
+		#quickTasks {
+		    overflow: scroll;
+		    height: 38%;
+		    position: fixed;
+		    width: 100%;
+		    color: @grey;
+		    background: #FFF;
+		    #no-tasks-message {
+		    	color: #FFF;
+		    	padding: 0;
+		    }
+		    .task-single:last-of-type {
+		    	margin-bottom: 1em;
+		    }
+		}
 	}
 	#right-wrapper{
 		width: 100%;
 		display: inline-flex;
 		display: -webkit-inline-flex;
-display: -ms-inline-flexbox;
+		display: -ms-inline-flexbox;
 		position: fixed;
 		right: 0;
 		z-index: 5;
@@ -508,7 +523,7 @@ display: -ms-inline-flexbox;
 			line-height: 2em;
 			display: inline-flex;
 			display: -webkit-inline-flex;
-display: -ms-inline-flexbox;
+			display: -ms-inline-flexbox;
 			width: 96%;
 		}
 		#add-task-form-nav i{
