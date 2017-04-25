@@ -36,3 +36,4 @@ percolate:synced-cron
 mobile-status-bar
 #meson:electron
 fastclick
+force-ssl

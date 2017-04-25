@@ -252,6 +252,42 @@ export default class AddTask extends TrackerReact(React.Component) {
 				
 				{this.state.hasBeenOptimized ? <div className="form-item" style={{"color": "#1de9b6", "fontSize" : "0.6em", "textAlign" : "center"}}><span className='form-item-label mdi mdi-alert-circle'></span><span> {'\u00A0'} This date and time has been optimized for you!</span> </div> : ""}
 				
+<div id="priority-radio-wrapper" className="form-item"> 
+					<p>Priority</p>
+					<div className="radio-option-wrapper">
+						<label className="radio" htmlFor="priority-radio-low">
+						<input id="priority-radio-low" ref="lowest" type="radio" name="priority" value="lowest" defaultChecked={true}/> 
+						<span className="outer"><span className="inner"></span></span><span className="radio-option-label-text">Lowest</span>
+						</label>
+					</div>	
+					<div className="radio-option-wrapper">
+						<label className="radio" htmlFor="priority-radio-med">
+						<input id="priority-radio-med" ref="lower" type="radio" name="priority" value="lower" /> <span className="outer">
+						<span className="inner"></span></span><span className="radio-option-label-text">Lower</span>
+						</label>
+					</div>	
+					<div className="radio-option-wrapper">
+						<label className="radio" htmlFor="priority-radio-high">
+						<input id="priority-radio-high" ref="higher" type="radio" name="priority" value="higher" /> <span className="outer">
+						<span className="inner"></span></span><span className="radio-option-label-text">Higher</span>
+						</label>
+					</div>	
+					<div className="radio-option-wrapper">
+						<label className="radio" htmlFor="priority-radio-critical">
+						<input id="priority-radio-critical" ref="highest" type="radio" name="priority" value="highest" /> <span className="outer">
+						<span className="inner"></span></span><span className="radio-option-label-text">Highest</span>
+						</label>
+					</div>
+				</div>
+				<div className="form-item"> Due Date? <div id="has-due-date-toggle-wrapper" className="checkbox bg-grey"><input type="checkbox" id="has-due-date-toggle" readOnly="" value="on" onClick={this.showDueDate.bind(this)}/><label htmlFor="has-due-date-toggle"></label></div></div>
+				<div className={this.state.dueDateVisible ? "form-item" : "hidden"} ><span className='form-item-label'>Due Date</span><input className="typeable" type="date" ref="dueDate" defaultValue={now}/> </div>
+				<div className={this.state.dueDateVisible ? "form-item" : "hidden"} ><span className='form-item-label'>Due Time</span><input className="typeable" type="time" ref="dueTime" /> </div>
+				
+
+				
+
+
+
 				<div className="form-item desc"><textarea type="text" ref="desc" placeholder="Description" maxLength="300"></textarea> </div>
 
 				<div  className="form-item"><button type="submit" className="button">Add Task</button> </div>
