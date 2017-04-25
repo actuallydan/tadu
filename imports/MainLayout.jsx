@@ -10,6 +10,7 @@ import Calendar from './Calendar.jsx';
 import AddTask from './AddTask.jsx';
 import EntryPortal from './EntryPortal.jsx';
 import TaskDetail from './TaskDetail.jsx';
+import TaskSingle from './TaskSingle.jsx';
 
 /*  CSS split up for now but should be refactored later to minimize redundancies */
 import './styles/main.normal.less';
@@ -26,6 +27,8 @@ import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import moment from 'moment';
 import Rodal from 'rodal';
 import 'rodal/lib/rodal.css';
+
+import SwipeableViews from 'react-swipeable-views';
 
 /* Instantiate MiniMongo local database collections */
 Tasks = new Mongo.Collection('Tasks');
@@ -153,13 +156,37 @@ export default class MainLayout extends TrackerReact(React.Component) {
   		},
   		function(isConfirm){
   			if (isConfirm) {
-  				swal("Good job!", "I'm so proud of you", "success");
-  				// Update task completion status to true
-  				Meteor.call('toggleTask', notice.data);
-  			} else {
-  				swal("Rescheduling...", "Don't worry. I'll set up a different time", "success");
-  				// TODO: update task startTime
-  			}
+  					swal("Good job!", "I'm so proud of you", "success");
+	  				// Update task completion status to true
+	  				Meteor.call('toggleTask', notice.data);
+					Meteor.call("changeThreshold", {tag: notice.data.tag, date: notice.data.dateStart, time: notice.data.timeStart, amt: 0.1})
+	  			} else {
+	  				swal("Rescheduling...", "Don't worry. I'll set up a different time", "success");
+	  				/* update task startTime */
+	  				Meteor.call("scheduleBestTime", {tag: notice.data.tag, today: new Date()}, (err, res)=>{
+	  					if(err){
+	  						swal("So..", "There was an issue rescheduling..." + "<br/>" + err, "error");
+	  					} else {
+	  						let daysFromToday = res.date - new Date().getDay();
+							let bestDate = moment(res.time, "HH:mm").add(daysFromToday, "days");
+							// Change threshold
+							/* Provide tag (notice.data.tag), date and time (notice.data.dateStart, notice.data.timeStart) and signed amount to change */
+							Meteor.call("changeThreshold", {tag: notice.data.tag, date: notice.data.dateStart, time: notice.data.timeStart, amt: -0.1})
+							// Update task
+							let newTask = {
+								_id: notice.data._id,
+								text : notice.data.text,
+								dateStart : bestDate.format("YYYY-MM-DD"),
+								timeStart : bestDate.format("HH:mm"),
+								desc : notice.data.desc,
+								alarm: notice.data.alarm,
+								timeUTC : notice.data.alarm !== null ? bestDate.subtract(notice.data.alarm, minutes).utc().format().substring(0,16) : null,
+	
+							}
+							Meteor.call("updateTask", newTask);
+	  					}
+	  				});
+	  			}
   			// Mark this notification as seen and do not re-show it
   			Meteor.call("seeNotification", notice);
 
@@ -211,7 +238,8 @@ export default class MainLayout extends TrackerReact(React.Component) {
 								dateStart : bestDate.format("YYYY-MM-DD"),
 								timeStart : bestDate.format("HH:mm"),
 								desc : notice.data.desc,
-								timeUTC : bestDate.utc().format().substring(0,16),
+								alarm: notice.data.alarm,
+								timeUTC : notice.data.alarm !== null ? bestDate.subtract(notice.data.alarm, "minutes").utc().format().substring(0,16) : null,
 	
 							}
 							Meteor.call("updateTask", newTask);
@@ -235,10 +263,20 @@ export default class MainLayout extends TrackerReact(React.Component) {
   	let taskDetail = this.state.taskDetail !== null ? this.state.taskDetail : "" ;
   	/* Get notifications to see if the user has any that need resolved and to display old notifications in tray at top of Calendar */
   	let notices = Notifications.find({}, {limit: 20}).fetch();
+
+if(window.innerWidth <= 992){
+	let nextTask = Tasks.find({dateStart: "2017-04-25", timeStart: {$gt : "14:08"}}).fetch().sort((a, b)=>{ return a.timeStart > b.timeStart})[0];
+
+	nextTask = nextTask === undefined 
+	? 
+	<div id="no-tasks-message"><p>You're free all day!</p><img src="../img/tadu_logo.png" className="no-tasks-icon"></img></div> 
+	: 
+	<TaskSingle key={nextTask._id} task={nextTask} showDetail={this.showDetail.bind(this)}/>;
+}
   	return (
   		<div>
 
-  		{this.state.loggedIn 
+  		{this.state.loggedIn && window.innerWidth > 992
   			?
   			<div>
   			<div id="left-wrapper" style={{zIndex: viewTaskList ? 5 : -1}}>
@@ -253,9 +291,31 @@ export default class MainLayout extends TrackerReact(React.Component) {
   			{notices.length !== 0 ? notices.filter((notice)=>{return notice.seen === false}).map((notice)=>{this.notify(notice)}) : ""}
   			</div>
   			:
+  			this.state.loggedIn && window.innerWidth <= 992 
+  			?
+  			<SwipeableViews index={1} >
+			<div id="left-wrapper" style={{zIndex: 1, position: "relative"}}>
+  			<TaskList show={true} showDetail={this.showDetail.bind(this)} selectedDate={this.state.selectedDate} showCal={this.showView.bind(this)}/>
+  			</div>
+  			<div id="center-wrapper" style={{zIndex: 1, position: "relative"}}>
+  			<Calendar show={true} showAddTask={this.showAddTask.bind(this)} selectDate={this.selectDate.bind(this)} notifications={notices} showTasks={this.showTasks.bind(this)} showDetail={this.showDetail.bind(this)}/>
+  			{notices.length !== 0 ? notices.filter((notice)=>{return notice.seen === false}).map((notice)=>{this.notify(notice)}) : ""}
+  			</div>
+  			<div id="right-wrapper" style={{zIndex : 1, position: "relative"}}>
+  			<AddTask show={true} hideAddTask={this.hideAddTask.bind(this)} selectedDate={this.state.selectedDate}/>
+  			</div>
+  			</SwipeableViews>
+  			:
   			<EntryPortal loggedInChange={this.loggedInChange.bind(this)}/>
   		}
+  		{this.state.loggedIn && window.innerWidth <= 992 && typeof nextTask !== "undefined"  ?
+			<div id="quickTasks">
+					{nextTask}
+					</div>
+					:
+					""
 
+  		}
   		<Rodal visible={this.state.taskDetail !== null} onClose={this.hideDetail.bind(this)} className="modal task-detail glow" animation="door" customStyles={{width: '80%',
   		height: '80%', borderRadius: 0, borderColor: '#1de9b6', borderWidth: 1, borderStyle : 'solid', background: '#242424', color: '#fff'}}>
   			<TaskDetail taskDetail={taskDetail} closeDetail={this.hideDetail}/>

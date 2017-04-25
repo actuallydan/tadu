@@ -17,7 +17,7 @@ export default class AddTask extends TrackerReact(React.Component) {
 		*/ 
 		this.state = {
 			stage1 : true,
-			dueDateVisible: false,
+			showAlarmVisible: true,
 			tagType : null,
 			subscription: {
 				tagTypes: Meteor.subscribe("tagTypes")
@@ -38,16 +38,30 @@ export default class AddTask extends TrackerReact(React.Component) {
 		/* Create the task object that will be sent to the server to be stored in the database
 		* As of now we need the task title (text), the date and time of the task to start, the time as UTC for the server, the user's ID, and the description
 		*/ 
+
+		/* Get alarm if any */
+		let alarm = null;
+		if(this.refs.hasAlarm.checked){
+			if(this.refs["5min"].checked){
+				alarm = 5;
+			} else if(this.refs["30min"].checked){
+				alarm = 30;
+			} else if(this.refs["1hour"].checked){
+				alarm = 60;
+			} else if(this.refs["1day"].checked){
+				alarm = 1440;
+			}
+		}
 		let task = {
-				text : this.refs.newTask.value.trim(),
-				dateStart : this.refs.dateStart.value.trim(),
-				timeStart : this.refs.timeStart.value.trim(),
-				// priority : event.target.elements.priority.value.trim()
+			text : this.refs.newTask.value.trim(),
+			dateStart : this.refs.dateStart.value.trim(),
+			timeStart : this.refs.timeStart.value.trim(),
 				tagType : this.state.tagType,
 				userId: Meteor.userId(),
 				desc: this.refs.desc.value.trim(),
 				completed: false,
-				timeUTC: moment(this.refs.dateStart.value.trim() + "T" + this.refs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").utc().format().substring(0,16)
+				alarm: alarm,
+				timeUTC: alarm !== null ? moment(this.refs.dateStart.value.trim() + "T" + this.refs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16) : null
 			};
 
 			/* Call Meteor to abscond with our earthly woes and store it in the database if possible */
@@ -61,8 +75,11 @@ export default class AddTask extends TrackerReact(React.Component) {
 					this.refs.newTask.value = "";
 					swal("Success", "Task Created", "success");
 					this.clearTask();
+					this.setState({
+						showAlarmVisible : true
+					})
 				};
-			})
+			});
 		}
 		/* Method to move to stage 2 of task creation which is additional and optional details */
 		taskStage2(e) {
@@ -87,52 +104,53 @@ export default class AddTask extends TrackerReact(React.Component) {
 				}
 			});
 		}
-		showDueDate(event){
+		showAlarm(){
 			this.setState({
-				dueDateVisible: !this.state.dueDateVisible
+				showAlarmVisible: !this.state.showAlarmVisible
 			});
 		}
 		/* Trigger method in parent to hide AddTask Component if necessary and clear state to reset form */
 		clearTask(){
 			this.props.hideAddTask();
 			this.setState({
-						stage1 : true,
-						tagType : null,
-						search: ""
-					});
+				stage1 : true,
+				tagType : null,
+				search: ""
+			});
 		}
 		/* Method to create a new tag for the user if not available*/
 		createNewTag(){
 			let context = this;
 			swal({
-			  title: "Create A New Tag",
-			  text: "Please enter a name for your new tag",
-			  type: "input",
-			  showCancelButton: true,
-			  closeOnConfirm: false,
-			  inputPlaceholder: document.getElementById("search").value.trim()
+				title: "Create A New Tag",
+				text: "Please enter a name for your new tag",
+				type: "input",
+				showCancelButton: true,
+				closeOnConfirm: false,
+				inputPlaceholder: "Netflix Marathon, Eat Ice, Reading",
+				inputValue: document.getElementById("search").value.trim(),
 			},
 			function(inputValue){
-			  if (inputValue === false) {
-			  	return false;
-			  }
-			  if (inputValue === "") {
-			    swal.showInputError("Please give your tag a name!");
-			    return false
-			  }
-			  Meteor.call("addTag", inputValue.trim(), (err, res)=>{
-			  	if(err){
-			  		swal("Uh Oh!", err, "error");
-			  	} else if(res === "exists"){
-			  		swal("Awkward...", "This tag already exists", "warning");
-			  	} else {
-			  		swal("Tag Created!", "We'll pick up where you left off", "success");
-			  		context.setState({
-						stage1 : false,
-						tagType : inputValue.trim()
-					});
-			  	}
-			  })
+				if (inputValue === false) {
+					return false;
+				}
+				if (inputValue === "") {
+					swal.showInputError("Please give your tag a name!");
+					return false
+				}
+				Meteor.call("addTag", inputValue.trim(), (err, res)=>{
+					if(err){
+						swal("Uh Oh!", err, "error");
+					} else if(res === "exists"){
+						swal("Awkward...", "This tag already exists", "warning");
+					} else {
+						swal("Tag Created!", "We'll pick up where you left off", "success");
+						context.setState({
+							stage1 : false,
+							tagType : inputValue.trim()
+						});
+					}
+				})
 			});
 		}
 		/* Relevant parts of AddTask stage 1; this should probably be spun off into it's own component */
@@ -146,54 +164,54 @@ export default class AddTask extends TrackerReact(React.Component) {
 				<div>
 				<div id="search-wrapper">
 				<i id="search-icon" className="mdi mdi-magnify"></i>
-					<input id="search" type="text" value={this.state.search} onChange={this.updateSearch.bind(this)} placeholder="Select Category or Search"/>
+				<input id="search" type="text" value={this.state.search} onChange={this.updateSearch.bind(this)} placeholder="Select Category or Search"/>
 				</div>
 				{
 					/* If the user hasn't started searching give them the dialpad, otherwise show them the most used results */
 					this.state.search !== "" ? "" :
-				<div id="global-tags">
+					<div id="global-tags">
 					<p className="global-tag-wrapper" data-tag="Homework" onClick={this.taskStage2.bind(this)}>
-						<i className="tag-icon mdi mdi-pencil"></i>
-						<span className="global-tag-label">Homework</span>
+					<i className="tag-icon mdi mdi-pencil"></i>
+					<span className="global-tag-label">Homework</span>
 					</p>
 
 					<p className="global-tag-wrapper" onClick={this.taskStage2.bind(this)} data-tag="Study">
-						<i className="tag-icon mdi mdi-book-open-variant"></i>
-						<span className="global-tag-label">Study</span>
+					<i className="tag-icon mdi mdi-book-open-variant"></i>
+					<span className="global-tag-label">Study</span>
 					</p>					
 					<p className="global-tag-wrapper" onClick={this.taskStage2.bind(this)} data-tag="Doctor">
-						<i className="tag-icon mdi mdi-stethoscope"></i>
-						<span className="global-tag-label">Doctor</span>
+					<i className="tag-icon mdi mdi-stethoscope"></i>
+					<span className="global-tag-label">Doctor</span>
 					</p>
 
 					<p className="global-tag-wrapper" onClick={this.taskStage2.bind(this)} data-tag="Exercise">
-						<i className="tag-icon mdi mdi-run"></i>
-						<span className="global-tag-label">Exercise</span>
+					<i className="tag-icon mdi mdi-run"></i>
+					<span className="global-tag-label">Exercise</span>
 					</p>					
 					<p className="global-tag-wrapper" onClick={this.taskStage2.bind(this)} data-tag="Meeting">
-						<i className="tag-icon mdi mdi-account-multiple"></i>
-						<span className="global-tag-label">Meeting</span>
+					<i className="tag-icon mdi mdi-account-multiple"></i>
+					<span className="global-tag-label">Meeting</span>
 					</p>					
 					<p className="global-tag-wrapper" onClick={this.taskStage2.bind(this)} data-tag="Groceries">
-						<i className="tag-icon mdi mdi-food-apple"></i>
-						<span className="global-tag-label">Groceries</span>
+					<i className="tag-icon mdi mdi-food-apple"></i>
+					<span className="global-tag-label">Groceries</span>
 					</p>
 
 					<p className="global-tag-wrapper" onClick={this.taskStage2.bind(this)} data-tag="Errands">
-						<i className="tag-icon mdi mdi-car"></i>
-						<span className="global-tag-label">Errands</span>
+					<i className="tag-icon mdi mdi-car"></i>
+					<span className="global-tag-label">Errands</span>
 					</p>					
 					<p className="global-tag-wrapper" onClick={this.taskStage2.bind(this)} data-tag="Music Practice">
-						<i className="tag-icon mdi mdi-music-note"></i>
-						<span className="global-tag-label">Music Practice</span>
+					<i className="tag-icon mdi mdi-music-note"></i>
+					<span className="global-tag-label">Music Practice</span>
 					</p>					
 					<p className="global-tag-wrapper" onClick={this.taskStage2.bind(this)} data-tag="Cleaning">
-						<i className="tag-icon mdi mdi-cup-water"></i>
-						<span className="global-tag-label">Cleaning</span>
+					<i className="tag-icon mdi mdi-cup-water"></i>
+					<span className="global-tag-label">Cleaning</span>
 					</p>
 
 
-				</div>
+					</div>
 				}
 				{
 					myTags === undefined ? "" :
@@ -230,9 +248,9 @@ export default class AddTask extends TrackerReact(React.Component) {
 				{
 					n === 0 && this.state.search !== "" ? 
 					<p className="global-tag-wrapper no-tags" onClick={this.createNewTag.bind(this)}>
-						<label>Looking for something else? Create a new tag for next time!</label>
-						<i className="tag-icon mdi mdi-tag"></i>
-						<span className="global-tag-label">Create New Tag</span>
+					<label>Looking for something else? Create a new tag for next time!</label>
+					<i className="tag-icon mdi mdi-tag"></i>
+					<span className="global-tag-label">Create New Tag</span>
 					</p>
 					: 
 					""
@@ -252,38 +270,39 @@ export default class AddTask extends TrackerReact(React.Component) {
 				
 				{this.state.hasBeenOptimized ? <div className="form-item" style={{"color": "#1de9b6", "fontSize" : "0.6em", "textAlign" : "center"}}><span className='form-item-label mdi mdi-alert-circle'></span><span> {'\u00A0'} This date and time has been optimized for you!</span> </div> : ""}
 				
-<div id="priority-radio-wrapper" className="form-item"> 
-					<p>Priority</p>
-					<div className="radio-option-wrapper">
-						<label className="radio" htmlFor="priority-radio-low">
-						<input id="priority-radio-low" ref="lowest" type="radio" name="priority" value="lowest" defaultChecked={true}/> 
-						<span className="outer"><span className="inner"></span></span><span className="radio-option-label-text">Lowest</span>
-						</label>
-					</div>	
-					<div className="radio-option-wrapper">
-						<label className="radio" htmlFor="priority-radio-med">
-						<input id="priority-radio-med" ref="lower" type="radio" name="priority" value="lower" /> <span className="outer">
-						<span className="inner"></span></span><span className="radio-option-label-text">Lower</span>
-						</label>
-					</div>	
-					<div className="radio-option-wrapper">
-						<label className="radio" htmlFor="priority-radio-high">
-						<input id="priority-radio-high" ref="higher" type="radio" name="priority" value="higher" /> <span className="outer">
-						<span className="inner"></span></span><span className="radio-option-label-text">Higher</span>
-						</label>
-					</div>	
-					<div className="radio-option-wrapper">
-						<label className="radio" htmlFor="priority-radio-critical">
-						<input id="priority-radio-critical" ref="highest" type="radio" name="priority" value="highest" /> <span className="outer">
-						<span className="inner"></span></span><span className="radio-option-label-text">Highest</span>
-						</label>
-					</div>
-				</div>
-				<div className="form-item"> Due Date? <div id="has-due-date-toggle-wrapper" className="checkbox bg-grey"><input type="checkbox" id="has-due-date-toggle" readOnly="" value="on" onClick={this.showDueDate.bind(this)}/><label htmlFor="has-due-date-toggle"></label></div></div>
-				<div className={this.state.dueDateVisible ? "form-item" : "hidden"} ><span className='form-item-label'>Due Date</span><input className="typeable" type="date" ref="dueDate" defaultValue={now}/> </div>
-				<div className={this.state.dueDateVisible ? "form-item" : "hidden"} ><span className='form-item-label'>Due Time</span><input className="typeable" type="time" ref="dueTime" /> </div>
-				
 
+				<div className="form-item"> Set Alarm? 
+				<div className="checkbox">
+				<input id="has-alarm-toggle" type="checkbox" readOnly="" defaultChecked={this.state.showAlarmVisible}ref="hasAlarm" onClick={this.showAlarm.bind(this)} />
+				<label htmlFor="has-alarm-toggle"></label>
+				</div>
+				</div>
+				<div id="alarm-radio-wrapper" className={"form-item " + (this.state.showAlarmVisible ? "" : "hidden")}> 
+				<div className="radio-option-wrapper">
+				<label className="radio" htmlFor="priority-radio-low">
+				<input id="priority-radio-low" ref="5min" type="radio" name="priority" value="5min" defaultChecked={true}/> 
+				<span className="outer"><span className="inner"></span></span><div className="radio-option-label-text">5 min</div>
+				</label>
+				</div>	
+				<div className="radio-option-wrapper">
+				<label className="radio" htmlFor="priority-radio-med">
+				<input id="priority-radio-med" ref="30min" type="radio" name="priority" value="30min" /> <span className="outer">
+				<span className="inner"></span></span><div className="radio-option-label-text">30 min</div>
+				</label>
+				</div>	
+				<div className="radio-option-wrapper">
+				<label className="radio" htmlFor="priority-radio-high">
+				<input id="priority-radio-high" ref="1hour" type="radio" name="priority" value="1hour" /> <span className="outer">
+				<span className="inner"></span></span><div className="radio-option-label-text">1 hour</div>
+				</label>
+				</div>	
+				<div className="radio-option-wrapper">
+				<label className="radio" htmlFor="priority-radio-critical">
+				<input id="priority-radio-critical" ref="1day" type="radio" name="priority" value="1day" /> <span className="outer">
+				<span className="inner"></span></span><div className="radio-option-label-text"> 1 day</div>
+				</label>
+				</div>
+				</div>
 				
 
 

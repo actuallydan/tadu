@@ -7,7 +7,6 @@ import React from 'react';
 import Notice from './Notice.jsx';
 import Schedule from './Schedule.jsx';
 import MonthView from './MonthCal.jsx';
-import TaskSingle from './TaskSingle.jsx';
 
 /* 3rd party plugins*/
 import ReactTooltip from 'react-tooltip';
@@ -17,7 +16,6 @@ import Rodal from 'rodal';
 import 'rodal/lib/rodal.css';
 
 import SwipeableViews from 'react-swipeable-views';
-import { virtualize } from 'react-swipeable-views-utils';
 
 export default class Cal extends TrackerReact(React.Component) {
 	constructor(props){
@@ -103,19 +101,7 @@ export default class Cal extends TrackerReact(React.Component) {
 
 		const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-		let filteredTasks = tasks.filter(
-			(task) => {
-				return task.dateStart === this.state.selectedDate;
-			}
-			).sort(
-			(a, b) => {
-				return a.dateStart + "T" + a.timeStart > b.dateStart + "T" +b.timeStart;
-			}
-			);
-			filteredTasks = filteredTasks.length === 0 ? <div id="no-tasks-message"><p>You're free all day!</p><img src="../img/tadu_logo.png" className="no-tasks-icon"></img></div> : filteredTasks.map( (task) => {
-				return <TaskSingle key={task._id} task={task} showDetail={this.props.showDetail.bind(this)}/>
-			});
-
+	
 			return (<div id="calendar">
 
 				<div id="calendar-header">
@@ -168,7 +154,6 @@ export default class Cal extends TrackerReact(React.Component) {
 					<div id="calendar-body" style={{"paddingTop" : "3.25em"}}>
 
 					<SwipeableViews
-					enableMouseEvents={true}
 					index={this.state.index === null ? 1 : this.state.index}
 					onSwitching={this.updateMonth.bind(this)}>
 
@@ -212,9 +197,7 @@ export default class Cal extends TrackerReact(React.Component) {
 					</SwipeableViews>
 
 					</div>
-					<div id="quickTasks" style={{display: window.innerWidth > 993 ? "none" : "normal"}}>
-					{filteredTasks}
-					</div>
+					
 					</div>
 
 				}

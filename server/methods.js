@@ -14,6 +14,7 @@ Meteor.methods({
 			createdAt: new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000)).getTime(),
 			userId : Meteor.userId(),
 			desc : task.desc,
+			alarm: task.alarm,
 			timeUTC: task.timeUTC
 		});
 
@@ -47,6 +48,7 @@ Meteor.methods({
 				dateStart : task.dateStart,
 				timeStart : task.timeStart,
 				desc : task.desc,
+				alarm: task.alarm,
 				timeUTC : task.timeUTC
 			}
 		});

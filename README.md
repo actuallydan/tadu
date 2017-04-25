@@ -56,16 +56,6 @@
 	* Style
 * FF issues?
 * Documentation
-	*Add Task 
-		* center align text
-		* Custom alert times (and tones for mobile)
-			* main.js cron job uses "alert time" for timeUTC which is the UTC time of te alert date minus the tasks alert offset
-			* AddTasks include alert offset radio (see categories from tadu.2)
-			* Update AddTasks, addTask meteor method, and test cron job
-			* Add Toggle to not set alarm
-			* Cron looks for timeUTC that does not === null  and equals the current server time
-
-	* Scheduler make 2 digit times fit (still stacking on tiny screens)
-
-
+* Custom Alert Tones for mobile
+* Up Next Task for Calendar on small screen (needs to be visible, having issue with heights?)
 
