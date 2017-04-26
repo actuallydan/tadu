@@ -57,5 +57,4 @@
 * FF issues?
 * Documentation
 * Custom Alert Tones for mobile
-* Up Next Task for Calendar on small screen (needs to be visible, having issue with heights?)
 

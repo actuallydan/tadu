@@ -17,8 +17,10 @@ input, button, textarea {
 input, button, textarea {
 	border-radius: 0;
 }
+
 /* small screens */
 @media screen and (max-width: 992px){
+
 	#entry-portal {
 		background: url(../img/Underground-Traffic.jpg) no-repeat center center fixed; 
 		-webkit-background-size: cover;
@@ -132,14 +134,13 @@ input, button, textarea {
 	}
 
 	/* Loggedin Dash */
-	#left-wrapper, #center-wrapper{
+	#left-wrapper, #center-wrapper, #quickTasks{
 		width: 100%;
 		display: inline-flex;
 		display: -webkit-inline-flex;
 		display: -ms-inline-flexbox;
 		position: fixed;
 		overflow-y: scroll;
-		height: 100%;
 		overflow-x: hidden;
 		#TaskList{
 			border-right: 1px solid @dark-grey;
@@ -371,6 +372,7 @@ input, button, textarea {
 			background-color : #242424;
 			width : 100%;
 			z-index: 4;
+			margin-top: 1em;
 			.cal-header {
 				color: @green;
 				border-bottom: 1px solid @grey;
@@ -385,20 +387,20 @@ input, button, textarea {
 				z-index: 4;
 				font-size: 1.3em;
 				margin: 0.4em 0 0 0.2em;
-				position: fixed;
-				top: 1.2em;
+				position: absolute;
+				top: -1.9em;
 				right: 2.4em;
 			}
 			#next-month-button{
 				width: 1em;
 				font-size: 1em;
 				float: right;
-				position: fixed;
+				position: absolute;
 				z-index: 4;
 				right: 0;
 				font-size: 1.3em;
 				margin: 0.4em 0 0 0.2em;
-				top: 1.2em;
+				top: -1.9em;
 				right: 0.4em;
 			}
 		}
@@ -487,18 +489,6 @@ input, button, textarea {
 			// }.cal-day:nth-of-type(6n + 42) {
 			// 	background: multiply(@green, #444);
 			// }
-		}
-		#quickTasks {
-		    overflow: scroll;
-		    height: auto;
-		    position: fixed;
-		    width: 100%;
-		    color: @grey;
-		    background: #FFF;
-		    #no-tasks-message {
-		    	color: #FFF;
-		    	padding: 0;
-		    }
 		}
 	}
 	#right-wrapper{
@@ -654,6 +644,36 @@ input, button, textarea {
 		}
 	}
 }
+#quickTasks {
+	overflow: scroll;
+	height: auto;
+	position: fixed;
+	width: 100%;
+	color: @grey;
+	background: #FFF;
+	bottom: 0;
+	z-index: 3;
+	.task-single{
+		border-bottom: none;
+		width: 100%
+	}
+	#no-tasks-message {
+		padding: 0;
+		display: inline-flex;
+   		 width: 100%;
+   		 p {
+width: 80%;
+    color: #242424;
+    line-height: 2em;
+    margin: auto;
+   		 }
+   		 .no-tasks-icon {
+width: 20%;
+    height: 100%;
+   		 }
+	}
+}
+
 @media screen and (max-width: 768px){
 
 }

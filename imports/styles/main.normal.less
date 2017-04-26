@@ -37,6 +37,11 @@ input {
 	src: local(Anivers), url("/fonts/Anivers.woff");
 	font-weight: 400;
 }
+#left-wrapper,
+#center-wrapper,
+#right-wrapper {
+	height: 100vh;
+}
 html, body, #app{
 	width: 100%;
 	border: none;
@@ -45,7 +50,9 @@ html, body, #app{
 	box-sizing: border-box;
 	overflow-x: hidden;
 	background-color: @dark-grey;
+	height: 100vh;
 }
+
 input:focus, textarea:focus, button:focus {
 	outline: none;
 }
@@ -1063,7 +1070,7 @@ body {font-weight: 300 } @media only screen and (min-width: 360px) {body {font-s
 	-webkit-animation-duration:0.25s !important;
 	animation-duration:0.25s !important;
 }
-.bounceInUp {
+.bounceInUp, .bounceIn {
 	-webkit-animation-duration:0.5s !important;
 	animation-duration:0.5s !important;
 }

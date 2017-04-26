@@ -50,7 +50,8 @@ export default class MainLayout extends TrackerReact(React.Component) {
 				notifications: Meteor.subscribe("notifications"),
 				schedules: Meteor.subscribe("schedules")
 			},
-			taskDetail : null
+			taskDetail : null,
+			index: 1
 		};
 	}
 
@@ -84,6 +85,24 @@ export default class MainLayout extends TrackerReact(React.Component) {
 			swal('Desktop notifications not available in your browser. Please download a modern browser like Chrome or Opera'); 
 			return;
 		}
+	}
+	/*Triggered when swiping between views (mobile only) */
+	onChangeIndex(index){
+		this.setState({
+			index: index
+		});
+	}
+	/* Triggered when manually switching views (with button) */
+	changeIndex(e){
+		console.log(e, this)
+		let switcher = {
+			"calendar" : 1,
+			"addTask" : 2,
+			"taskList" : 0
+		};
+		this.setState({
+			index: switcher[e]
+		});
 	}
 	/* All purpose change view method
 	* TODO: This should be used in place of show/hide addtask/tasklist/calendar
@@ -256,7 +275,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
   }
   render() {
   	/* Based on screen size and current state, determine which windows should be open */
-  	let viewTaskList =  this.state.viewMode === 'tasksList' ? true : window.innerWidth >= 992 ? true : false;
+  	let viewTaskList =  this.state.viewMode === 'taskList' ? true : window.innerWidth >= 992 ? true : false;
   	let viewAddEvent = this.state.viewMode === 'addTask' ? true : window.innerWidth >= 1400 ? true : false;
 
   	/* Whether or not task detail modal should be visible right now  is based on whether there is a task currently in state */
@@ -264,21 +283,22 @@ export default class MainLayout extends TrackerReact(React.Component) {
   	/* Get notifications to see if the user has any that need resolved and to display old notifications in tray at top of Calendar */
   	let notices = Notifications.find({}, {limit: 20}).fetch();
 
-if(window.innerWidth <= 992){
-	let nextTask = Tasks.find({dateStart: "2017-04-25", timeStart: {$gt : "14:08"}}).fetch().sort((a, b)=>{ return a.timeStart > b.timeStart})[0];
+  	let nextTask = null;
+	if(window.innerWidth <= 992){
+		nextTask = Tasks.find({dateStart: this.state.today, timeStart: {$gt : moment().format("HH:mm")}}).fetch().sort((a, b)=>{ return a.timeStart > b.timeStart})[0];
 
-	nextTask = nextTask === undefined 
-	? 
-	<div id="no-tasks-message"><p>You're free all day!</p><img src="../img/tadu_logo.png" className="no-tasks-icon"></img></div> 
-	: 
-	<TaskSingle key={nextTask._id} task={nextTask} showDetail={this.showDetail.bind(this)}/>;
-}
+		nextTask = nextTask === undefined 
+		? 
+		<div id="no-tasks-message"><p>You're free all day!</p><img src="../img/tadu_logo.png" className="no-tasks-icon"></img></div> 
+		: 
+		<TaskSingle key={nextTask._id} task={nextTask} showDetail={this.showDetail.bind(this)}/>;
+	}
   	return (
   		<div>
 
   		{this.state.loggedIn && window.innerWidth > 992
   			?
-  			<div>
+  			<div style={{width: "100%"}}>
   			<div id="left-wrapper" style={{zIndex: viewTaskList ? 5 : -1}}>
   			<TaskList show={viewTaskList} showDetail={this.showDetail.bind(this)} selectedDate={this.state.selectedDate} showCal={this.showView.bind(this)}/>
   			</div>
@@ -293,23 +313,23 @@ if(window.innerWidth <= 992){
   			:
   			this.state.loggedIn && window.innerWidth <= 992 
   			?
-  			<SwipeableViews index={1} >
+  			<SwipeableViews index={this.state.index}  style={{height: "100vh"}} onChangeIndex={this.onChangeIndex.bind(this)}>
 			<div id="left-wrapper" style={{zIndex: 1, position: "relative"}}>
-  			<TaskList show={true} showDetail={this.showDetail.bind(this)} selectedDate={this.state.selectedDate} showCal={this.showView.bind(this)}/>
+  			<TaskList show={true} showDetail={this.showDetail.bind(this)} selectedDate={this.state.selectedDate} showCal={this.changeIndex.bind(this)}/>
   			</div>
   			<div id="center-wrapper" style={{zIndex: 1, position: "relative"}}>
-  			<Calendar show={true} showAddTask={this.showAddTask.bind(this)} selectDate={this.selectDate.bind(this)} notifications={notices} showTasks={this.showTasks.bind(this)} showDetail={this.showDetail.bind(this)}/>
+  			<Calendar show={true} showAddTask={this.changeIndex.bind(this)} selectDate={this.selectDate.bind(this)} notifications={notices} showTasks={this.changeIndex.bind(this)} showDetail={this.showDetail.bind(this)}/>
   			{notices.length !== 0 ? notices.filter((notice)=>{return notice.seen === false}).map((notice)=>{this.notify(notice)}) : ""}
   			</div>
   			<div id="right-wrapper" style={{zIndex : 1, position: "relative"}}>
-  			<AddTask show={true} hideAddTask={this.hideAddTask.bind(this)} selectedDate={this.state.selectedDate}/>
+  			<AddTask show={true} hideAddTask={this.changeIndex.bind(this)} selectedDate={this.state.selectedDate}/>
   			</div>
   			</SwipeableViews>
   			:
   			<EntryPortal loggedInChange={this.loggedInChange.bind(this)}/>
   		}
-  		{this.state.loggedIn && window.innerWidth <= 992 && typeof nextTask !== "undefined"  ?
-			<div id="quickTasks">
+  		{this.state.loggedIn && window.innerWidth <= 992 && nextTask !== null && this.state.index === 1 ?
+			<div id="quickTasks" className="animated bounceInUp">
 					{nextTask}
 					</div>
 					:

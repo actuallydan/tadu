@@ -36,6 +36,7 @@ export default class Cal extends TrackerReact(React.Component) {
 			index: null
 		};
 	}
+
 	/* Triggers update in parent to tell app what day we are concerned with (changes current tasks view) 
 	* Also updates state to delegate the coveted "selected-day" theme to child Day components
 	*/
@@ -78,6 +79,9 @@ export default class Cal extends TrackerReact(React.Component) {
 	toggleWeekView(){
 		this.setState({weekView : !this.state.weekView})
 	}
+	showAddTask(){
+		this.props.showAddTask("addTask");
+	}
 	updateMonth(index, type){
 		// switch(index){
 		// 	case 0:
@@ -91,6 +95,9 @@ export default class Cal extends TrackerReact(React.Component) {
 			index: 1
 		});
 
+	}
+	showTasksList(){
+		this.props.showTasks("taskList");
 	}
 	render(){
 		/* Get tasks so we can map them over the current month to show them on the calendar 
@@ -106,6 +113,8 @@ export default class Cal extends TrackerReact(React.Component) {
 
 				<div id="calendar-header">
 				<div id="action-bar">
+			<div id="add-event-button" className="nav-button mdi mdi-view-list hide-on-large hide-on-med" onClick={this.props.showTasks.bind(this)} data-tip="Tasks"></div>
+
 				<div id="add-event-button" className="nav-button mdi mdi-alarm" onClick={this.showNotice.bind(this)} data-tip="Notifications"></div>
 				{
 					this.state.weekView ?  
@@ -116,7 +125,7 @@ export default class Cal extends TrackerReact(React.Component) {
 
 				}
 
-				<div id="add-event-button" className="nav-button mdi mdi-plus hide-on-large" onClick={this.props.showAddTask.bind(this)} data-tip="Add Event"></div>
+				<div id="add-event-button" className="nav-button mdi mdi-plus hide-on-large" onClick={this.showAddTask.bind(this)} data-tip="Add Event"></div>
 				</div>
 				<div className="hide-on-small">
 				<ReactTooltip place="bottom" type="dark" effect="solid" style={{borderRadius : 0, color: '#1de9b6', opacity: 0, backgroundColor: '#000000'}}>
@@ -151,25 +160,9 @@ export default class Cal extends TrackerReact(React.Component) {
 					}
 					<div id="next-month-button" className="mdi mdi-chevron-right" onClick={this.nextMonth.bind(this)}></div>
 					</div>
-					<div id="calendar-body" style={{"paddingTop" : "3.25em"}}>
+					<div id="calendar-body" style={{"paddingTop" : "4.25em"}}>
 
-					<SwipeableViews
-					index={this.state.index === null ? 1 : this.state.index}
-					onSwitching={this.updateMonth.bind(this)}>
 
-					<div>
-					<MonthView 
-					today={this.state.today} 
-					selectedDate={this.state.selectedDate} 
-					selectDate={this.selectDate.bind(this)}
-					monthShowing={this.state.monthShowing}
-					year={this.state.monthShowing.getFullYear()}
-					month={this.state.monthShowing.getMonth() - 1}
-					tasks={tasks}
-					/>
-					</div>
-
-					<div>
 					<MonthView 
 					today={this.state.today} 
 					selectedDate={this.state.selectedDate} 
@@ -179,22 +172,6 @@ export default class Cal extends TrackerReact(React.Component) {
 					month={this.state.monthShowing.getMonth()}
 					tasks={tasks}
 					/>
-					</div>
-
-					<div>
-					<MonthView 
-					today={this.state.today} 
-					selectedDate={this.state.selectedDate} 
-					selectDate={this.selectDate.bind(this)}
-					monthShowing={this.state.monthShowing}
-					year={this.state.monthShowing.getFullYear()}
-					month={this.state.monthShowing.getMonth() + 1}
-					tasks={tasks}
-					/>
-					</div>
-
-
-					</SwipeableViews>
 
 					</div>
 					
