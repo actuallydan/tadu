@@ -64,37 +64,17 @@ export default class Cal extends TrackerReact(React.Component) {
 			monthShowing : new Date(this.state.monthShowing.getFullYear(), this.state.monthShowing.getMonth() + 1, this.state.monthShowing.getDate())
 		});
 	}
-	/* Display the notifications tray
+	/* toggle the notifications tray
 	* Should probably condensed into a single toggle method
 	*/	
-	showNotice() {
-		this.setState({ showNotifications : true });
-	}
-	/* Hide the notifications tray
-	* Should probably condensed into a single toggle method
-	*/	
-	hideNotice() {
-		this.setState({showNotifications : false});
+	toggleNotice() {
+		this.setState({showNotifications : !this.state.showNotifications });
 	}
 	toggleWeekView(){
 		this.setState({weekView : !this.state.weekView})
 	}
 	showAddTask(){
 		this.props.showAddTask("addTask");
-	}
-	updateMonth(index, type){
-		// switch(index){
-		// 	case 0:
-		// 	this.prevMonth();
-		// 	break;
-		// 	case 2:
-		// 	this.nextMonth()
-		// 	break;
-		// }
-		this.setState({
-			index: 1
-		});
-
 	}
 	showTasksList(){
 		this.props.showTasks("taskList");
@@ -115,7 +95,7 @@ export default class Cal extends TrackerReact(React.Component) {
 				<div id="action-bar">
 			<div id="add-event-button" className="nav-button mdi mdi-view-list hide-on-large hide-on-med" onClick={this.props.showTasks.bind(this)} data-tip="Tasks"></div>
 
-				<div id="add-event-button" className="nav-button mdi mdi-alarm" onClick={this.showNotice.bind(this)} data-tip="Notifications"></div>
+				<div id="add-event-button" className="nav-button mdi mdi-alarm" onClick={this.toggleNotice.bind(this)} data-tip="Notifications"></div>
 				{
 					this.state.weekView ?  
 					<div id="add-event-button" className="nav-button mdi mdi-calendar" onClick={this.toggleWeekView.bind(this)} data-tip="Calendar"></div>
@@ -185,7 +165,7 @@ export default class Cal extends TrackerReact(React.Component) {
 				* TODO: style should be passed in from parent that also has a Rodal style object
 				*/
 				this.state.showNotifications ? 
-				<Rodal visible={this.state.showNotifications} onClose={this.hideNotice.bind(this)} className="modal task-detail glow" animation="door" customStyles={{width: '80%',
+				<Rodal visible={this.state.showNotifications} onClose={this.toggleNotice.bind(this)} className="modal task-detail glow" animation="door" customStyles={{width: '80%',
 				height: '80%', borderRadius: 0, borderColor: '#1de9b6', borderWidth: 1, borderStyle : 'solid', background: '#242424', color: '#fff'}}>
 				<div id="notice-header">Notifications</div>	
 				<div id="notice-wrapper">
