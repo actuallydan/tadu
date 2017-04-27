@@ -52,8 +52,7 @@
 * 5.0 Tadu Concierge 
 
 #### What Needs Done
-* On Task Click -> Modal Or Alert To Edit 
-	* Style
+* Notificiations modal doesn't work? Try to elevate to main layout
 * FF issues?
 * Documentation
 * Custom Alert Tones for mobile
