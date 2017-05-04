@@ -4,7 +4,6 @@
 *
 */
 import React from 'react';
-import Notice from './Notice.jsx';
 import Schedule from './Schedule.jsx';
 import MonthView from './MonthCal.jsx';
 
@@ -64,12 +63,6 @@ export default class Cal extends TrackerReact(React.Component) {
 			monthShowing : new Date(this.state.monthShowing.getFullYear(), this.state.monthShowing.getMonth() + 1, this.state.monthShowing.getDate())
 		});
 	}
-	/* toggle the notifications tray
-	* Should probably condensed into a single toggle method
-	*/	
-	toggleNotice() {
-		this.setState({showNotifications : !this.state.showNotifications });
-	}
 	toggleWeekView(){
 		this.setState({weekView : !this.state.weekView})
 	}
@@ -95,7 +88,7 @@ export default class Cal extends TrackerReact(React.Component) {
 				<div id="action-bar">
 			<div id="add-event-button" className="nav-button mdi mdi-view-list hide-on-large hide-on-med" onClick={this.props.showTasks.bind(this)} data-tip="Tasks"></div>
 
-				<div id="add-event-button" className="nav-button mdi mdi-alarm" onClick={this.toggleNotice.bind(this)} data-tip="Notifications"></div>
+				<div id="add-event-button" className="nav-button mdi mdi-alarm" onClick={this.props.toggleNotice.bind(this)} data-tip="Notifications"></div>
 				{
 					this.state.weekView ?  
 					<div id="add-event-button" className="nav-button mdi mdi-calendar" onClick={this.toggleWeekView.bind(this)} data-tip="Calendar"></div>
@@ -158,25 +151,7 @@ export default class Cal extends TrackerReact(React.Component) {
 					</div>
 
 				}
-				{
-				/* Crammed down here like the dirty after-thought it is, is the nofitications icon tray
-				* (I bet you forgot about it too didnt' you?)
-				* One of the gnarliest ternary opertators I've written to decide whether or not to rear it's ugly face
-				* TODO: style should be passed in from parent that also has a Rodal style object
-				*/
-				this.state.showNotifications ? 
-				<Rodal visible={this.state.showNotifications} onClose={this.toggleNotice.bind(this)} className="modal task-detail glow" animation="door" customStyles={{width: '80%',
-				height: '80%', borderRadius: 0, borderColor: '#1de9b6', borderWidth: 1, borderStyle : 'solid', background: '#242424', color: '#fff'}}>
-				<div id="notice-header">Notifications</div>	
-				<div id="notice-wrapper">
-				{this.props.notifications.sort((a, b)=>{return a.timestamp < b.timestamp}).map((notice)=>{
-					return (<Notice key={notice._id} data={notice} />)
-				})}
-				</div>
-				</Rodal>
-				:
-				""
-			}
+				
 			</div>)
 }
 }

@@ -34,7 +34,7 @@ return (
 				<label htmlFor="register-username" className="mdi mdi-account-circle"></label>
 				<input className='form-input' type="text"  id="register-username" ref="username" placeholder="Username"  onFocus={this.highlight.bind(this)}/>
 								</div>
-
+								<div style={{fontSize: "0.6em", color: "#616161"}}>By clicking "Register" you agree to our <a style={{color: "#FFF"}}target="_blank" href="../docs/privacypolicy.html">Privacy Policy</a> and that you are at least 13 years of age.</div>
 				<p className="login-register-button"><input className="button" type="submit" value="Register" /></p>
 								<p onClick={this.props.handleChangeForm.bind(this)} className="toggle-login">Already registered?</p>
 

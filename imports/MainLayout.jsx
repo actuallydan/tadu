@@ -11,6 +11,7 @@ import AddTask from './AddTask.jsx';
 import EntryPortal from './EntryPortal.jsx';
 import TaskDetail from './TaskDetail.jsx';
 import TaskSingle from './TaskSingle.jsx';
+import Notice from './Notice.jsx';
 
 /*  CSS split up for now but should be refactored later to minimize redundancies */
 import './styles/main.normal.less';
@@ -51,10 +52,13 @@ export default class MainLayout extends TrackerReact(React.Component) {
 				schedules: Meteor.subscribe("schedules")
 			},
 			taskDetail : null,
-			index: 1
+			index: 1,
+			showNotifications: false
 		};
 	}
-
+	toggleNotice(){
+		this.setState({showNotifications : !this.state.showNotifications });
+	}
 	handleResize(){
 		let newWidth = window.innerWidth > 1399 ? (window.innerWidth - 700) : window.innerWidth > 992 ? (window.innerWidth - 300) : window.innerWidth;
 		this.setState({width: newWidth});
@@ -303,7 +307,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
   			<TaskList show={viewTaskList} showDetail={this.showDetail.bind(this)} selectedDate={this.state.selectedDate} showCal={this.showView.bind(this)}/>
   			</div>
   			<div id="center-wrapper" style={{zIndex: 1}}>
-  			<Calendar show={true} showAddTask={this.showAddTask.bind(this)} selectDate={this.selectDate.bind(this)} notifications={notices} showTasks={this.showTasks.bind(this)} showDetail={this.showDetail.bind(this)}/>
+  			<Calendar toggleNotice={this.toggleNotice.bind(this)} show={true} showAddTask={this.showAddTask.bind(this)} selectDate={this.selectDate.bind(this)} notifications={notices} showTasks={this.showTasks.bind(this)} showDetail={this.showDetail.bind(this)}/>
   			</div>
   			<div id="right-wrapper" style={{zIndex : viewAddEvent ? 5 : -1}}>
   			<AddTask show={viewAddEvent} hideAddTask={this.hideAddTask.bind(this)} selectedDate={this.state.selectedDate}/>
@@ -318,7 +322,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
   			<TaskList show={true} showDetail={this.showDetail.bind(this)} selectedDate={this.state.selectedDate} showCal={this.changeIndex.bind(this)}/>
   			</div>
   			<div id="center-wrapper" style={{zIndex: 1, position: "relative"}}>
-  			<Calendar show={true} showAddTask={this.changeIndex.bind(this)} selectDate={this.selectDate.bind(this)} notifications={notices} showTasks={this.changeIndex.bind(this)} showDetail={this.showDetail.bind(this)}/>
+  			<Calendar toggleNotice={this.toggleNotice.bind(this)} show={true} showAddTask={this.changeIndex.bind(this)} selectDate={this.selectDate.bind(this)} notifications={notices} showTasks={this.changeIndex.bind(this)} showDetail={this.showDetail.bind(this)}/>
   			{notices.length !== 0 ? notices.filter((notice)=>{return notice.seen === false}).map((notice)=>{this.notify(notice)}) : ""}
   			</div>
   			<div id="right-wrapper" style={{zIndex : 1, position: "relative"}}>
@@ -340,6 +344,25 @@ export default class MainLayout extends TrackerReact(React.Component) {
   		height: '80%', borderRadius: 0, borderColor: '#1de9b6', borderWidth: 1, borderStyle : 'solid', background: '#242424', color: '#fff'}}>
   			<TaskDetail taskDetail={taskDetail} closeDetail={this.hideDetail}/>
   		</Rodal>
+  		{
+			/* Crammed down here like the dirty after-thought it is, is the nofitications icon tray
+			* (I bet you forgot about it too didnt' you?)
+			* One of the gnarliest ternary opertators I've written to decide whether or not to rear it's ugly face
+			* TODO: style should be passed in from parent that also has a Rodal style object
+			*/
+			this.state.showNotifications ? 
+			<Rodal visible={this.state.showNotifications} onClose={this.toggleNotice.bind(this)} className="modal task-detail glow" animation="door" customStyles={{width: '80%',
+			height: '80%', borderRadius: 0, borderColor: '#1de9b6', borderWidth: 1, borderStyle : 'solid', background: '#242424', color: '#fff'}}>
+			<div id="notice-header">Notifications</div>	
+			<div id="notice-wrapper">
+			{notices.sort((a, b)=>{return a.timestamp < b.timestamp}).map((notice)=>{
+				return (<Notice key={notice._id} data={notice} />)
+			})}
+			</div>
+			</Rodal>
+			:
+			""
+		}
   		</div>
   		);
   }
