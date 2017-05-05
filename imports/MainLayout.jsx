@@ -67,6 +67,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
 		this.loggedInChange = this.loggedInChange.bind(this);
 		this.changeIndex = this.changeIndex.bind(this);
 		this.showTasks = this.showTasks.bind(this);
+		this.hideDetail = this.hideDetail.bind(this)
 	}
 	toggleNotice(){
 		this.setState({showNotifications : !this.state.showNotifications });
@@ -218,7 +219,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
 								desc : notice.data.desc,
 								alarm: notice.data.alarm,
 								timeUTC : notice.data.alarm !== null ? bestDate.subtract(notice.data.alarm, minutes).utc().format().substring(0,16) : null,
-								
+
 							}
 							Meteor.call("updateTask", newTask);
 						}
@@ -277,7 +278,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
 								desc : notice.data.desc,
 								alarm: notice.data.alarm,
 								timeUTC : notice.data.alarm !== null ? bestDate.subtract(notice.data.alarm, "minutes").utc().format().substring(0,16) : null,
-								
+
 							}
 							Meteor.call("updateTask", newTask);
 						}

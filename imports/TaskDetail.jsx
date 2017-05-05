@@ -85,13 +85,14 @@ export default class TaskDetail extends React.Component{
 				<div className='timeStart'> Time </div>
 				<input className="typeable" id="edit-task-time" type="time" ref="timeStart"  defaultValue={this.props.taskDetail.timeStart} /> 
 			</div>
-			<div className="form-item"> Set Alarm? 
-				<div className="checkbox">
-				<input id="has-alarm-toggle" type="checkbox" readOnly="" ref="hasAlarm" onClick={this.showAlarm.bind(this)} />
-				<label htmlFor="has-alarm-toggle"></label>
+			<div className="form-item" style={{borderBottom : "1px solid #424242", padding: "0.5em", lineHeight: "2em"}}>
+				<div style={{width: '15%', display: "inline-block", fontSize: window.innerWidth > 992 ? "0.8em" : '0.7em'}}>Set Alarm? </div>
+				<div className="checkbox" style={{width: '85%'}}>
+					<input id="has-alarm-toggle" type="checkbox" readOnly="" ref="hasAlarm" onClick={this.showAlarm.bind(this)} />
+					<label htmlFor="has-alarm-toggle"></label>
 				</div>
 				</div>
-				<div id="alarm-radio-wrapper" className={"form-item " + (this.state.showAlarmVisible ? "" : "hidden")}> 
+				<div id="alarm-radio-wrapper" className={"form-item " + (this.state.showAlarmVisible ? "" : "hidden")} style={{borderBottom : "1px solid #424242", padding: "0.5em 0"}}> 
 				<div className="radio-option-wrapper">
 				<label className="radio" htmlFor="priority-radio-low">
 				<input id="priority-radio-low" ref="5min" type="radio" name="priority" value="5min" defaultChecked={this.props.taskDetail.alarm === 5}/> 
