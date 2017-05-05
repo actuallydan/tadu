@@ -92,9 +92,13 @@ export default class EntryPortal extends React.Component {
 		*/
 		return (
 			<div id="entry-portal"> 
-			<video preload="true" loop muted autoPlay poster="../img/Underground-Traffic.jpg">
-		        <source src="../img/Underground-Traffic.mp4" type="video/mp4"/>
-		    </video>
+			{window.innerWidth > 992 ?
+				<video preload="true" loop muted autoPlay poster="../img/Underground-Traffic.jpg" >
+		        	<source src="../img/Underground-Traffic.mp4" type="video/mp4"/>
+		    	</video>
+				:
+				""
+			}
 			{this.state.showLogin ? 
 			<Login showLogin={this.state.showLogin} tryLogin={this.tryLogin} handleChangeForm={this.handleChangeForm.bind(this)} loggedInChange={this.props.loggedInChange.bind(this)}/> 
 			:

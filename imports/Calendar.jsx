@@ -14,7 +14,7 @@ import moment from 'moment';
 import Rodal from 'rodal';
 import 'rodal/lib/rodal.css';
 
-import SwipeableViews from 'react-swipeable-views';
+// import SwipeableViews from 'react-swipeable-views';
 
 export default class Cal extends TrackerReact(React.Component) {
 	constructor(props){
@@ -50,7 +50,8 @@ export default class Cal extends TrackerReact(React.Component) {
 	* This should not update the selectedDate
 	*/
 	prevMonth(){
-		this.setState({
+	
+	this.setState({
 			monthShowing : new Date(this.state.monthShowing.getFullYear(), this.state.monthShowing.getMonth() - 1, this.state.monthShowing.getDate())
 		});
 	}
@@ -59,7 +60,8 @@ export default class Cal extends TrackerReact(React.Component) {
 	* This should not change selectedDate
 	*/
 	nextMonth(){
-		this.setState({
+	
+	this.setState({
 			monthShowing : new Date(this.state.monthShowing.getFullYear(), this.state.monthShowing.getMonth() + 1, this.state.monthShowing.getDate())
 		});
 	}

@@ -44,7 +44,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
 			loggedIn: Meteor.userId() === null ? false : true,
 			viewMode: "calendar",
 			selectedDate: new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000)).toJSON().substring(0, 10),
-			width: window.innerWidth > 1399 ? (window.innerWidth - 700) : window.innerWidth > 992 ? (window.innerWidth - 300) : window.innerWidth,
+			width: window.innerWidth,
 			subscription: {
 				tasks: Meteor.subscribe("userTasks"),
 				tagTypes: Meteor.subscribe("tagTypes"),
@@ -55,13 +55,24 @@ export default class MainLayout extends TrackerReact(React.Component) {
 			index: 1,
 			showNotifications: false
 		};
+		this.handleResize = this.handleResize.bind(this);
+		this.showDetail = this.showDetail.bind(this);
+		this.showView = this.showView.bind(this);
+		this.toggleNotice = this.toggleNotice.bind(this);
+		this.showAddTask = this.showAddTask.bind(this);
+		this.selectDate = this.selectDate.bind(this);
+		this.hideAddTask = this.hideAddTask.bind(this);
+		this.onChangeIndex = this.onChangeIndex.bind(this);
+		this.changeIndex = this.changeIndex.bind(this);
+		this.loggedInChange = this.loggedInChange.bind(this);
+		this.changeIndex = this.changeIndex.bind(this);
+		this.showTasks = this.showTasks.bind(this);
 	}
 	toggleNotice(){
 		this.setState({showNotifications : !this.state.showNotifications });
 	}
 	handleResize(){
-		let newWidth = window.innerWidth > 1399 ? (window.innerWidth - 700) : window.innerWidth > 992 ? (window.innerWidth - 300) : window.innerWidth;
-		this.setState({width: newWidth});
+		this.setState({width: window.innerWidth});
 	}
 	loggedInChange(flag){
 		/* Tell out app that we're changing our logged in state and that Meteor knows we're logged in / out and need to change views 
@@ -79,7 +90,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
 		/* Create event listener to update the state when the window resizes. 
 		* This way we can store window width in one place instead on constantly having to look it up with window.innerWidth
 		* This gives responsiveness to larger organizational components */
-		window.addEventListener('resize', this.handleResize.bind(this));
+		window.addEventListener('resize', this.handleResize);
 
 		/* Get the user's permission for notifications early on */
 		if (Notification.permission !== "granted")
@@ -91,14 +102,17 @@ export default class MainLayout extends TrackerReact(React.Component) {
 		}
 	}
 	/*Triggered when swiping between views (mobile only) */
-	onChangeIndex(index){
-		this.setState({
-			index: index
-		});
+	onChangeIndex(index, type){
+		// console.log(index, type);
+		if(type === "end"){
+			this.setState({
+				index: index
+			});
+		}
+		
 	}
 	/* Triggered when manually switching views (with button) */
 	changeIndex(e){
-		console.log(e, this)
 		let switcher = {
 			"calendar" : 1,
 			"addTask" : 2,
@@ -179,10 +193,10 @@ export default class MainLayout extends TrackerReact(React.Component) {
   		},
   		function(isConfirm){
   			if (isConfirm) {
-  					swal("Good job!", "I'm so proud of you", "success");
+  				swal("Good job!", "I'm so proud of you", "success");
 	  				// Update task completion status to true
 	  				Meteor.call('toggleTask', notice.data);
-					Meteor.call("changeThreshold", {tag: notice.data.tag, date: notice.data.dateStart, time: notice.data.timeStart, amt: 0.1})
+	  				Meteor.call("changeThreshold", {tag: notice.data.tag, date: notice.data.dateStart, time: notice.data.timeStart, amt: 0.1})
 	  			} else {
 	  				swal("Rescheduling...", "Don't worry. I'll set up a different time", "success");
 	  				/* update task startTime */
@@ -191,7 +205,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
 	  						swal("So..", "There was an issue rescheduling..." + "<br/>" + err, "error");
 	  					} else {
 	  						let daysFromToday = res.date - new Date().getDay();
-							let bestDate = moment(res.time, "HH:mm").add(daysFromToday, "days");
+	  						let bestDate = moment(res.time, "HH:mm").add(daysFromToday, "days");
 							// Change threshold
 							/* Provide tag (notice.data.tag), date and time (notice.data.dateStart, notice.data.timeStart) and signed amount to change */
 							Meteor.call("changeThreshold", {tag: notice.data.tag, date: notice.data.dateStart, time: notice.data.timeStart, amt: -0.1})
@@ -204,11 +218,11 @@ export default class MainLayout extends TrackerReact(React.Component) {
 								desc : notice.data.desc,
 								alarm: notice.data.alarm,
 								timeUTC : notice.data.alarm !== null ? bestDate.subtract(notice.data.alarm, minutes).utc().format().substring(0,16) : null,
-	
+								
 							}
 							Meteor.call("updateTask", newTask);
-	  					}
-	  				});
+						}
+					});
 	  			}
   			// Mark this notification as seen and do not re-show it
   			Meteor.call("seeNotification", notice);
@@ -241,7 +255,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
   					swal("Good job!", "I'm so proud of you", "success");
 	  				// Update task completion status to true
 	  				Meteor.call('toggleTask', notice.data);
-					Meteor.call("changeThreshold", {tag: notice.data.tag, date: notice.data.dateStart, time: notice.data.timeStart, amt: 0.1})
+	  				Meteor.call("changeThreshold", {tag: notice.data.tag, date: notice.data.dateStart, time: notice.data.timeStart, amt: 0.1})
 	  			} else {
 	  				swal("Rescheduling...", "Don't worry. I'll set up a different time", "success");
 	  				/* update task startTime */
@@ -250,7 +264,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
 	  						swal("So..", "There was an issue rescheduling..." + "<br/>" + err, "error");
 	  					} else {
 	  						let daysFromToday = res.date - new Date().getDay();
-							let bestDate = moment(res.time, "HH:mm").add(daysFromToday, "days");
+	  						let bestDate = moment(res.time, "HH:mm").add(daysFromToday, "days");
 							// Change threshold
 							/* Provide tag (notice.data.tag), date and time (notice.data.dateStart, notice.data.timeStart) and signed amount to change */
 							Meteor.call("changeThreshold", {tag: notice.data.tag, date: notice.data.dateStart, time: notice.data.timeStart, amt: -0.1})
@@ -263,11 +277,11 @@ export default class MainLayout extends TrackerReact(React.Component) {
 								desc : notice.data.desc,
 								alarm: notice.data.alarm,
 								timeUTC : notice.data.alarm !== null ? bestDate.subtract(notice.data.alarm, "minutes").utc().format().substring(0,16) : null,
-	
+								
 							}
 							Meteor.call("updateTask", newTask);
-	  					}
-	  				});
+						}
+					});
 	  			}
 	  		});
   			// Mark this notification as seen and do not re-show it
@@ -279,8 +293,8 @@ export default class MainLayout extends TrackerReact(React.Component) {
   }
   render() {
   	/* Based on screen size and current state, determine which windows should be open */
-  	let viewTaskList =  this.state.viewMode === 'taskList' ? true : window.innerWidth >= 992 ? true : false;
-  	let viewAddEvent = this.state.viewMode === 'addTask' ? true : window.innerWidth >= 1400 ? true : false;
+  	let viewTaskList =  this.state.viewMode === 'taskList' ? true : this.state.width >= 992 ? true : false;
+  	let viewAddEvent = this.state.viewMode === 'addTask' ? true : this.state.width >= 1400 ? true : false;
 
   	/* Whether or not task detail modal should be visible right now  is based on whether there is a task currently in state */
   	let taskDetail = this.state.taskDetail !== null ? this.state.taskDetail : "" ;
@@ -288,61 +302,61 @@ export default class MainLayout extends TrackerReact(React.Component) {
   	let notices = Notifications.find({}, {limit: 20}).fetch();
 
   	let nextTask = null;
-	if(window.innerWidth <= 992){
-		nextTask = Tasks.find({dateStart: this.state.today, timeStart: {$gt : moment().format("HH:mm")}}).fetch().sort((a, b)=>{ return a.timeStart > b.timeStart})[0];
+  	if(this.state.width <= 992){
+  		nextTask = Tasks.find({dateStart: this.state.today, timeStart: {$gt : moment().format("HH:mm")}}).fetch().sort((a, b)=>{ return a.timeStart > b.timeStart})[0];
 
-		nextTask = nextTask === undefined 
-		? 
-		<div id="no-tasks-message"><p>You're free all day!</p><img src="../img/tadu_logo.png" className="no-tasks-icon"></img></div> 
-		: 
-		<TaskSingle key={nextTask._id} task={nextTask} showDetail={this.showDetail.bind(this)}/>;
-	}
+  		nextTask = nextTask === undefined 
+  		? 
+  		<div id="no-tasks-message"><p>You're free all day!</p><img src="../img/tadu_logo.png" className="no-tasks-icon"></img></div> 
+  		: 
+  		<TaskSingle key={nextTask._id} task={nextTask} showDetail={this.showDetail}/>;
+  	}
   	return (
   		<div>
 
-  		{this.state.loggedIn && window.innerWidth > 992
+  		{this.state.loggedIn && this.state.width > 992
   			?
   			<div style={{width: "100%"}}>
   			<div id="left-wrapper" style={{zIndex: viewTaskList ? 5 : -1}}>
-  			<TaskList show={viewTaskList} showDetail={this.showDetail.bind(this)} selectedDate={this.state.selectedDate} showCal={this.showView.bind(this)}/>
+  			<TaskList show={viewTaskList} showDetail={this.showDetail} selectedDate={this.state.selectedDate} showCal={this.showView}/>
   			</div>
   			<div id="center-wrapper" style={{zIndex: 1}}>
-  			<Calendar toggleNotice={this.toggleNotice.bind(this)} show={true} showAddTask={this.showAddTask.bind(this)} selectDate={this.selectDate.bind(this)} notifications={notices} showTasks={this.showTasks.bind(this)} showDetail={this.showDetail.bind(this)}/>
+  			<Calendar toggleNotice={this.toggleNotice} show={true} showAddTask={this.showAddTask} selectDate={this.selectDate} notifications={notices} showTasks={this.showTasks} showDetail={this.showDetail}/>
   			</div>
   			<div id="right-wrapper" style={{zIndex : viewAddEvent ? 5 : -1}}>
-  			<AddTask show={viewAddEvent} hideAddTask={this.hideAddTask.bind(this)} selectedDate={this.state.selectedDate}/>
+  			<AddTask show={viewAddEvent} hideAddTask={this.hideAddTask} selectedDate={this.state.selectedDate}/>
   			</div>
   			{notices.length !== 0 ? notices.filter((notice)=>{return notice.seen === false}).map((notice)=>{this.notify(notice)}) : ""}
   			</div>
   			:
-  			this.state.loggedIn && window.innerWidth <= 992 
+  			this.state.loggedIn && this.state.width <= 992 
   			?
-  			<SwipeableViews index={this.state.index}  style={{height: "100vh"}} onChangeIndex={this.onChangeIndex.bind(this)}>
-			<div id="left-wrapper" style={{zIndex: 1, position: "relative"}}>
-  			<TaskList show={true} showDetail={this.showDetail.bind(this)} selectedDate={this.state.selectedDate} showCal={this.changeIndex.bind(this)}/>
+  			<SwipeableViews index={this.state.index}  style={{height: "100vh"}} onSwitching={this.onChangeIndex}>
+  			<div id="left-wrapper" style={{zIndex: 1, position: "relative"}}>
+  			<TaskList show={true} showDetail={this.showDetail} selectedDate={this.state.selectedDate} showCal={this.changeIndex}/>
   			</div>
   			<div id="center-wrapper" style={{zIndex: 1, position: "relative"}}>
-  			<Calendar toggleNotice={this.toggleNotice.bind(this)} show={true} showAddTask={this.changeIndex.bind(this)} selectDate={this.selectDate.bind(this)} notifications={notices} showTasks={this.changeIndex.bind(this)} showDetail={this.showDetail.bind(this)}/>
+  			<Calendar toggleNotice={this.toggleNotice} show={true} showAddTask={this.changeIndex} selectDate={this.selectDate} notifications={notices} showTasks={this.changeIndex.bind(this)} showDetail={this.showDetail.bind(this)}/>
   			{notices.length !== 0 ? notices.filter((notice)=>{return notice.seen === false}).map((notice)=>{this.notify(notice)}) : ""}
   			</div>
   			<div id="right-wrapper" style={{zIndex : 1, position: "relative"}}>
-  			<AddTask show={true} hideAddTask={this.changeIndex.bind(this)} selectedDate={this.state.selectedDate}/>
+  			<AddTask show={true} hideAddTask={this.changeIndex} selectedDate={this.state.selectedDate}/>
   			</div>
   			</SwipeableViews>
   			:
-  			<EntryPortal loggedInChange={this.loggedInChange.bind(this)}/>
+  			<EntryPortal loggedInChange={this.loggedInChange}/>
   		}
-  		{this.state.loggedIn && window.innerWidth <= 992 && nextTask !== null && this.state.index === 1 ?
-			<div id="quickTasks" className="animated bounceInUp">
-					{nextTask}
-					</div>
-					:
-					""
+  		{this.state.loggedIn && this.state.width <= 992 && nextTask !== null && this.state.index === 1 ?
+  			<div id="quickTasks" className="animated bounceInUp">
+  			{nextTask}
+  			</div>
+  			:
+  			""
 
   		}
-  		<Rodal visible={this.state.taskDetail !== null} onClose={this.hideDetail.bind(this)} className="modal task-detail glow" animation="door" customStyles={{width: '80%',
+  		<Rodal visible={this.state.taskDetail !== null} onClose={this.hideDetail} className="modal task-detail glow" animation="door" customStyles={{width: '80%',
   		height: '80%', borderRadius: 0, borderColor: '#1de9b6', borderWidth: 1, borderStyle : 'solid', background: '#242424', color: '#fff'}}>
-  			<TaskDetail taskDetail={taskDetail} closeDetail={this.hideDetail}/>
+  		<TaskDetail taskDetail={taskDetail} closeDetail={this.hideDetail}/>
   		</Rodal>
   		{
 			/* Crammed down here like the dirty after-thought it is, is the nofitications icon tray
@@ -351,7 +365,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
 			* TODO: style should be passed in from parent that also has a Rodal style object
 			*/
 			this.state.showNotifications ? 
-			<Rodal visible={this.state.showNotifications} onClose={this.toggleNotice.bind(this)} className="modal task-detail glow" animation="door" customStyles={{width: '80%',
+			<Rodal visible={this.state.showNotifications} onClose={this.toggleNotice} className="modal task-detail glow" animation="door" customStyles={{width: '80%',
 			height: '80%', borderRadius: 0, borderColor: '#1de9b6', borderWidth: 1, borderStyle : 'solid', background: '#242424', color: '#fff'}}>
 			<div id="notice-header">Notifications</div>	
 			<div id="notice-wrapper">
@@ -363,7 +377,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
 			:
 			""
 		}
-  		</div>
-  		);
+		</div>
+		);
   }
 }

@@ -52,8 +52,10 @@
 * 5.0 Tadu Concierge 
 
 #### What Needs Done
-* Notificiations modal doesn't work? Try to elevate to main layout
 * FF issues?
 * Documentation
 * Custom Alert Tones for mobile
+* Tags should all be same height
+* shouldUpdateComponent on Tags
+
 
