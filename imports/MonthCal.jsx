@@ -22,6 +22,7 @@ export default class MonthView extends React.Component {
 		} /* To iteratively index into cal obj */
 		var _calArray = Object.keys(tempCal); 
 		/* Create calendar days with Day components, each has it's own style depending on whether its in the month, is selected, or is today */
+		
 		return(
 			<div className="month-wrapper">
 			{

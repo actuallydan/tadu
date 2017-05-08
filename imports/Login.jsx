@@ -27,7 +27,7 @@ export default class Login extends React.Component {
 				<input className='form-input' id="login-password" type="password" ref="password" placeholder="Password" autoComplete="off" onFocus={this.highlight.bind(this)}/>
 				</div>
 				<p className="login-register-button"><input className="button" type="submit" value="Login" /></p>
-								<p onClick={this.props.handleChangeForm.bind(this)} className="toggle-login">Need to register?</p>
+								<p onClick={this.props.handleChangeForm.bind(this)} className="toggle-login pulse">Need to register?</p>
 
 				</form>
 

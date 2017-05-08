@@ -19,7 +19,6 @@ import 'rodal/lib/rodal.css';
 export default class Cal extends TrackerReact(React.Component) {
 	constructor(props){
 		super(props);
-
 		/* Keep track of the current day (adjusted for timezone differences and Firefox's abiltiy to ruin everything)
 		* track the date we want to create a task on or see what tasks we have on that day
 		* the current month to view
@@ -30,12 +29,10 @@ export default class Cal extends TrackerReact(React.Component) {
 			selectedDate : new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000)).toJSON().substring(0, 10),
 			monthShowing : new Date(),
 			showNotifications: false,
-			showSchedule: false,
 			weekView: false,
 			index: null
 		};
 	}
-
 	/* Triggers update in parent to tell app what day we are concerned with (changes current tasks view) 
 	* Also updates state to delegate the coveted "selected-day" theme to child Day components
 	*/
@@ -50,7 +47,6 @@ export default class Cal extends TrackerReact(React.Component) {
 	* This should not update the selectedDate
 	*/
 	prevMonth(){
-	
 	this.setState({
 			monthShowing : new Date(this.state.monthShowing.getFullYear(), this.state.monthShowing.getMonth() - 1, this.state.monthShowing.getDate())
 		});
@@ -60,13 +56,12 @@ export default class Cal extends TrackerReact(React.Component) {
 	* This should not change selectedDate
 	*/
 	nextMonth(){
-	
 	this.setState({
 			monthShowing : new Date(this.state.monthShowing.getFullYear(), this.state.monthShowing.getMonth() + 1, this.state.monthShowing.getDate())
 		});
 	}
 	toggleWeekView(){
-		this.setState({weekView : !this.state.weekView})
+		this.setState({weekView : !this.state.weekView});
 	}
 	showAddTask(){
 		this.props.showAddTask("addTask");
@@ -88,8 +83,6 @@ export default class Cal extends TrackerReact(React.Component) {
 
 				<div id="calendar-header">
 				<div id="action-bar">
-			<div id="add-event-button" className="nav-button mdi mdi-view-list hide-on-large hide-on-med" onClick={this.props.showTasks.bind(this)} data-tip="Tasks"></div>
-
 				<div id="add-event-button" className="nav-button mdi mdi-alarm" onClick={this.props.toggleNotice.bind(this)} data-tip="Notifications"></div>
 				{
 					this.state.weekView ?  
@@ -147,7 +140,14 @@ export default class Cal extends TrackerReact(React.Component) {
 					month={this.state.monthShowing.getMonth()}
 					tasks={tasks}
 					/>
-
+					{ 
+						this.props.width <= 992 ?
+			  			<div id="quickTasks" className="animated bounceInUp">
+			  			{this.props.filteredTasks}
+			  			</div>
+			  			:
+			  			""
+			  		}
 					</div>
 					
 					</div>
@@ -157,15 +157,15 @@ export default class Cal extends TrackerReact(React.Component) {
 			</div>)
 }
 }
-const get20Years = ()=>{
-	var allYears = [];
-	for(var i = 12; i > 0; i--){ 
-		allYears.push(moment().subtract(i, "months")) 
-	} 
-	allYears.push(moment()); 
-	for(var i = 0; i < 12; i++){ 
-		allYears.push(moment().add(i, "months")) 
-	} 
-	return allYears 
-};
+// const get20Years = ()=>{
+// 	var allYears = [];
+// 	for(var i = 12; i > 0; i--){ 
+// 		allYears.push(moment().subtract(i, "months")) 
+// 	} 
+// 	allYears.push(moment()); 
+// 	for(var i = 0; i < 12; i++){ 
+// 		allYears.push(moment().add(i, "months")) 
+// 	} 
+// 	return allYears 
+// };
 

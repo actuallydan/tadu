@@ -41,18 +41,6 @@ export default class TaskList extends TrackerReact(React.Component) {
 	render(){
 		/* <i id="search-icon" className="mdi mdi-magnify"></i>
 				<input id="search" type="text" value={this.state.search} onChange={this.updateSearch.bind(this)} />*/
-		let filteredTasks = Tasks.find().fetch().filter(
-			(task) => {
-				return task.dateStart === this.props.selectedDate;
-			}
-			).sort(
-			(a, b) => {
-				return a.dateStart + "T" + a.timeStart > b.dateStart + "T" +b.timeStart;
-			}
-			);
-			filteredTasks = filteredTasks.length === 0 ? <div id="no-tasks-message"><p>You're free all day!</p><img src="../img/tadu_logo.png" className="no-tasks-icon"></img></div> : filteredTasks.map( (task) => {
-						return <TaskSingle key={task._id} task={task} showDetail={this.showDetail.bind(this)}/>
-					});
 		return (
 			<div id="TaskList" className={this.props.show ? "animated slideInLeft" : "animated slideOutLeft"}>
 				<div className="hide-on-large hide-on-med"></div>
@@ -62,7 +50,7 @@ export default class TaskList extends TrackerReact(React.Component) {
 
 				</div>
 				<ul id="tasks-wrapper">
-					{filteredTasks}
+					{this.props.filteredTasks}
 				</ul>
 			</div>
 			)

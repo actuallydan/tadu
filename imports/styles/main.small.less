@@ -372,7 +372,7 @@ input, button, textarea {
 			background-color : #242424;
 			width : 100%;
 			z-index: 4;
-			margin-top: 1em;
+			padding-top: 1em;
 			.cal-header {
 				color: @green;
 				border-bottom: 1px solid @grey;
@@ -388,7 +388,7 @@ input, button, textarea {
 				font-size: 1.3em;
 				margin: 0.4em 0 0 0.2em;
 				position: absolute;
-				top: -1.9em;
+				top: -1.2em;
 				right: 2.4em;
 			}
 			#next-month-button{
@@ -400,7 +400,7 @@ input, button, textarea {
 				right: 0;
 				font-size: 1.3em;
 				margin: 0.4em 0 0 0.2em;
-				top: -1.9em;
+				top: -1.2em;
 				right: 0.4em;
 			}
 		}
@@ -558,12 +558,15 @@ input, button, textarea {
 		}
 		.event-tag-tile {
 			display: inline-block;
-			width: 50%;
+			width: 44%;
 			color: white;
-			padding: 1.1em 0em;
+			padding: 1.1em 0.5em;
 			font-size: 1em;
 			text-align: center;
 			cursor: pointer;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
 		}
 		.event-tag-tile:hover {
 			// box-shadow: inset 0 0 300px 300px rgba(255, 255, 255, 0.1);
@@ -647,30 +650,30 @@ input, button, textarea {
 #quickTasks {
 	overflow: scroll;
 	height: auto;
-	position: fixed;
 	width: 100%;
-	color: @grey;
-	background: #FFF;
-	bottom: 0;
-	z-index: 3;
+	color: #424242;
+	background: #e9e9e9;
+	display: block;
+	height: 7em;
 	.task-single{
-		border-bottom: none;
+		border-bottom: 1px solid @grey;
 		width: 100%
 	}
 	#no-tasks-message {
 		padding: 0;
 		display: inline-flex;
-   		 width: 100%;
-   		 p {
-width: 80%;
-    color: #242424;
-    line-height: 2em;
-    margin: auto;
-   		 }
-   		 .no-tasks-icon {
-width: 20%;
-    height: 100%;
-   		 }
+		width: 100%;
+		background: #FFF;
+		p {
+			width: 80%;
+			color: #242424;
+			line-height: 2em;
+			margin: auto;
+		}
+		.no-tasks-icon {
+			width: 20%;
+			height: 100%;
+		}
 	}
 }
 

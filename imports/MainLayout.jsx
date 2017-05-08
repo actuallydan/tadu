@@ -52,8 +52,9 @@ export default class MainLayout extends TrackerReact(React.Component) {
 				schedules: Meteor.subscribe("schedules")
 			},
 			taskDetail : null,
-			index: 1,
-			showNotifications: false
+			index: 0,
+			showNotifications: false,
+			scheduleVisible: false
 		};
 		this.handleResize = this.handleResize.bind(this);
 		this.showDetail = this.showDetail.bind(this);
@@ -65,12 +66,15 @@ export default class MainLayout extends TrackerReact(React.Component) {
 		this.onChangeIndex = this.onChangeIndex.bind(this);
 		this.changeIndex = this.changeIndex.bind(this);
 		this.loggedInChange = this.loggedInChange.bind(this);
-		this.changeIndex = this.changeIndex.bind(this);
 		this.showTasks = this.showTasks.bind(this);
-		this.hideDetail = this.hideDetail.bind(this)
+		this.hideDetail = this.hideDetail.bind(this);
 	}
 	toggleNotice(){
 		this.setState({showNotifications : !this.state.showNotifications });
+	}
+	toggleSchedule(){
+		console.log("hideQuickTask", this.state.scheduleVisible);
+		this.setState({scheduleVisible: !this.state.scheduleVisible});
 	}
 	handleResize(){
 		this.setState({width: window.innerWidth});
@@ -115,9 +119,8 @@ export default class MainLayout extends TrackerReact(React.Component) {
 	/* Triggered when manually switching views (with button) */
 	changeIndex(e){
 		let switcher = {
-			"calendar" : 1,
-			"addTask" : 2,
-			"taskList" : 0
+			"calendar" : 0,
+			"addTask" : 1,
 		};
 		this.setState({
 			index: switcher[e]
@@ -293,6 +296,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
   	}
   }
   render() {
+  	console.log(this.state.scheduleVisible);
   	/* Based on screen size and current state, determine which windows should be open */
   	let viewTaskList =  this.state.viewMode === 'taskList' ? true : this.state.width >= 992 ? true : false;
   	let viewAddEvent = this.state.viewMode === 'addTask' ? true : this.state.width >= 1400 ? true : false;
@@ -301,65 +305,56 @@ export default class MainLayout extends TrackerReact(React.Component) {
   	let taskDetail = this.state.taskDetail !== null ? this.state.taskDetail : "" ;
   	/* Get notifications to see if the user has any that need resolved and to display old notifications in tray at top of Calendar */
   	let notices = Notifications.find({}, {limit: 20}).fetch();
-
-  	let nextTask = null;
-  	if(this.state.width <= 992){
-  		nextTask = Tasks.find({dateStart: this.state.today, timeStart: {$gt : moment().format("HH:mm")}}).fetch().sort((a, b)=>{ return a.timeStart > b.timeStart})[0];
-
-  		nextTask = nextTask === undefined 
-  		? 
-  		<div id="no-tasks-message"><p>You're free all day!</p><img src="../img/tadu_logo.png" className="no-tasks-icon"></img></div> 
-  		: 
-  		<TaskSingle key={nextTask._id} task={nextTask} showDetail={this.showDetail}/>;
-  	}
-  	return (
-  		<div>
-
-  		{this.state.loggedIn && this.state.width > 992
-  			?
-  			<div style={{width: "100%"}}>
-  			<div id="left-wrapper" style={{zIndex: viewTaskList ? 5 : -1}}>
-  			<TaskList show={viewTaskList} showDetail={this.showDetail} selectedDate={this.state.selectedDate} showCal={this.showView}/>
-  			</div>
-  			<div id="center-wrapper" style={{zIndex: 1}}>
-  			<Calendar toggleNotice={this.toggleNotice} show={true} showAddTask={this.showAddTask} selectDate={this.selectDate} notifications={notices} showTasks={this.showTasks} showDetail={this.showDetail}/>
-  			</div>
-  			<div id="right-wrapper" style={{zIndex : viewAddEvent ? 5 : -1}}>
-  			<AddTask show={viewAddEvent} hideAddTask={this.hideAddTask} selectedDate={this.state.selectedDate}/>
-  			</div>
-  			{notices.length !== 0 ? notices.filter((notice)=>{return notice.seen === false}).map((notice)=>{this.notify(notice)}) : ""}
-  			</div>
-  			:
-  			this.state.loggedIn && this.state.width <= 992 
-  			?
-  			<SwipeableViews index={this.state.index}  style={{height: "100vh"}} onSwitching={this.onChangeIndex}>
-  			<div id="left-wrapper" style={{zIndex: 1, position: "relative"}}>
-  			<TaskList show={true} showDetail={this.showDetail} selectedDate={this.state.selectedDate} showCal={this.changeIndex}/>
-  			</div>
-  			<div id="center-wrapper" style={{zIndex: 1, position: "relative"}}>
-  			<Calendar toggleNotice={this.toggleNotice} show={true} showAddTask={this.changeIndex} selectDate={this.selectDate} notifications={notices} showTasks={this.changeIndex.bind(this)} showDetail={this.showDetail.bind(this)}/>
-  			{notices.length !== 0 ? notices.filter((notice)=>{return notice.seen === false}).map((notice)=>{this.notify(notice)}) : ""}
-  			</div>
-  			<div id="right-wrapper" style={{zIndex : 1, position: "relative"}}>
-  			<AddTask show={true} hideAddTask={this.changeIndex} selectedDate={this.state.selectedDate}/>
-  			</div>
-  			</SwipeableViews>
-  			:
-  			<EntryPortal loggedInChange={this.loggedInChange}/>
+  	let filteredTasks = Tasks.find().fetch().filter(
+  		(task) => {
+  			return task.dateStart === this.state.selectedDate;
   		}
-  		{this.state.loggedIn && this.state.width <= 992 && nextTask !== null && this.state.index === 1 ?
-  			<div id="quickTasks" className="animated bounceInUp">
-  			{nextTask}
-  			</div>
-  			:
-  			""
-
+  		).sort(
+  		(a, b) => {
+  			return a.dateStart + "T" + a.timeStart > b.dateStart + "T" +b.timeStart;
   		}
-  		<Rodal visible={this.state.taskDetail !== null} onClose={this.hideDetail} className="modal task-detail glow" animation="door" customStyles={{width: '80%',
-  		height: '80%', borderRadius: 0, borderColor: '#1de9b6', borderWidth: 1, borderStyle : 'solid', background: '#242424', color: '#fff'}}>
-  		<TaskDetail taskDetail={taskDetail} closeDetail={this.hideDetail}/>
-  		</Rodal>
-  		{
+  		);
+  		filteredTasks = filteredTasks.length === 0 ? <div id="no-tasks-message"><p>You're free all day!</p><img src="../img/tadu_logo.png" className="no-tasks-icon"></img></div> : filteredTasks.map( (task) => {
+  			return <TaskSingle key={task._id} task={task} showDetail={this.showDetail.bind(this)}/>
+  		});
+  		return (
+  			<div>
+
+  			{this.state.loggedIn && this.state.width > 992
+  				?
+  				<div style={{width: "100%"}}>
+  				<div id="left-wrapper" style={{zIndex: viewTaskList ? 5 : -1}}>
+  				<TaskList filteredTasks={filteredTasks} show={viewTaskList} showDetail={this.showDetail} selectedDate={this.state.selectedDate} showCal={this.showView}/>
+  				</div>
+  				<div id="center-wrapper" style={{zIndex: 1}}>
+  				<Calendar filteredTasks={filteredTasks} width={this.state.width} toggleNotice={this.toggleNotice} show={true} showAddTask={this.showAddTask} selectDate={this.selectDate} notifications={notices} showTasks={this.showTasks} showDetail={this.showDetail}/>
+  				</div>
+  				<div id="right-wrapper" style={{zIndex : viewAddEvent ? 5 : -1}}>
+  				<AddTask show={viewAddEvent} hideAddTask={this.hideAddTask} selectedDate={this.state.selectedDate}/>
+  				</div>
+  				{notices.length !== 0 ? notices.filter((notice)=>{return notice.seen === false}).map((notice)=>{this.notify(notice)}) : ""}
+  				</div>
+  				:
+  				this.state.loggedIn && this.state.width <= 992 
+  				?
+  				<SwipeableViews index={this.state.index}  style={{height: "100%"}} onSwitching={this.onChangeIndex}>
+  				<div id="center-wrapper" style={{zIndex: 1, position: "relative"}}>
+  				<Calendar filteredTasks={filteredTasks} width={this.state.width} toggleNotice={this.toggleNotice} show={true} showAddTask={this.changeIndex} selectDate={this.selectDate} notifications={notices} showTasks={this.changeIndex.bind(this)} showDetail={this.showDetail.bind(this)}/>
+  				{notices.length !== 0 ? notices.filter((notice)=>{return notice.seen === false}).map((notice)=>{this.notify(notice)}) : ""}
+  				</div>
+  				<div id="right-wrapper" style={{zIndex : 1, position: "relative"}}>
+  				<AddTask show={true} hideAddTask={this.changeIndex} selectedDate={this.state.selectedDate}/>
+  				</div>
+  				</SwipeableViews>
+  				:
+  				<EntryPortal loggedInChange={this.loggedInChange}/>
+  			}
+
+  			<Rodal visible={this.state.taskDetail !== null} onClose={this.hideDetail} className="modal task-detail glow" animation="door" customStyles={{width: '80%',
+  			height: '80%', borderRadius: 0, borderColor: '#1de9b6', borderWidth: 1, borderStyle : 'solid', background: '#242424', color: '#fff'}}>
+  			<TaskDetail taskDetail={taskDetail} closeDetail={this.hideDetail}/>
+  			</Rodal>
+  			{
 			/* Crammed down here like the dirty after-thought it is, is the nofitications icon tray
 			* (I bet you forgot about it too didnt' you?)
 			* One of the gnarliest ternary opertators I've written to decide whether or not to rear it's ugly face
@@ -380,5 +375,5 @@ export default class MainLayout extends TrackerReact(React.Component) {
 		}
 		</div>
 		);
+  	}
   }
-}

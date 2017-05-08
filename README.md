@@ -57,5 +57,18 @@
 * Custom Alert Tones for mobile
 * Tags should all be same height
 * shouldUpdateComponent on Tags
+* Tutorial
+* Refactor MainLayout
+* Add activity indicators
+* Replace with SweetAlert 2
+* Motion to buttons 
+* Cordova/Electron offline functionality?
+* Graphical glitch on calendar headers with non-mac things
+* On Setup, set normal distributed thresholds
+* Optimize time method needs expansion
+* Calendar needs adjustable height for mobile
+* Replace Update Task/ Detail with Swal 2
+* Logout button
+* String validation on register
 
 
