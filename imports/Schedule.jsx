@@ -41,7 +41,7 @@ export default class Schedule extends TrackerReact(React.Component) {
 				width: window.innerWidth > 1400 ? "60%" : window.innerWidth > 992 ? "71%" : "100%",
 				position: "fixed",
 				display: "inline-flex",
-				backgroundColor: "rgba(36, 36, 36, 0.8)",
+				backgroundColor: " rgba(0, 0, 0, 0.3)",
 				fontSize : "1.5em",
 				top: "calc(100vh / 13 * 2)",
 				zIndex: 4,
@@ -56,7 +56,7 @@ export default class Schedule extends TrackerReact(React.Component) {
 		};
 		return (
 			<div className="wrapper">
-			<div style={styles.month}>
+			<div style={styles.month} id="schedule-header">
 			<div className="header" style={styles.day}></div><div style={styles.day}>S</div><div style={styles.day}>M</div><div style={styles.day}>T</div><div style={styles.day}>W</div><div style={styles.day}>Th</div><div style={styles.day}>F</div><div style={styles.day}>S</div>
 			</div>
 			<table id="schedule" className="animated fadeIn">
@@ -72,7 +72,7 @@ export default class Schedule extends TrackerReact(React.Component) {
 							: <td key={day + "T" + hour} 
 							data-coords={day + "T" + hour} 
 							onClick={this.modifySchedule.bind(this)}
-							style={{backgroundColor: mySched.schedule[day][hour] === null ? "#242424" : "#1de9b6"}}
+							style={{backgroundColor: mySched.schedule[day][hour] === null ? "transparent" : "#1de9b6"}}
 							>{'\u00A0'}</td>
 						}
 						)

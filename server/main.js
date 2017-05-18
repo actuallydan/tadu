@@ -3,7 +3,20 @@ import moment from 'moment';
 
 Meteor.startup(() => {
   // code to run on server at startup
-  
+
+  /* Prevent cordova images from being saved to app cache */
+  Meteor.AppCache.config({
+  onlineOnly: [
+    '/img/Android/',
+    '/img/iOS/',
+    '/img/untitled.png',
+    '/img/untitled.svg',
+    '/img/untitled.svg',
+    '/img/readme.txt',
+    '/img/TaduLaunch.png',
+    '/img/Underground-Traffic.mp4',
+  ]
+});
   SyncedCron.config({
     // Log job run details to console
     log: false,

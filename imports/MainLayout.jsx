@@ -281,7 +281,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
   			return <TaskSingle key={task._id} task={task} showDetail={this.showDetail.bind(this)}/>
   		});
   		return(
-  			<div className="wrapper">
+  			<div className="wrapper" id="top-wrapper">
   			{	!Session.get('data_loaded') 
   				?
   				<Loader />
