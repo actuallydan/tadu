@@ -8,6 +8,7 @@
 }
 .sweet-alert h2 {
   color: #fff !important;
+  font-weight: 400;
 }
 .sweet-alert button {
   border-radius: 0;

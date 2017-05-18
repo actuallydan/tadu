@@ -1,13 +1,9 @@
-/* Add Tasks view for Tadu App 
-*
-* Allows user to create tasks for themselves based on tags
-* This component will have interplay with Tadu SI to optimize task creation
-*/
-import React from 'react';
+import React, {Component} from 'react';
 import moment from 'moment';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
+import Loader from './Loader.jsx';
 
-export default class AddTask extends TrackerReact(React.Component) {
+export default class AddTask extends Component {
 	constructor(props) {
 		super(props);
 
@@ -23,7 +19,9 @@ export default class AddTask extends TrackerReact(React.Component) {
 				tagTypes: Meteor.subscribe("tagTypes")
 			},
 			search: "",
-			hasBeenOptimized: false
+			hasBeenOptimized: false,
+			alarm : "5min",
+			showLoader: false
 		};
 	}
 	/* Update the parameter of our search for the perfect tag */
@@ -42,13 +40,13 @@ export default class AddTask extends TrackerReact(React.Component) {
 		/* Get alarm if any */
 		let alarm = null;
 		if(this.refs.hasAlarm.checked){
-			if(this.refs["5min"].checked){
+			if(this.state.alarm === "5min"){
 				alarm = 5;
-			} else if(this.refs["30min"].checked){
+			} else if(this.state.alarm === "30min"){
 				alarm = 30;
-			} else if(this.refs["1hour"].checked){
+			} else if(this.state.alarm === "1hour"){
 				alarm = 60;
-			} else if(this.refs["1day"].checked){
+			} else if(this.state.alarm === "1day"){
 				alarm = 1440;
 			}
 		}
@@ -56,17 +54,17 @@ export default class AddTask extends TrackerReact(React.Component) {
 			text : this.refs.newTask.value.trim(),
 			dateStart : this.refs.dateStart.value.trim(),
 			timeStart : this.refs.timeStart.value.trim(),
-				tagType : this.state.tagType,
-				userId: Meteor.userId(),
-				desc: this.refs.desc.value.trim(),
-				completed: false,
-				alarm: alarm,
-				timeUTC: alarm !== null ? moment(this.refs.dateStart.value.trim() + "T" + this.refs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16) : null
-			};
+			tagType : this.state.tagType,
+			userId: Meteor.userId(),
+			desc: this.refs.desc.value.trim(),
+			completed: false,
+			alarm: alarm,
+			timeUTC: alarm !== null ? moment(this.refs.dateStart.value.trim() + "T" + this.refs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16) : null
+		};
 
-			/* Call Meteor to abscond with our earthly woes and store it in the database if possible */
-			Meteor.call("addTask", task, (err, data)=>{
-				if(err){
+		/* Call Meteor to abscond with our earthly woes and store it in the database if possible */
+		Meteor.call("addTask", task, (err, data)=>{
+			if(err){
 					/* There was some sort of error on the server 
 					* Because of MiniMongo this should be rare and ussually points to bad server code or poor life choices */
 					swal("Oops...", err, "error");
@@ -80,85 +78,96 @@ export default class AddTask extends TrackerReact(React.Component) {
 					})
 				};
 			});
-		}
-		/* Method to move to stage 2 of task creation which is additional and optional details */
-		taskStage2(e) {
-			/* grab the tag type and save it fin state for task creation (see addTask() )*/
-			let tag = e.target.getAttribute("data-tag") === null ? e.target.parentElement.getAttribute("data-tag").trim() : e.target.getAttribute("data-tag").trim();
-			/* Setting the state to stage1 = false re-renders the component to show stage 2 */
+	}
+	/* Method to move to stage 2 of task creation which is additional and optional details */
+	taskStage2(e) {
+		/* grab the tag type and save it fin state for task creation (see addTask() )*/
+		let tag = e.target.getAttribute("data-tag") === null ? e.target.parentElement.getAttribute("data-tag").trim() : e.target.getAttribute("data-tag").trim();
+		/* Setting the state to stage1 = false re-renders the component to show stage 2 */
+		this.showLoader();
+		Meteor.call("scheduleBestTime", {"tag": tag , "today": new Date() }, (err, res)=>{
+			if(err){
+				swal("Oops...", err, "error")
+			} else {
+				let daysFromToday = res.day - new Date().getDay();
+				let bestDate = moment(res.time, "HH:mm").add(daysFromToday, "days").format();
+				this.setState({
+					stage1 : false,
+					tagType : tag,
+					hasBeenOptimized : true
+				});
+				document.getElementById("new-task-date").value = bestDate.substring(0, 10);
+				document.getElementById("new-task-time").value = bestDate.substring(11, 16);
 
-			Meteor.call("scheduleBestTime", {"tag": tag , "today": new Date() }, (err, res)=>{
+			}
+		});
+	}
+	showAlarm(){
+		this.setState({
+			showAlarmVisible: !this.state.showAlarmVisible
+		});
+	}
+	/* Trigger method in parent to hide AddTask Component if necessary and clear state to reset form */
+	clearTask(){
+		this.props.hideAddTask("calendar");
+		this.setState({
+			stage1 : true,
+			tagType : null,
+			search: "",
+			showLoader: false
+		});
+	}
+	/* Method to create a new tag for the user if not available*/
+	createNewTag(){
+		let context = this;
+		swal({
+			title: "Create A New Tag",
+			text: "Please enter a name for your new tag",
+			type: "input",
+			showCancelButton: true,
+			closeOnConfirm: false,
+			inputPlaceholder: "Netflix Marathon, Eat Ice, Reading",
+			inputValue: document.getElementById("search").value.trim(),
+		},
+		function(inputValue){
+			if (inputValue === false) {
+				return false;
+			}
+			if (inputValue === "") {
+				swal.showInputError("Please give your tag a name!");
+				return false
+			}
+			Meteor.call("addTag", inputValue.trim(), (err, res)=>{
 				if(err){
-					swal("Oops...", err, "error")
+					swal("Uh Oh!", err, "error");
+				} else if(res === "exists"){
+					swal("Awkward...", "This tag already exists", "warning");
 				} else {
-					let daysFromToday = res.date - new Date().getDay();
-					let bestDate = moment(res.time, "HH:mm").add(daysFromToday, "days").format();
-					this.setState({
+					swal("Tag Created!", "We'll pick up where you left off", "success");
+					context.setState({
 						stage1 : false,
-						tagType : tag,
-						hasBeenOptimized : true
+						tagType : inputValue.trim()
 					});
-					document.getElementById("new-task-date").value = bestDate.substring(0, 10);
-					document.getElementById("new-task-time").value = bestDate.substring(11, 16);
-
 				}
-			});
-		}
-		showAlarm(){
-			this.setState({
-				showAlarmVisible: !this.state.showAlarmVisible
-			});
-		}
-		/* Trigger method in parent to hide AddTask Component if necessary and clear state to reset form */
-		clearTask(){
-			this.props.hideAddTask("calendar");
-			this.setState({
-				stage1 : true,
-				tagType : null,
-				search: ""
-			});
-		}
-		/* Method to create a new tag for the user if not available*/
-		createNewTag(){
-			let context = this;
-			swal({
-				title: "Create A New Tag",
-				text: "Please enter a name for your new tag",
-				type: "input",
-				showCancelButton: true,
-				closeOnConfirm: false,
-				inputPlaceholder: "Netflix Marathon, Eat Ice, Reading",
-				inputValue: document.getElementById("search").value.trim(),
-			},
-			function(inputValue){
-				if (inputValue === false) {
-					return false;
-				}
-				if (inputValue === "") {
-					swal.showInputError("Please give your tag a name!");
-					return false
-				}
-				Meteor.call("addTag", inputValue.trim(), (err, res)=>{
-					if(err){
-						swal("Uh Oh!", err, "error");
-					} else if(res === "exists"){
-						swal("Awkward...", "This tag already exists", "warning");
-					} else {
-						swal("Tag Created!", "We'll pick up where you left off", "success");
-						context.setState({
-							stage1 : false,
-							tagType : inputValue.trim()
-						});
-					}
-				})
-			});
-		}
-		/* Relevant parts of AddTask stage 1; this should probably be spun off into it's own component */
-		renderStage1(){
-			/* Get allthe tags by this user and sort by most often used for quicker selection */
-			let myTags = TagTypes.findOne();
-			let tags = ["Homework", "Study", "Doctor", "Exercise", "Meeting", "Groceries", "Errands", "Music Practice", "Cleaning"];
-			let n = 0;
+			})
+		});
+	}
+	showLoader(){
+		this.setState({
+			showLoader : true
+		});
+	}
+	changeAlarm(e){
+		this.setState({
+			alarm: e
+		});
+	}
+	/* Relevant parts of AddTask stage 1; this should probably be spun off into it's own component */
+	renderStage1(){
+		/* Get allthe tags by this user and sort by most often used for quicker selection */
+		let myTags = TagTypes.findOne();
+		let tags = ["Homework", "Study", "Doctor", "Exercise", "Meeting", "Groceries", "Errands", "Music Practice", "Cleaning"];
+		let n = 0;
 			// myTags = myTags[0].tags.sort((a , b)=>{return a.uses > b.uses});
 			return (
 				<div>
@@ -166,7 +175,10 @@ export default class AddTask extends TrackerReact(React.Component) {
 				<i id="search-icon" className="mdi mdi-magnify"></i>
 				<input id="search" type="text" value={this.state.search} onChange={this.updateSearch.bind(this)} placeholder="Select Category or Search"/>
 				</div>
-				{
+				{	this.state.showLoader
+					?
+					<Loader width={"100%"}/>
+					:
 					/* If the user hasn't started searching give them the dialpad, otherwise show them the most used results */
 					this.state.search !== "" ? "" :
 					<div id="global-tags">
@@ -313,14 +325,16 @@ export default class AddTask extends TrackerReact(React.Component) {
 				</form>
 				)
 		}
+		shouldComponentUpdate(nextProps, nextState){
+			return (nextProps.show !== this.props.show || nextProps.hideAddTask !== this.props.hideAddTask || this.state !== nextState)
+		}
 		render(){
-			return (		
-				<div id="AddTaskForm" className={this.props.show ? "animated slideInRight" : "animated slideOutRight hidden"}>
+			return(
+				<div id="add-tasks" className={this.props.show ? "animated slideInRight" : "animated slideOutRight"}>
 				<div className="form-item" id="add-task-form-nav"><i className="mdi mdi-close" onClick={this.clearTask.bind(this)}></i><div>New Task</div></div>
 				{this.state.stage1 ? this.renderStage1() : this.renderStage2()}
-				</div>
-				)
+				
+				</div>);
 
 		}
 	}
-

@@ -32,14 +32,18 @@ export default class TaskDetail extends React.Component{
 			tag:  old.tag,
 			userId:  old.userId,
 			desc: this.refs.desc.value.trim(),
+			alarm: alarm,
 			timeUTC: alarm !== null ? moment(this.refs.dateStart.value.trim() + "T" + this.refs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16) : null,
 		};
+		console.log(updatedTask);
 
 		Meteor.call("updateTask", updatedTask, (err)=>{
 			if(err){
 				swal("Sorry!", "There was an error updating your task, please try again later", "error");
 			} else {
-				swal("Success", "Task Updated", "success");
+				swal("Success", "Task Updated", "success", ()=>{
+					this.forceUpdate();
+				});
 			}
 		});
 		this.props.closeDetail.bind(this);
@@ -51,11 +55,17 @@ export default class TaskDetail extends React.Component{
 				document.getElementById("edit-task-time").value = this.props.taskDetail.timeStart;
 				document.getElementById("edit-task-desc").value = this.props.taskDetail.desc !== null ? this.props.taskDetail.desc : "";
 				document.getElementById("has-alarm-toggle").checked = this.state.showAlarmVisible;
-				document.getElementById("priority-radio-low").checked = this.props.taskDetail.alarm === 5;
-				document.getElementById("priority-radio-med").checked = this.props.taskDetail.alarm === 30;
-				document.getElementById("priority-radio-high").checked = this.props.taskDetail.alarm === 60;
-				document.getElementById("priority-radio-critical").checked = this.props.taskDetail.alarm === 1440;
+				this.state.showAlarmVisible ? this.clicker( this.props.taskDetail.alarm) : "";
 			}
+	}
+	clicker(alarm){
+		const clicker = {
+			5 : ()=>{document.getElementById("priority-radio-low").click()},
+			30 : ()=>{document.getElementById("priority-radio-med").click()},
+			60 : ()=>{document.getElementById("priority-radio-high").click()},
+			1440 : ()=>{document.getElementById("priority-radio-critical").click()},
+		}
+		clicker[alarm];
 	}
 	componentDidMount(){
 		if(this.props.taskDetail !== null){

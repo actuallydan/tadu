@@ -16,4 +16,16 @@ Meteor.publish("notifications", function(){
 Meteor.publish("schedules", function(){
 	return Schedules.find({userId: this.userId}, {fields: {"thresholds" : 0}} );
 });
+Meteor.publish("allUsers", function () {
+	return Meteor.users.find({},
+	{fields: {
+     // specific fields to return
+     '_id' : 1,
+     'username': 1,
+     'createdAt': 1,
+     'profile': 1
+	}})
+}
+ );
 //, {fields: {'everythingButThisField':0}}
+	// return Schedules.find({userId: this.userId}, {fields: {"thresholds" : 0}} );

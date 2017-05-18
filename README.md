@@ -31,44 +31,37 @@
 * 1.0 Heroku Deployed Meteor Server and Web App 
 * 1.2 iOS App deployed using Meteor backend
 * 1.2.5 Android deployed using Meteor backend
+* 1.2.6 Sensibility Update 
+	* Habits (Superlatives)
 * 1.3 Electron App for Windows, MacOS, Linux
 * 1.4 Migration of Server
 	* VPS or Dedicated Heroku Server
 * 1.5 Full Release
-* 1.6 Sensibility Update 1
+* 1.6 Sensibility Update 
 	* Create Repeated Tasks Automatically
-* 1.7 Sensibility Update 2
+* 1.7 Sensibility Update 
 	* Optimizer considers context of prospective task before and after time slot
-* 2.0 Location Aware
+* 2.0 Share & Assign Tasks
+	* Task Chat (see Meteor Pigeon)
+* 2.1 Location Aware
 	* May access location to learn daily behavior
 		* This will later be used to optimize schedule consider time/distance efficiency
 	* Routing to Task-Completers
 		* Grades Task-Completers on frequency of ability to complete a user's task
-* 2.1 Share & Assign Tasks
-	* Task-Chat System (see Pigeon)
 * 3.0 Enterprise Productivity Platform
 * 3.5 Voice to Task 
 * 4.0 Embedded Tadu List 
 * 5.0 Tadu Concierge 
 
 #### What Needs Done
-* FF issues?
 * Documentation
-* Custom Alert Tones for mobile
-* Tags should all be same height
-* shouldUpdateComponent on Tags
+* Still tries to schedule things on the day of, hours in the past
 * Tutorial
-* Refactor MainLayout
-* Add activity indicators
 * Replace with SweetAlert 2
-* Motion to buttons 
+* Graphical glitch on calendar headers with non-mac things (maybe solved?)
 * Cordova/Electron offline functionality?
-* Graphical glitch on calendar headers with non-mac things
-* On Setup, set normal distributed thresholds
-* Optimize time method needs expansion
-* Calendar needs adjustable height for mobile
-* Replace Update Task/ Detail with Swal 2
-* Logout button
-* String validation on register
+* Share Tasks
+* Speech Recognition w/ https://www.npmjs.com/package/annyang
+* Custom Alert Tones for mobile
 
 

@@ -7,13 +7,16 @@
 import React from 'react';
 import Login from './Login.jsx';
 import Register from './Register.jsx';
+import Menu from './Menu.jsx';
+import Policy from './Policy.jsx';
 
 export default class EntryPortal extends React.Component {
 	constructor(props) {
 		super(props);
 		/* Single state value to switch out login for register view or vice versa */ 
 		this.state = {
-			showLogin: true
+			showLogin: true,
+			showPolicy: false,
 		};
 	}
 	/* Method that actually updates the state to show whichever form isn't present */
@@ -23,8 +26,6 @@ export default class EntryPortal extends React.Component {
 
 	/* After user submit's login form we attempt to sign them in */
 	tryLogin(event){
-				console.log(this, event.target);
-
 		/* Stop from from submitting and page from refreshing. What is this 2012? */
 		event.preventDefault();
 		/* Because this works weird in JS, i'm making sure it points to the current component we're in, not a meteor method or something else */
@@ -35,7 +36,7 @@ export default class EntryPortal extends React.Component {
 		const password = this.refs.password.value.trim();
 
 		/* Make sure both fields have data in them otherwise ignore it in case of errant enter or mouse click to prevent needless alerting of user */
-		if ( email !== null && password !== null) {
+		if ( email !== "" && password !== "") {
 			try{
 				/* Attempt to login user with Meteor Account's method and exception will tell us what happened if thrown */
 				Meteor.loginWithPassword(email, password, (err, data)=> {
@@ -58,14 +59,28 @@ export default class EntryPortal extends React.Component {
 	tryRegister(event){
 		/* Second verse, same as the first */
 		event.preventDefault();
+		let valid = true;
+		/* Trim, validate, and sanitize user input */
+		const bad = "~`,<>/?'\";:]}[{\|+=)(*&^%$#!";
 
-		/* Trim, validate, and sanitize (TODO) user input */
-		if (this.refs.username.value.trim() !== null && this.refs.password.value.trim() !== null && this.refs.email.value.trim() !== null) {
+		for(var i = 0; i < bad.length; i++){
+			if(this.refs.email.value.indexOf(bad[i]) >= 0 || this.refs.username.value.indexOf(bad[i]) >= 0){
+				valid = false;
+				break;    
+			}
+		}
+
+		if (this.refs.username.value.trim() !== "" && this.refs.password.value.trim() !== "" && this.refs.email.value.trim() !== "" && valid && this.refs.bedHour.value !== "") {
+			/* Get the time the user ususally goes to bed to build their social circadian rhythm around that */
 			const user = {
 				username: this.refs.username.value.trim(),
 				password: this.refs.password.value.trim(),
-				email: this.refs.email.value.trim()
+				email: this.refs.email.value.trim(),
+				profile: {
+					bedHour: this.refs.bedHour.value
+				}
 			};
+			console.log(user, this.refs);
 			try{
 				/* Try to create a new user with Meteor's account package */
 				Accounts.createUser(user, (err)=> {
@@ -73,7 +88,7 @@ export default class EntryPortal extends React.Component {
 						/* There was an issue with existing accounts, parameter length wasn't sufficient etc.*/
 						swal("Oops...", err.reason, "error");
 					} else {
-						/* Meteor will automagically sign in users after successful account creation so we can trigger state update in parent to escape this prison*/
+						 /* Meteor will automagically sign in users after successful account creation so we can trigger state update in parent to escape this prison */
 						this.props.loggedInChange(true);
 						Meteor.call("addDefaultTags");
 						Meteor.call("addDefaultSchedule");
@@ -84,26 +99,29 @@ export default class EntryPortal extends React.Component {
 				swal("Oops...", e, "error");
 			}
 			
+		} else {
+			/* The user tried to enter invalid email or username credentials. Email addresses should contain alphanumeric characters, @, ., _, and - only */
+			swal("Sorry", "Please make sure you enter a valid email and a valid username with at least 6 characters.", "error");
 		}
 	}
+	togglePolicy(){
+		this.setState({
+			showPolicy: !this.state.showPolicy
+		});
+	}
 	render(){
-		/* Swaps out which form should be visible based on this component's state: register or login
-		* TODO: make transitions more appealing and maybe spin each into it's own component
-		*/
+		/* Swaps out which form should be visible based on this component's state: register or login. Also display the pirvacy policy because links don't work by default in Cordova */
 		return (
 			<div id="entry-portal"> 
-			{window.innerWidth > 992 ?
-				<video preload="true" loop muted autoPlay poster="../img/Underground-Traffic.jpg" >
-		        	<source src="../img/Underground-Traffic.mp4" type="video/mp4"/>
-		    	</video>
-				:
-				""
-			}
+			
 			{this.state.showLogin ? 
 			<Login showLogin={this.state.showLogin} tryLogin={this.tryLogin} handleChangeForm={this.handleChangeForm.bind(this)} loggedInChange={this.props.loggedInChange.bind(this)}/> 
 			:
-			 <Register showLogin={this.state.showLogin} tryRegister={this.tryRegister} handleChangeForm={this.handleChangeForm.bind(this)}  loggedInChange={this.props.loggedInChange.bind(this)}/>
+			 <Register showLogin={this.state.showLogin} tryRegister={this.tryRegister} handleChangeForm={this.handleChangeForm.bind(this)}  showPolicy={this.togglePolicy.bind(this)} loggedInChange={this.props.loggedInChange.bind(this)}/>
 			 }
+			 <Menu show={this.state.showPolicy} close={this.togglePolicy.bind(this)}>
+			 	<Policy />
+			 </Menu>
 			 </div>
 			  ) 
 	

@@ -1,35 +1,22 @@
-/* Main Structure file for Tadu App 
-*
-* Manages Logged in state and holds 3 main views of app: Calendar, Tasks List, and Add Task.
-* Also holds React Modal "Rodal" for viewing task details for editing 
-*
-*/
 import React from 'react';
-import TaskList from './TaskList.jsx';
-import Calendar from './Calendar.jsx';
-import AddTask from './AddTask.jsx';
-import EntryPortal from './EntryPortal.jsx';
-import TaskDetail from './TaskDetail.jsx';
-import TaskSingle from './TaskSingle.jsx';
-import Notice from './Notice.jsx';
+ Session.set('data_loaded', false); 
 
-/*  CSS split up for now but should be refactored later to minimize redundancies */
-import './styles/main.normal.less';
-import './styles/main.large.less';
-import './styles/main.small.less';
+import EntryPortal from './EntryPortal.jsx';
+import MobileLayout from'./MobileLayout.jsx';
+import DesktopLayout from './DesktopLayout.jsx';
+import TaskSingle from './TaskSingle.jsx';
+import TaskDetail from './TaskDetail.jsx';
+import Loader from './Loader.jsx';
+import Menu from './Menu.jsx';
 
 /* 3rd party CSS libraries */
 import 'animate.css';
-import swal from 'sweetalert';
-import 'sweetalert/dist/sweetalert.css';
-/* Fix to change alerts to fit theme */
-import './styles/swaloverride.css';
+
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import moment from 'moment';
 import Rodal from 'rodal';
-import 'rodal/lib/rodal.css';
 
-import SwipeableViews from 'react-swipeable-views';
+import 'loaders.css';
 
 /* Instantiate MiniMongo local database collections */
 Tasks = new Mongo.Collection('Tasks');
@@ -41,19 +28,19 @@ export default class MainLayout extends TrackerReact(React.Component) {
 	constructor(props) {
 		super(props);
 		this.state = {
-			loggedIn: Meteor.userId() === null ? false : true,
 			viewMode: "calendar",
 			selectedDate: new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000)).toJSON().substring(0, 10),
 			width: window.innerWidth,
 			subscription: {
-				tasks: Meteor.subscribe("userTasks"),
+				tasks: Meteor.subscribe("userTasks" , ()=>{
+					Session.set('data_loaded', true); 
+				}),
 				tagTypes: Meteor.subscribe("tagTypes"),
 				notifications: Meteor.subscribe("notifications"),
-				schedules: Meteor.subscribe("schedules")
+				schedules: Meteor.subscribe("schedules"),
+				users: Meteor.subscribe("allUsers"),
 			},
 			taskDetail : null,
-			index: 0,
-			showNotifications: false,
 			scheduleVisible: false
 		};
 		this.handleResize = this.handleResize.bind(this);
@@ -63,8 +50,6 @@ export default class MainLayout extends TrackerReact(React.Component) {
 		this.showAddTask = this.showAddTask.bind(this);
 		this.selectDate = this.selectDate.bind(this);
 		this.hideAddTask = this.hideAddTask.bind(this);
-		this.onChangeIndex = this.onChangeIndex.bind(this);
-		this.changeIndex = this.changeIndex.bind(this);
 		this.loggedInChange = this.loggedInChange.bind(this);
 		this.showTasks = this.showTasks.bind(this);
 		this.hideDetail = this.hideDetail.bind(this);
@@ -89,7 +74,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
 	}
 	componentWillUnmount(){ 
 		/* Always remove window listeners when not in use, but this is not likely to be needed at the moment */
-		window.removeEventListener('resize');
+		window.removeEventListener('resize', this.handleResize);
 	}
 	componentDidMount() {
 		/* Create event listener to update the state when the window resizes. 
@@ -102,29 +87,9 @@ export default class MainLayout extends TrackerReact(React.Component) {
 			Notification.requestPermission();
 		if (!Notification) {
 			/* Inform the user not to use a lame browser like Firefox, IE, or Safari that ruins JavaScript Dates and has full modern API support */
-			swal('Desktop notifications not available in your browser. Please download a modern browser like Chrome or Opera'); 
+			swal('Desktop notifications not available in your browser. Please download a modern browser.'); 
 			return;
 		}
-	}
-	/*Triggered when swiping between views (mobile only) */
-	onChangeIndex(index, type){
-		// console.log(index, type);
-		if(type === "end"){
-			this.setState({
-				index: index
-			});
-		}
-		
-	}
-	/* Triggered when manually switching views (with button) */
-	changeIndex(e){
-		let switcher = {
-			"calendar" : 0,
-			"addTask" : 1,
-		};
-		this.setState({
-			index: switcher[e]
-		});
 	}
 	/* All purpose change view method
 	* TODO: This should be used in place of show/hide addtask/tasklist/calendar
@@ -171,7 +136,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
 	selectDate(date){
 		this.setState({
 			selectedDate: date
-		})
+		});
 	}
 	/* Multipurpose method for handling notifications triggered in the MainLayout component or elsewhere
 	* Takes in a valid Notifications object and may contain a task, message, or system alert
@@ -295,16 +260,15 @@ export default class MainLayout extends TrackerReact(React.Component) {
 
   	}
   }
-  render() {
-  	console.log(this.state.scheduleVisible);
+  render(){
   	/* Based on screen size and current state, determine which windows should be open */
   	let viewTaskList =  this.state.viewMode === 'taskList' ? true : this.state.width >= 992 ? true : false;
-  	let viewAddEvent = this.state.viewMode === 'addTask' ? true : this.state.width >= 1400 ? true : false;
+  	let viewAddTask = this.state.viewMode === 'addTask' ? true : this.state.width >= 1400 ? true : false;
 
   	/* Whether or not task detail modal should be visible right now  is based on whether there is a task currently in state */
   	let taskDetail = this.state.taskDetail !== null ? this.state.taskDetail : "" ;
   	/* Get notifications to see if the user has any that need resolved and to display old notifications in tray at top of Calendar */
-  	let notices = Notifications.find({}, {limit: 20}).fetch();
+  	let newNotice = Notifications.findOne({seen: false});
   	let filteredTasks = Tasks.find().fetch().filter(
   		(task) => {
   			return task.dateStart === this.state.selectedDate;
@@ -317,63 +281,48 @@ export default class MainLayout extends TrackerReact(React.Component) {
   		filteredTasks = filteredTasks.length === 0 ? <div id="no-tasks-message"><p>You're free all day!</p><img src="../img/tadu_logo.png" className="no-tasks-icon"></img></div> : filteredTasks.map( (task) => {
   			return <TaskSingle key={task._id} task={task} showDetail={this.showDetail.bind(this)}/>
   		});
-  		return (
-  			<div>
-
-  			{this.state.loggedIn && this.state.width > 992
+  		return(
+  			<div className="wrapper">
+  			{	!Session.get('data_loaded') 
   				?
-  				<div style={{width: "100%"}}>
-  				<div id="left-wrapper" style={{zIndex: viewTaskList ? 5 : -1}}>
-  				<TaskList filteredTasks={filteredTasks} show={viewTaskList} showDetail={this.showDetail} selectedDate={this.state.selectedDate} showCal={this.showView}/>
-  				</div>
-  				<div id="center-wrapper" style={{zIndex: 1}}>
-  				<Calendar filteredTasks={filteredTasks} width={this.state.width} toggleNotice={this.toggleNotice} show={true} showAddTask={this.showAddTask} selectDate={this.selectDate} notifications={notices} showTasks={this.showTasks} showDetail={this.showDetail}/>
-  				</div>
-  				<div id="right-wrapper" style={{zIndex : viewAddEvent ? 5 : -1}}>
-  				<AddTask show={viewAddEvent} hideAddTask={this.hideAddTask} selectedDate={this.state.selectedDate}/>
-  				</div>
-  				{notices.length !== 0 ? notices.filter((notice)=>{return notice.seen === false}).map((notice)=>{this.notify(notice)}) : ""}
-  				</div>
+  				<Loader />
   				:
-  				this.state.loggedIn && this.state.width <= 992 
-  				?
-  				<SwipeableViews index={this.state.index}  style={{height: "100%"}} onSwitching={this.onChangeIndex}>
-  				<div id="center-wrapper" style={{zIndex: 1, position: "relative"}}>
-  				<Calendar filteredTasks={filteredTasks} width={this.state.width} toggleNotice={this.toggleNotice} show={true} showAddTask={this.changeIndex} selectDate={this.selectDate} notifications={notices} showTasks={this.changeIndex.bind(this)} showDetail={this.showDetail.bind(this)}/>
-  				{notices.length !== 0 ? notices.filter((notice)=>{return notice.seen === false}).map((notice)=>{this.notify(notice)}) : ""}
-  				</div>
-  				<div id="right-wrapper" style={{zIndex : 1, position: "relative"}}>
-  				<AddTask show={true} hideAddTask={this.changeIndex} selectedDate={this.state.selectedDate}/>
-  				</div>
-  				</SwipeableViews>
-  				:
-  				<EntryPortal loggedInChange={this.loggedInChange}/>
-  			}
+  				this.state.width > 992 
+  				? 
+  				<DesktopLayout 
+				filteredTasks={filteredTasks}
+				width={this.state.width}
+				selectDate={this.selectDate}
+				showTasks={this.showTasks}
+				showDetail={this.showDetail}
+				viewAddTask={viewAddTask}
+				hideAddTask={this.hideAddTask}
+				selectedDate={this.selectedDate}
+				viewTaskList={viewTaskList}
+				selectedDate={this.state.selectedDate}
+				showView={this.showView}
+				viewMode={this.state.viewMode}
+				loggedInChange={this.props.loggedInChange.bind(this)}
+  				/> 
+  				: 
+  				<MobileLayout 
+  				filteredTasks={filteredTasks}
+  				width={this.state.width}
+  				changeIndex={this.changeIndex}
+  				selectDate={this.selectDate}
+  				showDetail={this.showDetail}
+  				hideAddTask={this.hideAddTask}
+				selectedDate={this.state.selectedDate}
+				loggedInChange={this.props.loggedInChange.bind(this)}
+  				/>
+  			} 
+  			{newNotice !== undefined ? this.notify(newNotice) : ""}
 
-  			<Rodal visible={this.state.taskDetail !== null} onClose={this.hideDetail} className="modal task-detail glow" animation="door" customStyles={{width: '80%',
-  			height: '80%', borderRadius: 0, borderColor: '#1de9b6', borderWidth: 1, borderStyle : 'solid', background: '#242424', color: '#fff'}}>
+  			<Menu show={this.state.taskDetail !== null} className="task-detail" toggleMenu={this.hideDetail.bind(this)}> 
   			<TaskDetail taskDetail={taskDetail} closeDetail={this.hideDetail}/>
-  			</Rodal>
-  			{
-			/* Crammed down here like the dirty after-thought it is, is the nofitications icon tray
-			* (I bet you forgot about it too didnt' you?)
-			* One of the gnarliest ternary opertators I've written to decide whether or not to rear it's ugly face
-			* TODO: style should be passed in from parent that also has a Rodal style object
-			*/
-			this.state.showNotifications ? 
-			<Rodal visible={this.state.showNotifications} onClose={this.toggleNotice} className="modal task-detail glow" animation="door" customStyles={{width: '80%',
-			height: '80%', borderRadius: 0, borderColor: '#1de9b6', borderWidth: 1, borderStyle : 'solid', background: '#242424', color: '#fff'}}>
-			<div id="notice-header">Notifications</div>	
-			<div id="notice-wrapper">
-			{notices.sort((a, b)=>{return a.timestamp < b.timestamp}).map((notice)=>{
-				return (<Notice key={notice._id} data={notice} />)
-			})}
-			</div>
-			</Rodal>
-			:
-			""
-		}
-		</div>
-		);
+  			</Menu>
+  			
+  			</div>
+  			)
   	}
   }

@@ -1,0 +1,1055 @@
+/* Setup */
+* {
+	-webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */
+	font-family: "Rajdhani", sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+::-webkit-scrollbar { 
+	display: none; 
+}
+input:focus, textarea:focus, button:focus {
+	outline: none;
+}
+html {
+	touch-action: manipulation;
+}
+input {
+	-webkit-appearance: none !important;
+	-moz-appearance: none !important;
+	appearance: none !important;
+}
+@font-face {
+	font-family: "Rajdhani";
+	src: local(Rajdhani), url("/fonts/rajdhani.medium.ttf");
+	font-weight: 400;
+}
+@font-face {
+	font-family: "Anivers";
+	src: local(Anivers), url("/fonts/Anivers.woff");
+	font-weight: 400;
+}
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+	color:    #1de9b6;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+	color:    #1de9b6;
+	opacity:  1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+	color:    #1de9b6;
+	opacity:  1;
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+	color:    #1de9b6;
+}
+
+/* Structure */
+html, body, #root {
+	width: 100%;
+	height: 100%;
+	margin: 0; 
+	padding: 0;
+	overflow: hidden;
+	background-color: #242424;
+}
+/* global grid-like components */
+.row {
+	height: calc(100vh / 13);
+	width: 100%;
+}
+.row-2 {
+	height: calc(100vh / 13 * 2);
+	width: 100%;
+}
+.row-4 {
+	height: calc(100vh / 13 * 4);
+	width: 100%;
+}
+.row-6 {
+	height: calc(100vh / 13 * 6);
+	width: 100%;
+}
+.row-11 {
+	height: calc(100vh / 13 * 11);
+	width: 100%;
+	margin-top: calc(100vh / 13 * 2);
+	overflow: scroll;
+}
+/* An effort to clone the environment of a parent component*/
+.wrapper {
+	width: 100%;
+	height: 100%;
+}
+/* sweetalert-like modal */
+.menu-mask{
+	position: fixed;
+    padding: 0;
+    margin: 0 auto;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
+    z-index: 100;
+}
+#user-menu{
+    width: 80%;
+    margin: 1em auto;
+    height: auto;
+    background: #242424;
+    border: #1de9b6 1px solid;
+    padding: 5%;
+    color: #FFF;
+    text-align: center;
+    top: 5%;
+    position: relative;
+    font-size: 1.1em;
+}
+/* 
+* mobile first
+* width < 992px 
+*/
+/* Login */
+#entry-portal {
+	background: url(../img/Underground-Traffic.jpg) no-repeat center center fixed; 
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	position: fixed;
+	height: 100%;
+	width: 100%;
+	font-size: 0.8em;
+}
+#login-form, #register-form {
+	width: 90%;
+	background: rgba(0,0,0,0.85);
+	margin: 1em auto;
+}
+.logo-text {
+	text-align: center;
+	font-size: 5em;
+	color: white;
+}
+.form-input-wrapper {
+	color: white;
+	font-size: 3em;
+	display: inline-flex;
+	width: 90%;
+	margin: 0 5%;
+	margin-bottom: 0.5em;
+	border-bottom: 1px solid #424242;
+}
+.form-input-wrapper label {
+	width: 15%;
+	color: #1de9b6;
+	font-size: 0.75em;
+}
+.form-input-wrapper input {
+	width: 85%;
+	color: #FFF;
+	font-size: 0.5em;
+	border: none;
+	background: transparent;
+}
+.login-register-button {
+	text-align: center;
+}
+.login-register-button .button:focus {
+ 	-webkit-animation: click 0.5s;
+	-moz-animation: click 0.5s;
+	-o-animation: click 0.5s;
+	animation: click 0.5s;
+  }
+.login-register-button .button{
+	margin: 0 auto;
+	width: 90%;
+	font-size: 1.4em;
+	color: #1de9b6;
+	background: #242424;
+	border: 1px solid #1de9b6;
+}
+.privacy-policy {
+	font-size: 1em;
+	color: #616161;
+	margin: 0 1em 2.5em;
+	text-align: center;
+
+}
+.privacy-policy a {
+	color: #FFF;
+}
+.toggle-login {
+	font-size: 1.5em;
+	color: #FFF;
+	text-align: center;
+	padding-bottom: 1em;
+}
+.react-swipeable-view-container div {
+	// height: 100vh;
+ //    overflow-y: hidden;
+}
+/* Tasks */
+#tasks{
+	display: none;
+}
+/* Calendar */
+#calendar{
+	height: 100%;
+	width: 100%;
+}
+#cal-month {
+	background-color: #242424;
+	position: absolute;
+	top: 0;
+	z-index: 2;
+
+}
+#cal-month-text {
+	display: inline-block;
+	width: 40%;
+	font-size: 2em;
+	color: #FFF;
+	margin-left: 5vw;
+}
+#action-bar{
+	position: absolute;
+	right: 0;
+	top: 0;
+	margin: 1em 3vw 0 0;
+	font-size: 0.5em;
+	color: white;
+	width: 50%;
+}
+#add-event-button {
+	cursor: pointer;
+}
+.nav-button {
+	font-size: 3em;
+	text-align: right;
+	width: 25%;
+}
+.nav-button
+.notice {
+	width: 100%;
+	font-size: 1.3em;
+	border-bottom: 1px solid #424242;
+	color: #FFF;
+	margin-bottom: 0.5em;
+	line-height: 2.5em;
+}
+.notice:hover{
+	color: #1de9b6;
+	border-bottom: 1px solid #1de9b6;
+	transition: color border-bottom 0.25s ease;
+}
+.notice-icon {
+	width: 15%;
+	display: inline-block;
+    font-size: 2em;
+    margin: 0.2em 0;
+}
+.notice-text {
+	width: 60%;
+	display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.5em;
+    text-align: left;
+}
+.notice-time {
+	    width: 25%;
+    display: inline-block;
+    float: right;
+    margin: 0.5em 0;
+}
+.menu-item{
+	width: 100%;
+	background-color: transparent;
+	color: #FFF;
+	cursor: pointer;
+}
+.menu-item:hover{
+	background-color: #1de9b6;
+	color: #242424;
+	transition: color background-color 0.2s ease;
+}
+.menu-icon{
+width: 15%;
+display: inline-block;
+}
+.menu-text{
+width: 85%;
+display: inline-block;
+text-align: left;
+}
+#cal-year {
+	background-color: #242424;
+	position: absolute;
+	top: 0;
+	margin-top: calc(100vh / 13 - 3px);
+	z-index: 4;
+	padding-top: 0.5em;
+}
+#cal-year-text {
+	display: inline-block;
+	width: 40%;
+	font-size: 1.3em;
+	color: #FFF;
+	margin-left: 5vw;
+}
+#schedule {
+	width: 100%;
+	text-align: center;
+	font-size: 1em;
+	margin-top: calc(100vh / 13);
+}
+
+#schedule-header{
+	position : fixed;
+	background-color : #242424;
+	width : initial;
+	z-index: 3;
+}
+#schedule tr td {
+	border-right: 1px solid #424242;
+	border-bottom: 1px solid #424242;
+	width: calc(((100% - 7px) - 5em)/ 7);
+	color: #1de9b6;
+}
+#schedule tr td:last-of-type {
+	border-right: transparent;
+}
+#schedule tr td:hover {
+	background-color: rgba(255, 255, 255, 0.2)
+}
+#schedule tr td .header, div .header{
+	width: 20% !important;
+}
+.header:hover {
+	background-color: transparent;
+}
+
+
+#cal-week {
+	background-color: #242424;
+	margin-top: calc(100vh / 13 * 2);
+}
+#prev-month-button{
+	position: absolute;
+	top: calc(100vh / 13);
+	color: #FFF;
+	right: 19vw;
+	font-size: 2em;
+	z-index: 4;
+}
+#next-month-button{
+	position: absolute;
+	top: calc(100vh / 13);
+	color: #FFF;
+	right: 2vw;
+	font-size: 2em;
+	z-index: 4;
+}
+.cal-header {
+	display: inline-block;
+	width: calc(100% / 7);
+	text-align: center;
+	font-size: 1em;
+	color: #1de9b6;
+	height: 100%;
+	line-height: 100%;
+}
+#cal-body {
+	background-color: #242424;
+	position: absolute;
+}
+.month-wrapper{
+	height: 100%;
+	width: 100%;
+	display: inline-block;
+}
+.cal-block {
+	display: inline-block;
+	font-size: 0.7em;
+	line-height: 50%;
+	text-align: center;
+	// overflow: hidden;
+}
+.cal-day-text {
+	margin: 20% auto 0;
+	height: 40%;
+	font-size: 1.5em;
+}
+.event-indicator {
+	font-size: 0.7em;
+	margin: 0;
+	height: 50%;
+}
+.no-events {
+	color: transparent !important;
+}
+#quick-tasks {
+	background-color: #FFF;
+	overflow: scroll;
+	position: absolute;
+	margin-top: calc(100vh / 13 * 6);
+}
+.completed-task{
+	text-decoration: line-through;
+	color: #555;
+	font-size: 0.75em;
+}
+#no-tasks-message {
+	display: inline-block;
+	width: 100%;
+}
+#no-tasks-message p {
+	width: 100%;
+	text-align: center;
+	font-size: 1.5em;
+	color: #242424;
+}
+#no-tasks-message img {
+	width: 15%;
+	margin: 0 42.5%;
+}
+/* Add Tasks */
+#add-tasks{
+	height: 100%;
+	width: 100%;
+	font-size: 1.5em;
+}
+#add-task-form-nav{
+	line-height: 2em;
+	display: inline-flex;
+	width: 100%;
+	color: #FFF;
+}
+#add-task-form-nav i{
+	position: relative;
+	top: 0.2em;
+	font-size: 1.25em;
+	cursor: pointer;
+	width: 10%;
+}
+#add-task-form-nav div {
+	width: 76%;
+	text-align: center;
+}
+#search-wrapper{
+	background-color: #242424;
+	color: white;
+	display: inline-flex;
+	border-bottom: 1px solid #424242;
+	margin: 0;
+	padding: 0;
+	height: 1.4em;
+	width: 100%;
+}
+#search-icon{
+	color: white;
+	line-height: 1.4em;
+	font-size: 1em;
+	background-color: #242424;
+	padding-left: 0.3em;
+}
+#search{
+	color: white;
+	line-height: 1.4em;
+	font-size: 0.8em;
+	background-color: #242424;
+	border: none;
+	padding-left: 0.25em;
+	width: 86%;
+}
+
+.global-tag-wrapper {
+	width: 33%;
+	display: inline-block;
+	color: #616161;
+	text-align: center;
+	margin: 0.3em 0;
+}
+.tag-icon {
+	width: 100%;
+	font-size: 1.5em;
+}
+.global-tag-label {
+	width: 100%;
+	display: inline-block;
+	font-size: 0.7em;
+}
+
+.global-tag-wrapper:hover {
+	color: #1de9b6;
+	cursor: pointer;
+}
+.no-tags{
+	width: auto;
+	margin: 0 1em;
+}
+label {
+	font-size: 0.8em
+}
+
+.event-tag-tile {
+	display: inline-block;
+	width: 50%;
+	color: white;
+	padding: 1.1em 0em;
+	font-size: 0.7em;
+	text-align: center;
+	cursor: pointer;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.event-tag-tile:hover {
+	filter: drop-shadow(0 0 20px rgba(0,0,0,0.5));
+}
+.form-item{
+	min-height: 2em;
+	background-color: #242424;
+	border-bottom: 1px solid #424242;
+	color: #616161;
+	font-size: 0.8em;
+	padding: 0.5em;
+	line-height: 2em;
+	box-shadow: none;
+}
+.form-item .checkbox, .form-item .checkbox-alt {
+	background-color: transparent;
+	height: auto;
+	margin: 0 auto;
+	width: 1em;
+	padding-left: 3.1em;
+	font-size: 0.7em;
+	position: relative;
+	top: 0.2em;
+}
+.form-item > textarea {
+	width: 100%;
+	font-size: 1em;
+	color: white;
+	background: transparent;
+	border: none;
+	border-bottom: 1px solid #1de9b6;
+	resize: vertical;
+	height: 5em;
+}
+.form-item button{
+	margin: 0 auto;
+	width: 100%;
+	font-size: 1em;
+	color: #1de9b6;
+	background: #242424;
+	border: 1px solid #1de9b6;
+}
+.form-item button:focus{
+	-webkit-animation: click 0.25s;
+	-moz-animation: click 0.25s;
+	-o-animation: click 0.25s;
+	animation: click 0.25s;
+}
+.form-item input {
+	text-align: left;
+	font-size: inherit;
+	background-color: #242424;
+	border: none;
+	width: 80%;
+	color: #e9e9e9;
+}
+#alarm-radio-wrapper{
+	display: inline-flex;
+	width: 100%;
+	padding-top: 0.5em 0.5em 0.5em 0;
+}
+.radio-option-wrapper{
+	display: inline-flex;
+	color: #616161;
+	text-align: center;
+	width: 25%;
+}
+.radio {
+	display: inline-block;
+	font-size: 0.75em;
+	line-height: 1em;
+	cursor: pointer;
+	text-align: center;
+	width: 100%;
+}
+.radio .outer {
+	position: relative;
+	left: 0.5em;
+}
+.radio:hover .inner {
+	-webkit-transform: scale(0.5);
+	transform: scale(0.5);
+	opacity: .5;
+}
+.radio input {
+	height: 1px;
+	width: 1px;
+	opacity: 0;
+	position: relative;
+	top: 2em;
+}
+.radio input:checked + .outer .inner {
+	-webkit-transform: scale(1);
+	transform: scale(1);
+	opacity: 1;
+}
+.radio input:checked + .outer {
+	border: 3px solid #1de9b6;
+}
+.radio input:focus + .outer .inner {
+	-webkit-transform: scale(1);
+	transform: scale(1);
+	opacity: 1;
+	background-color: #1de9b6;
+}
+.radio .outer {
+	height: 20px;
+	width: 20px;
+	display: block;
+	margin: -1em 1.5em 0.5em 1.5em;
+	border: 3px solid #1de9b6;
+	border-radius: 50%;
+	background-color: #242424;
+}
+.radio .inner {
+	-webkit-transition: all 0.25s ease-in-out;
+	transition: all 0.25s ease-in-out;
+	height: 16px;
+	width: 16px;
+	-webkit-transform: scale(0);
+	transform: scale(0);
+	display: block;
+	margin: 2px;
+	border-radius: 50%;
+	background-color: #1de9b6;
+	opacity: 0;
+}
+.radio-option-label-text {
+	margin: 0;
+	color: #616161;
+}
+.task-detail {
+	.radio .outer {
+		margin: -1em auto 0.5em;
+	}
+	.radio-option-label-text {
+		padding-left: 1em;
+	}
+}
+/* Add tasks and quick tasks*/
+.task-single{
+	padding: 0.1em 0 0 0.2em;
+	min-height: 2em;
+	border-bottom: #616161 1px solid;
+	list-style: none;
+	display: flex;
+	background-color: #FFF;
+}
+.task-title{
+	padding: 0 0 0 0.5em;
+	font-size: 1.5em;
+	white-space: nowrap;
+	width: 12em;
+	display: inline-block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	color: #242424;
+}
+.task-secondary{
+	float: right;
+	text-align: right;
+	position: absolute;
+	right: 0.25em;
+	font-size: 1.5em;
+	color: #242424;
+}
+.task-info-date,
+.task-info-time {
+	font-size: 0.75em;
+	color: #424242;
+	margin: 0 0 0.3em 1.5em;
+	position: relative;
+	bottom: 0.5em;
+
+}
+/* checkboxes */
+.checkbox, .task-secondary {
+	padding-top: 0.1em;
+}
+@-webkit-keyframes check {0% {height: 0; width: 0; } 25% {height: 0; width: 10px; } 50% {height: 20px; width: 10px; } } @-moz-keyframes check {0% {height: 0; width: 0; } 25% {height: 0; width: 10px; } 50% {height: 20px; width: 10px; } } @-ms-keyframes check {0% {height: 0; width: 0; } 25% {height: 0; width: 10px; } 50% {height: 20px; width: 10px; } } @keyframes check {0% {height: 0; width: 0; } 25% {height: 0; width: 10px; } 50% {height: 20px; width: 10px; } } 
+.checkbox, .checkbox-alt {
+	background-color: #fff;
+	display: inline-block;
+	height: 20px;
+	margin: 0.1em 0 0 0.25em;
+	width: 1em;
+	padding-right: 0.1em;
+}
+.checkbox label, .checkbox-alt label {
+	display: block;
+	height: 1.5em;
+	position: relative;
+	width: 1.5em;
+	border: 2px solid #666;
+	border-radius: 4px;
+	cursor: pointer;
+	margin: 0;
+
+}
+.checkbox label:after, .checkbox-alt label:after {
+  /*
+  This element has a border on the right, and top. By rotating it looks like a check symbol, but the wrong way. That's why I'm flipping it with scaleX(-1)
+  */
+  -moz-transform: scaleX(-1) rotate(135deg);
+  -o-transform: scaleX(-1) rotate(135deg);
+  -ms-transform: scaleX(-1) rotate(135deg);
+  -webkit-transform: scaleX(-1) rotate(135deg);
+  transform: scaleX(-1) rotate(135deg);
+  /*
+  I want to position the symbol using the left top, because when increasing the width and height of an object, it expands from the top left corner as well. That is what makes it looks like it's being drawn.
+  */
+  -moz-transform-origin: left top;   
+  -o-transform-origin: left top;
+  -ms-transform-origin: left top;
+  -webkit-transform-origin: left top;
+  transform-origin: left top;
+  border-right: 4px solid rgba(0,0,0,0);
+  border-top: 4px solid rgba(0,0,0,0);
+  content: '';
+  display: block;
+  height: 1.75em;
+  left: -3px;
+  position: absolute;
+  top: 0.75em;
+  width: 0.75em;
+}
+.checkbox input, .checkbox-alt input {
+	display: none;
+}
+.checkbox input:checked + label:after, .checkbox-alt input:checked + label:after {
+	-webkit-animation: check 0.25s;
+	-moz-animation: check 0.25s;
+	-o-animation: check 0.25s;
+	animation: check 0.25s;
+	border-color: #1de9b6;
+}
+.checkbox.checkbox-alt label:hover:after, .checkbox-alt.checkbox-alt label:hover:after {
+	-webkit-animation: check 0.75s ease infinite;
+	-moz-animation: check 0.75s ease infinite;
+	-o-animation: check 0.75s ease infinite;
+	animation: check 0.75s ease infinite;
+}
+.checkbox.checkbox-alt input:checked + label:after, .checkbox-alt.checkbox-alt input:checked + label:after {
+	-webkit-animation: none;
+	-moz-animation: none;
+	-o-animation: none;
+	animation: none;
+}
+/* Task Detail */
+.task-detail {
+	font-size: 1.2em;
+	top: 5%;
+}
+.task-detail #update-task-header {
+  text-align: center;
+  color: white;
+}
+.task-detail form {
+  height: 100%;
+  overflow: scroll;
+}
+.task-detail .edit-item {
+  height: 2em;
+  background-color: #242424;
+  border-bottom: 1px solid #424242;
+  color: #FFF;
+  font-size: 0.8em;
+  padding: 0.5em;
+  line-height: 2em;
+  box-shadow: none;
+}
+.task-detail .edit-item input {
+  text-align: left;
+  font-size: inherit;
+  background-color: #242424;
+  border: none;
+  width: 80%;
+  color: #FFF;
+  line-height: 2em;
+  display: inline-block;
+}
+.task-detail .edit-item div {
+  width: 15%;
+  line-height: 2em;
+  display: inline-block;
+}
+.task-detail .radio .outer {
+	margin: -1.5em auto 0.6em;
+}
+.task-detail .radio-option-label-text{
+	text-indent: 1em;
+}
+.task-detail .edit-item button {
+  width: 100%;
+  height: 2em;
+  font-size: inherit;
+  border: 1px solid #1de9b6;
+  color: #1de9b6;
+  background-color: #242424;
+}
+.task-detail .edit-item button:focus {
+	-webkit-animation: click 0.5s;
+	-moz-animation: click 0.5s;
+	-o-animation: click 0.5s;
+	animation: click 0.5s;
+}
+.task-detail .edit-item button:hover {
+  background-color: #1de9b6;
+  color: #242424;
+}
+.task-detail .desc {
+  height: auto;
+  padding: 0.5em;
+}
+.task-detail .desc textarea {
+  height: 4em;
+  resize: none;
+  border: none;
+  font-size: 1em;
+  background-color: transparent;
+  border-bottom: 1px solid #1de9b6;
+  width: 100%;
+  color: #FFF;
+}
+/*
+*
+medium screens
+*
+*/
+@media screen and (min-width: 992px){
+	#entry-portal{
+		font-size: 1.1em;
+	}
+	#login-form, #register-form {
+		width: 60%;
+		margin: 3em auto;
+	}
+.task-detail {
+	font-size: 1.2em;
+	top: 4%;
+}
+	#tasks {
+		display: inline-block;
+		width: 30%;
+		height: 100%;
+		position: absolute;
+		left: 0;
+		top: 0;
+		background: #FFF;
+	}
+	#task-list-header {
+		text-align: center;
+		width: 100%;
+		margin: 0 auto;
+		font-size: 1.5em;
+		background-color: #242424;
+		color: #FFF;
+	}
+	#tasks-wrapper{
+		margin: 0;
+		padding: 0;
+		overflow-y: scroll;
+	    height: 97.5vh;
+	}
+	#calendar {
+		display: inline-block;
+		width: 70%;
+		margin-left: 30%;
+		font-size: 1.5em;
+	}
+	#cal-month {
+		position: relative;
+		z-index: 5;
+	}
+	#action-bar {
+		width: 43%;
+	}
+	.notice {
+		font-size: 1.3em;
+	}
+	.notice-text {
+	width: 65%;
+}
+.notice-time {
+	    width: 20%;
+}
+	#user-menu {
+		font-size: 1.5em;
+		top: 7%;
+		padding: 2%;
+	}
+	#cal-year-text, #cal-month-text {
+		margin-left: 2.25vw;
+	}
+	#schedule{
+		margin-top: 0;
+	}
+	#prev-month-button {
+		right: 12.75vw;
+	}
+	#next-month-button {
+		right: 2.75vw;
+	}
+	#cal-week {
+		margin-top: 3em;
+	}
+	#cal-body {
+		height: calc(100vh / 13 * 10);
+		// font-size: 2.5em;
+		width: 70%;
+	}
+	.month-wrapper {
+		width: 100%;
+		overflow: scroll;
+	}
+	.cal-block {
+		font-size: 1em;
+	}
+	.cal-day-text {
+		font-size: 1.5em;
+	}
+	.event-indicator {
+		font-size: 1em;
+	}
+	#quick-tasks {
+		display: none;
+	}
+	#add-tasks {
+		display: initial;
+		width: 30%;
+		height: 100%;
+		position: absolute;
+		top: 0;
+		right: 0;
+		background: #242424;
+		z-index: 8;
+		border-left: 1px solid #424242;
+	}
+}
+/*
+*
+large screens
+*
+*/
+@media screen and (min-width: 1400px){
+	#login-form, #register-form {
+		width: 60%;
+		margin: 7em auto;
+	}
+	#tasks {
+		display: inline-block;
+		width: 20%;
+		height: 100%;
+		margin: 0;
+		padding: 0;
+	}
+	#calendar {
+		display: inline-block;
+		width: 60%;
+		margin-left: 20%;
+	}
+	
+	#action-bar {
+		width: 43%;
+
+		margin: 1em 3.5vw 0 0;
+
+	}
+	.nav-button {
+		width: 33%;
+	}
+	#prev-month-button {
+		right: 31.5vw;
+		z-index: 14;
+	}
+	#next-month-button {
+		right: 23vw;
+		z-index: 14;
+	}
+	#cal-body {
+		height: calc(100vh / 13 * 10);
+		width: 60%;
+	}
+	#quick-tasks {
+		display: none;
+	}
+	#add-tasks {
+		display: inline-block;
+		width: 20%;
+		height: 100%;
+		background: #242424;
+		margin: 0;
+		padding: 0;
+		position: absolute;
+		right: 0;
+		top: 0;
+	}
+}
+
+/* Helper Styles */
+.animated {
+	-webkit-animation-duration:0.25s !important;
+	animation-duration:0.25s !important;
+}
+.bounceInUp, .bounceIn {
+	-webkit-animation-duration:0.5s !important;
+	animation-duration:0.5s !important;
+}
+/* color classes */
+.green{
+	background-color: #1de9b6;
+}
+.light-green {
+	background-color: #18f7bf;
+}
+.dark-green {
+	background-color: #13af88;
+}
+.hidden {
+	display: none !important;
+}
+@keyframes click {
+  0%   { box-shadow: 0 0 1px rgba(29, 233, 182, 0.5);
+  		transform: perspective(1em) translateZ(-1px);
+   }
+  30% {   box-shadow: 0 0 3em rgba(29, 233, 182, 0.5);
+  		transform: perspective(1em) translateZ(-1px);
+   }
+   100%   { box-shadow: 0 0 1px rgba(29, 233, 182, 0.5);
+   		transform: perspective(1em) translateZ(-1px);
+    }
+}
+@media screen and (max-width: 992px){
+	.hide-on-small{
+		display: none;
+	}
+}
+@media screen and (min-width: 1400px){
+	.hide-on-large {
+		display: none;
+	}
+}
+@media screen and (min-width: 993px){
+	.hide-on-med {
+		display: none;
+	}
+}
