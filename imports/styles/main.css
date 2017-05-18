@@ -56,7 +56,7 @@ html, body, #root {
 #top-wrapper::before {
     background-size: cover;
     opacity: 0.1;
-    filter: blur(2px);
+    filter: blur(2px) grayscale(100%);
     display: block;
     position: absolute;
     content: ' ';
