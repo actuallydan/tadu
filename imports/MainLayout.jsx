@@ -14,7 +14,6 @@ import 'animate.css';
 
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import moment from 'moment';
-import Rodal from 'rodal';
 
 import 'loaders.css';
 
