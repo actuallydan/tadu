@@ -14,10 +14,12 @@ input:focus, textarea:focus, button:focus {
 html {
 	touch-action: manipulation;
 }
-input, button, textarea, * {
+input, button, textarea, input[type=submit] {
 	-webkit-appearance: none !important;
 	-moz-appearance: none !important;
 	appearance: none !important;
+	-webkit-appearance: none !important;
+	-webkit-border-radius: 0 !important;
 }
 @font-face {
 	font-family: "Rajdhani";
