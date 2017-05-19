@@ -52,6 +52,9 @@ export default class EntryPortal extends React.Component {
 				/* Something unforseen happened with the server request, possibly a poor connection issue */
 				swal("Oops...", e, "error");
 			}
+		} else {
+			/* The user tried to enter invalid email or username credentials. Email addresses should contain alphanumeric characters, @, ., _, and - only */
+			swal("Sorry", "Please enter a valid email and a valid username with at least 6 characters.", "error");
 		}
 	}
 
@@ -101,7 +104,7 @@ export default class EntryPortal extends React.Component {
 			
 		} else {
 			/* The user tried to enter invalid email or username credentials. Email addresses should contain alphanumeric characters, @, ., _, and - only */
-			swal("Sorry", "Please make sure you enter a valid email and a valid username with at least 6 characters.", "error");
+			swal("Sorry", "Please fill out all fields. Make sure you enter a valid email and a valid username with at least 6 characters.", "error");
 		}
 	}
 	togglePolicy(){
@@ -119,7 +122,7 @@ export default class EntryPortal extends React.Component {
 			:
 			 <Register showLogin={this.state.showLogin} tryRegister={this.tryRegister} handleChangeForm={this.handleChangeForm.bind(this)}  showPolicy={this.togglePolicy.bind(this)} loggedInChange={this.props.loggedInChange.bind(this)}/>
 			 }
-			 <Menu show={this.state.showPolicy} close={this.togglePolicy.bind(this)}>
+			 <Menu show={this.state.showPolicy} toggleMenu={this.togglePolicy.bind(this)}>
 			 	<Policy />
 			 </Menu>
 			 </div>
