@@ -904,6 +904,9 @@ medium screens
 		height: auto;
 		padding-bottom: 2em;
 	}
+	#login-form::before, #register-form::before{
+		opacity: 0.95;
+	}
 	.toggle-login{
 		position: relative;
 		bottom: 0;	
