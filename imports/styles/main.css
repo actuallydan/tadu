@@ -157,7 +157,7 @@ html, body, #root {
 	width: 100%;
 	// background: rgba(0,0,0,0.85);
 	position: relative;
-    height: 100%;
+	height: 100%;
 }
 #login-form::before , #register-form::before {
 	background-size: cover;
@@ -201,7 +201,7 @@ html, body, #root {
 	background: transparent;
 }
 .form-input-wrapper::-webkit-input-placeholder, .form-input-wrapper:-moz-placeholder, .form-input-wrapper::-moz-placeholder  { /* WebKit, Blink, Edge */
-	color:    #FFF;
+	color:    #FFF !important;
 	opacity: 1;
 }
 .login-register-button {
@@ -435,7 +435,7 @@ html, body, #root {
 	color: transparent !important;
 }
 #quick-tasks {
-	background-color: rgba(255, 255, 255, 0.3);
+	background-color: transparent;
 	overflow: scroll;
 	position: absolute;
 	margin-top: calc(100vh / 13 * 6);
@@ -695,7 +695,7 @@ label {
 	border-bottom: #FFF 1px solid;
 	list-style: none;
 	display: flex;
-	background-color: transparent;
+	background-color: rgba(255, 255, 255, 0.2);
 }
 .task-title{
 	padding: 0 0 0 0.5em;
@@ -873,12 +873,21 @@ label {
 	width: 100%;
 	color: #FFF;
 }
+/* Weird ipad fixes */
+@media screen and (min-width: 768px){
+	html, body, #root {
+		font-size: 1.2em;
+	}
+}
 /*
 *
 medium screens
 *
 */
 @media screen and (min-width: 992px){
+	html, body, #root {
+		font-size: 1em;
+	}
 	.row-11 {
 		overflow: display;
 		margin: 0
