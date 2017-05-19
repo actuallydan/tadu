@@ -895,9 +895,19 @@ medium screens
 	#entry-portal{
 		font-size: 1.1em;
 	}
+	#entry-portal::before {
+		content: none;
+	}
 	#login-form, #register-form {
 		width: 60%;
 		margin: 3em auto;
+		height: auto;
+		padding-bottom: 2em;
+	}
+	.toggle-login{
+		position: relative;
+		bottom: 0;	
+		margin: 2em 0 0;
 	}
 	.task-detail {
 		font-size: 1.2em;
