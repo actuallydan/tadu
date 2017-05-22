@@ -1,5 +1,8 @@
 import React from 'react';
- Session.set('data_loaded', false); 
+Session.set('tasks_loaded', false);
+Session.set('tagTypes_loaded', false);
+Session.set('notifications_loaded', false);
+Session.set('schedules_loaded', false);
 
 import EntryPortal from './EntryPortal.jsx';
 import MobileLayout from'./MobileLayout.jsx';
@@ -31,12 +34,18 @@ export default class MainLayout extends TrackerReact(React.Component) {
 			selectedDate: new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000)).toJSON().substring(0, 10),
 			width: window.innerWidth,
 			subscription: {
-				tasks: Meteor.subscribe("userTasks" , ()=>{
-					Session.set('data_loaded', true); 
+				tasks: Meteor.subscribe("userTasks", ()=>{
+					Session.set("tasks_loaded", true);
 				}),
-				tagTypes: Meteor.subscribe("tagTypes"),
-				notifications: Meteor.subscribe("notifications"),
-				schedules: Meteor.subscribe("schedules"),
+				tagTypes: Meteor.subscribe("tagTypes", ()=>{
+					Session.set("tagTypes_loaded", true);
+				}),
+				notifications: Meteor.subscribe("notifications", ()=>{
+					Session.set("notifications_loaded", true);
+				}),
+				schedules: Meteor.subscribe("schedules", ()=>{
+					Session.set("schedules_loaded", true);
+				}),
 				users: Meteor.subscribe("allUsers"),
 			},
 			taskDetail : null,
@@ -282,7 +291,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
   		});
   		return(
   			<div className="wrapper" id="top-wrapper">
-  			{	!Session.get('data_loaded') 
+  			{	Session.get('tasks_loaded') === false ||  Session.get('tagTypes_loaded') === false || Session.get('notifications_loaded') === false || Session.get('schedules_loaded') === false
   				?
   				<Loader />
   				:

@@ -1004,9 +1004,14 @@ medium screens
 	}
 	.cal-day-text {
 		font-size: 1.5em;
+		line-height: 150%;
+		margin: 0;
 	}
 	.event-indicator {
 		font-size: 1em;
+		line-height: 200%;
+		margin: 0;
+		height: auto;
 	}
 	#quick-tasks {
 		display: none;

@@ -37,7 +37,7 @@ export default class MonthView extends React.Component {
 						borderColor: _isSelected ? "#1de9b6" : "transparent",
 						backgroundColor: _isToday && _isSelected ? "#1de9b6" : "transparent",
 						width : this.props.width > 1400 ? "calc(60vw / 7 - 2px)" : this.props.width > 992 ? "calc(70vw / 7 - 2px)" : "calc(100vw / 7 - 2px)",
-						height : "calc(100% / 6 - 2px)",
+						height : this.props.width > 992 ? "calc(100vh / 13 * 10 / 6 - 2px)" : "calc(100% / 6 - 2px)",
 					};
 					return <Day date={day} style={_dayStyles} key={day} selectDate={this.props.selectDate.bind(this)} isSelected={_isSelected} events={tempCal[day].events}/>
 				})
