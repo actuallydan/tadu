@@ -164,7 +164,7 @@ Meteor.methods({
 			*/
 			tempPossibilites = tempPossibilites.filter((coord)=>{
 				let daysFromToday = (coord.day - new Date().getDay()) < 0 ? 7 - Math.abs(coord.day - new Date().getDay()): (coord.day - new Date().getDay())
-				return (mySched.thresholds[daysOfWeek[coord.day]][coord.time][data.tag] - daysFromToday * 0.025) >= target;
+				return (mySched.thresholds[daysOfWeek[coord.day]][coord.time][data.tag] - daysFromToday * 0.01) >= target;
 			});
 			// console.log("At " + (target * 100) + "%, there are " + tempPossibilites.length + " times available")
 			/* Filter out all times to remove hours where task is already set */

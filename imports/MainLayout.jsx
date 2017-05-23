@@ -26,6 +26,8 @@ TagTypes = new Mongo.Collection("TagTypes");
 Notifications = new Mongo.Collection("Notifications");
 Schedules = new Mongo.Collection("Schedules");
 
+let toggleTitle;
+
 export default class MainLayout extends TrackerReact(React.Component) {
 	constructor(props) {
 		super(props);
@@ -154,69 +156,47 @@ export default class MainLayout extends TrackerReact(React.Component) {
 	* Accomodates for both Notifcation users and otherwise
 	*/
 	notify(notice){
-  	// add switch(notice.type) for different types of notifications
+	// let audio = new Audio('audio_file.mp3');
+	// audio.play();
+  	document.title = "Task Alert!";
+  	toggleTitle = setInterval(()=>{
+  			switch(document.title){
+  				case notice.data.text:
+  				document.title = "Task Alert!";
+  				break;
+  				case "Task Alert!":
+  				document.title = notice.data.text;
+  				break;
+  			}
+  		}, 1500);
+  	toggleTitle;
   	if (Notification.permission !== "granted"){
-  		// Tell the user their task is due
-  		swal({
-  			title: notice.data.tag,
-  			text: notice.data.text + "<br/> Have you completed it?",
-  			type: "warning",
-  			showCancelButton: true,
-  			confirmButtonText: "Yes, it's done!",
-  			cancelButtonText: "No, I need to reschedule",
-  			closeOnConfirm: false,
-  			closeOnCancel: false,
-  			html: true
-  		},
-  		function(isConfirm){
-  			if (isConfirm) {
-  				swal("Good job!", "I'm so proud of you", "success");
-	  				// Update task completion status to true
-	  				Meteor.call('toggleTask', notice.data);
-	  				Meteor.call("changeThreshold", {tag: notice.data.tag, date: notice.data.dateStart, time: notice.data.timeStart, amt: 0.1})
-	  			} else {
-	  				swal("Rescheduling...", "Don't worry. I'll set up a different time", "success");
-	  				/* update task startTime */
-	  				Meteor.call("scheduleBestTime", {tag: notice.data.tag, today: new Date()}, (err, res)=>{
-	  					if(err){
-	  						swal("So..", "There was an issue rescheduling..." + "<br/>" + err, "error");
-	  					} else {
-	  						let daysFromToday = res.date - new Date().getDay();
-	  						let bestDate = moment(res.time, "HH:mm").add(daysFromToday, "days");
-							// Change threshold
-							/* Provide tag (notice.data.tag), date and time (notice.data.dateStart, notice.data.timeStart) and signed amount to change */
-							Meteor.call("changeThreshold", {tag: notice.data.tag, date: notice.data.dateStart, time: notice.data.timeStart, amt: -0.1})
-							// Update task
-							let newTask = {
-								_id: notice.data._id,
-								text : notice.data.text,
-								dateStart : bestDate.format("YYYY-MM-DD"),
-								timeStart : bestDate.format("HH:mm"),
-								desc : notice.data.desc,
-								alarm: notice.data.alarm,
-								timeUTC : notice.data.alarm !== null ? bestDate.subtract(notice.data.alarm, minutes).utc().format().substring(0,16) : null,
-
-							}
-							Meteor.call("updateTask", newTask);
-						}
-					});
-	  			}
-  			// Mark this notification as seen and do not re-show it
-  			Meteor.call("seeNotification", notice);
-
-  		});
-
+  		/* Tell the user their task is due */
+	  	if(!document.hasFocus()){
+	  		window.addEventListener('focus', ()=>{
+				this.displayNotification(notice);
+	  		});
+	  		window.removeEventListener('focus');
+	  	}
   	} else {
-  		/* the only difference being that the notification will get the user's attention better */
+  		/* The only difference being that the notification will get the user's attention better */
   		const notification = new Notification(notice.data.tag, {
   			icon: '../img/tadu_logo.png',
   			body: notice.data.tag + " @ " + moment(notice.data.timeStart, "HH:mm").format("h:mm a"),
   		});
-
   		notification.onclick = ()=>{
   			/* Switch to Tadu tab if need be */
   			window.focus();
-  			swal({
+  			this.displayNotification(notice);
+  			notification.close();
+  		};
+
+  	}
+  }
+  displayNotification(notice) {
+  	clearInterval(toggleTitle);
+  	document.title = "Tadu";
+  	swal({
   				title: notice.data.tag,
   				text: notice.data.text + "<br/> Have you completed it?",
   				type: "warning",
@@ -261,12 +241,8 @@ export default class MainLayout extends TrackerReact(React.Component) {
 					});
 	  			}
 	  		});
-  			// Mark this notification as seen and do not re-show it
+  			/* Mark this notification as seen and do not re-show it */
   			Meteor.call("seeNotification", notice);
-  			notification.close();
-  		};
-
-  	}
   }
   render(){
   	/* Based on screen size and current state, determine which windows should be open */
