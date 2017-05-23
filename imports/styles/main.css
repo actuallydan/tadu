@@ -20,6 +20,10 @@ input, button, textarea, input[type=submit] {
 	appearance: none !important;
 	-webkit-appearance: none !important;
 	-webkit-border-radius: 0 !important;
+	-moz-box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+    padding: 0;
 }
 @font-face {
 	font-family: "Rajdhani";
@@ -456,6 +460,7 @@ html, body, #root {
 	text-align: center;
 	font-size: 1.5em;
 	color: #FFF;
+    margin: 01em 0 0em;
 }
 #no-tasks-message img {
 	width: 15%;
@@ -551,6 +556,7 @@ label {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	vertical-align: middle;
 }
 .event-tag-tile:hover {
 	filter: drop-shadow(0 0 20px rgba(0,0,0,0.5));
@@ -836,6 +842,8 @@ label {
 	width: 15%;
 	line-height: 2em;
 	display: inline-block;
+	text-align: left;
+	color: #616161;
 }
 .task-detail .radio .outer {
 	margin: -1.5em auto 0.6em;
@@ -925,7 +933,8 @@ medium screens
 		position: absolute;
 		left: 0;
 		top: 0;
-		background: rgba(255, 255, 255, 0.2);
+		background: transparent;
+	    border-right: 1px solid #424242;
 	}
 	#task-list-header {
 		text-align: center;
@@ -1069,7 +1078,7 @@ large screens
 		z-index: 14;
 	}
 	#cal-body {
-		height: calc(100vh / 13 * 10);
+		height: calc(100vh / 13 * 11);
 		width: 100%;
 	}
 	#quick-tasks {

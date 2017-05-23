@@ -127,9 +127,13 @@ export default class AddTask extends Component {
 			showCancelButton: true,
 			closeOnConfirm: false,
 			inputPlaceholder: "Netflix Marathon, Eat Ice, Reading",
-			inputValue: document.getElementById("search").value.trim(),
+			inputValue: document.getElementById("search").value.trim().substring(0, 20),
 		},
 		function(inputValue){
+			if(inputValue.length > 25){
+				 swal.showInputError("You have exceeded the 25 character limit for tags");
+		        return false;
+			}
 			if (inputValue === false) {
 				return false;
 			}
@@ -237,7 +241,7 @@ export default class AddTask extends Component {
 						}
 					})
 					.sort((a, b)=> {
-						return a.uses > b.uses;
+						return a.uses < b.uses;
 					})
 					.map((tag)=>{ 
 						n++;

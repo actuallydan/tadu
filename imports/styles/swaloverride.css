@@ -70,3 +70,15 @@
   background: #f44336 !important;
   border: #f44336 1px solid;
 }
+.sweet-alert .sa-error-container{
+  background-color: transparent;
+}
+.sweet-alert .sa-error-container .icon {
+  background-color: #f44336;
+}
+.sweet-alert .sa-input-error::before, .sweet-alert .sa-input-error::after {
+  width: 1.5em;
+  border-radius: 0;
+  height: 3px;
+  background-color: #f44336;
+}

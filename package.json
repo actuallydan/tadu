@@ -25,6 +25,7 @@
     "loaders.css": "^0.1.2",
     "mdi": "^1.8.36",
     "moment": "^2.18.1",
+    "normalize-css": "^2.3.1",
     "rc-tooltip": "^3.4.2",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",

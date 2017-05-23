@@ -2,14 +2,18 @@ import React, {Component} from 'react';
 import MainLayout from '../imports/MainLayout.jsx';
 import EntryPortal from '../imports/EntryPortal.jsx';
 
+/* CSS Standardization */
+import 'normalize-css';
+
 /* Import Custom CSS */
 import '../imports/styles/main.css';
 
+/* 3rd party imports */
 import swal from 'sweetalert';
 import 'sweetalert/dist/sweetalert.css';
+
 /* Fix to change alerts to fit theme */
 import '../imports/styles/swaloverride.css';
-
 
 export default class App extends Component {
 	constructor(){

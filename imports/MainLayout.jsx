@@ -286,7 +286,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
   			return a.dateStart + "T" + a.timeStart > b.dateStart + "T" +b.timeStart;
   		}
   		);
-  		filteredTasks = filteredTasks.length === 0 ? <div id="no-tasks-message"><p>You're free all day!</p><img src="../img/tadu_logo.png" className="no-tasks-icon"></img></div> : filteredTasks.map( (task) => {
+  		filteredTasks = filteredTasks.length === 0 ? <div id="no-tasks-message" className='animated pulse' ><p>You're free all day!</p><img src="../img/tadu_logo.png" className="no-tasks-icon"></img></div> : filteredTasks.map( (task) => {
   			return <TaskSingle key={task._id} task={task} showDetail={this.showDetail.bind(this)}/>
   		});
   		return(

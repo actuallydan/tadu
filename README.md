@@ -54,14 +54,15 @@
 * 5.0 Tadu Concierge 
 
 #### What Needs Done
+* Mobile Add/Edit Task Menu Style
 * Documentation
 * Still tries to schedule things on the day of, hours in the past
 * Tutorial
-* Replace with SweetAlert 2
-* Graphical glitch on calendar headers with non-mac things (maybe solved?)
+* Graphical glitch on calendar headers with non-mac things
+	* Occurs with:
+	* Linux, Windows OS regardless of Browser
 * Cordova/Electron offline functionality?
+------------
 * Share Tasks
-* Speech Recognition w/ https://www.npmjs.com/package/annyang
-* Custom Alert Tones for mobile
 
 
