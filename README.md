@@ -54,10 +54,10 @@
 * 5.0 Tadu Concierge 
 
 #### What Needs Done
-* Mobile Add/Edit Task Menu Style
 * Documentation
 * Still tries to schedule things on the day of, hours in the past
 * Tutorial
+	* Use https://github.com/gilbarbara/react-joyride
 * Graphical glitch on calendar headers with non-mac things
 	* Occurs with:
 	* Linux, Windows OS regardless of Browser

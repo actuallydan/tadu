@@ -23,7 +23,8 @@ Meteor.publish("allUsers", function () {
      '_id' : 1,
      'username': 1,
      'createdAt': 1,
-     'profile': 1
+     'profile': 1,
+     'tut' : 1
 	}})
 }
  );

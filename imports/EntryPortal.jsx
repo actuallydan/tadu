@@ -80,7 +80,8 @@ export default class EntryPortal extends React.Component {
 				password: this.refs.password.value.trim(),
 				email: this.refs.email.value.trim(),
 				profile: {
-					bedHour: this.refs.bedHour.value
+					bedHour: this.refs.bedHour.value,
+					hasCompletedTutorial : false
 				}
 			};
 			console.log(user, this.refs);

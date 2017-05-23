@@ -51,7 +51,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
 				users: Meteor.subscribe("allUsers"),
 			},
 			taskDetail : null,
-			scheduleVisible: false
+			scheduleVisible: false,
 		};
 		this.handleResize = this.handleResize.bind(this);
 		this.showDetail = this.showDetail.bind(this);
