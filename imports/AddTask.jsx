@@ -360,9 +360,11 @@ render(){
 			this.clearTutStage();
 		}
 	}
+	let display = window.innerWidth >= 1400 ? !this.state.stage1 ?  "visible" : "hidden" : "visible";
+	let icon = this.state.stage1 ? "mdi mdi-close" : "mdi mdi-refresh"
 	return(
 		<div id="add-tasks" className={this.props.show ? "animated slideInRight" : "animated slideOutRight"}>
-		<div className="form-item" id="add-task-form-nav"><i className="mdi mdi-close" onClick={this.clearTask.bind(this)}></i><div>New Task</div></div>
+		<div className="form-item" id="add-task-form-nav"><i className={icon} onClick={this.clearTask.bind(this)} style={{visibility : display}}></i><div>New Task</div></div>
 		{this.state.stage1 ? this.renderStage1() : this.renderStage2()}
 
 		</div>);
