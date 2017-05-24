@@ -15,7 +15,9 @@ Meteor.startup(() => {
     '/img/readme.txt',
     '/img/TaduLaunch.png',
     '/img/Underground-Traffic.mp4',
-    '/packages/'
+    '/packages/',
+    '/docs/',
+    '/fonts/licenses'
   ]
 });
   SyncedCron.config({

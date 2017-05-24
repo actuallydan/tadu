@@ -81,10 +81,13 @@ export default class EntryPortal extends React.Component {
 				email: this.refs.email.value.trim(),
 				profile: {
 					bedHour: this.refs.bedHour.value,
-					hasCompletedTutorial : false
+					tut : {
+						'login' : false,
+						'schedule' : false,
+						'addTasks': false,
+					}
 				}
 			};
-			console.log(user, this.refs);
 			try{
 				/* Try to create a new user with Meteor's account package */
 				Accounts.createUser(user, (err)=> {

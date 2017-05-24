@@ -56,8 +56,6 @@
 #### What Needs Done
 * Documentation
 * Still tries to schedule things on the day of, hours in the past
-* Tutorial
-	* Use https://github.com/gilbarbara/react-joyride
 * Graphical glitch on calendar headers with non-mac things
 	* Occurs with:
 	* Linux, Windows OS regardless of Browser

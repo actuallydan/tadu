@@ -31,7 +31,7 @@ export default class MonthView extends React.Component {
 					let _isToday = day === this.props.today ? true : false;
 					let _isSelected = day === this.props.selectedDate ? true : false;
 					let _dayStyles = {
-						color: !_inThisMonth ? "#424242" : !_isToday ? "#FFF" : _isSelected ? "#000" : "#1de9b6",
+						color: !_inThisMonth ? "#424242" : !_isToday ? "#FFF" : _isSelected ? "#242424" : "#1de9b6",
 						borderWidth: 1,
 						borderStyle: 'solid',
 						borderColor: _isSelected ? "#1de9b6" : "transparent",

@@ -209,12 +209,20 @@ Meteor.methods({
 			$set: {thresholds : mySched.thresholds}
 		});
 	},
-	toggleCompleteTour(){
+	/* Takes a string indicating which step of the 'tutorial' has been completed */
+	toggleCompleteTour(step){
 		if(!Meteor.userId()){
 			throw new Meteor.Error('not-authorized');
 		} 
+		let usertut = Meteor.user().profile.tut;
+		usertut[step] = true;
+
 		Meteor.users.update(Meteor.userId(), {
-			$set: {hasCompletedTutorial: !Meteor.user().profile.hasCompletedTutorial}
+			$set: { 
+				profile: { 
+				tut: usertut
+				}
+			}
 		});
 	}
 });

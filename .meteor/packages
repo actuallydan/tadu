@@ -17,13 +17,13 @@ ecmascript@0.7.3              # Enable ECMAScript2015+ syntax in app code
 shell-server@0.2.3            # Server-side component of the `meteor shell` command
 
 static-html
-accounts-password@1.3.5
+accounts-password@1.3.6
 
 dapearce:material-icons
 meteortoys:allthings
 ultimatejs:tracker-react
 percolate:synced-cron
-force-ssl
-session
-service-configuration
-appcache
+force-ssl@1.0.14
+session@1.1.7
+service-configuration@1.0.11
+appcache@1.0.12

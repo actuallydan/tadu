@@ -79,13 +79,7 @@ export default class Calendar extends TrackerReact(Component) {
 		const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 		const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-		// if(!weekView && !Meteor.user().profile.tut.calendar){
-		// 	/* Show swal for calendar */
-		// } else if(weekView && !Meteor.user().profile.tut.schedule){
-		// 	/* Show swal for calendar */
-		// } else if(this.props.width < 992 && !Meteor.user().profile.tut.tasks){
-		// 	/* Show swal for Quick Tasks */ 
-		// }
+
 		return(
 			<div id="calendar">
 			<div id="cal-month" className="row">

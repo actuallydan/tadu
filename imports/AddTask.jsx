@@ -28,6 +28,18 @@ export default class AddTask extends Component {
 	updateSearch(event){
 		this.setState({search: event.target.value});
 	}
+	clearTutStage(){
+		let context = this;
+		swal({
+			title:"Creating New Tasks",
+			text: "Tadu uses a tags to determine the best time for Tasks. Choose a tag, or create your own and let Tadu find the best time for it.",
+			type: "success", 
+			closeOnConfirm: true, 
+		},
+		()=>{
+			Meteor.call("toggleCompleteTour", "addTasks");
+		})
+	}
 	/* Once we've found the ideal tag and added any additional details to our task we try to add it to the database */
 	addTask(event){
 		/* Stop the event from triggering a POST request */ 
@@ -131,8 +143,8 @@ export default class AddTask extends Component {
 		},
 		function(inputValue){
 			if(inputValue.length > 25){
-				 swal.showInputError("You have exceeded the 25 character limit for tags");
-		        return false;
+				swal.showInputError("You have exceeded the 25 character limit for tags");
+				return false;
 			}
 			if (inputValue === false) {
 				return false;
@@ -225,6 +237,10 @@ export default class AddTask extends Component {
 					<i className="tag-icon mdi mdi-cup-water"></i>
 					<span className="global-tag-label">Cleaning</span>
 					</p>
+					<p className="global-tag-wrapper no-tags" style={{width: '100%', "margin": "0 auto"}} onClick={this.createNewTag.bind(this)}>
+					<i className="tag-icon mdi mdi-tag"></i>
+					<span className="global-tag-label">New Tag</span>
+					</p>
 
 
 					</div>
@@ -273,72 +289,83 @@ export default class AddTask extends Component {
 				}
 				</div>
 				)
+}
+
+/* Relevant parts of AddTask stage 2; this should probably be spun off into it's own component */
+renderStage2(){
+	let nowTime = moment().add(1, 'hour').format("HH:mm");
+	return (
+		<form onSubmit={this.addTask.bind(this)} className={this.state.stage1 ?  "animated slideOutRight" : "animated slideInRight"}>
+		<div className="form-item"><span className='form-item-label'> Title </span><input className="typeable" type="text" ref="newTask" defaultValue={this.state.tagType}  required maxLength="75"/> </div>
+		<div className="form-item"><span className='form-item-label'> Date </span><input className="typeable" id="new-task-date" type="date" ref="dateStart" defaultValue={this.props.selectedDate} /> </div>
+		<div className="form-item"><span className='form-item-label'> Time </span><input className="typeable" id="new-task-time" type="time" ref="timeStart"  defaultValue={nowTime} /> </div>
+
+		{this.state.hasBeenOptimized ? <div className="form-item" style={{"color": "#1de9b6", "fontSize" : "0.6em", "textAlign" : "center"}}><span className='form-item-label mdi mdi-alert-circle'></span><span> {'\u00A0'} This date and time has been optimized for you!</span> </div> : ""}
+
+
+		<div className="form-item"> Set Alarm? 
+		<div className="checkbox">
+		<input id="has-alarm-toggle" type="checkbox" readOnly="" defaultChecked={this.state.showAlarmVisible}ref="hasAlarm" onClick={this.showAlarm.bind(this)} />
+		<label htmlFor="has-alarm-toggle"></label>
+		</div>
+		</div>
+		<div id="alarm-radio-wrapper" className={"form-item " + (this.state.showAlarmVisible ? "" : "hidden")}> 
+		<div className="radio-option-wrapper">
+		<label className="radio" htmlFor="priority-radio-low">
+		<input id="priority-radio-low" ref="5min" type="radio" name="priority" value="5min" defaultChecked={true}/> 
+		<span className="outer"><span className="inner"></span></span><div className="radio-option-label-text">5 min</div>
+		</label>
+		</div>	
+		<div className="radio-option-wrapper">
+		<label className="radio" htmlFor="priority-radio-med">
+		<input id="priority-radio-med" ref="30min" type="radio" name="priority" value="30min" /> <span className="outer">
+		<span className="inner"></span></span><div className="radio-option-label-text">30 min</div>
+		</label>
+		</div>	
+		<div className="radio-option-wrapper">
+		<label className="radio" htmlFor="priority-radio-high">
+		<input id="priority-radio-high" ref="1hour" type="radio" name="priority" value="1hour" /> <span className="outer">
+		<span className="inner"></span></span><div className="radio-option-label-text">1 hour</div>
+		</label>
+		</div>	
+		<div className="radio-option-wrapper">
+		<label className="radio" htmlFor="priority-radio-critical">
+		<input id="priority-radio-critical" ref="1day" type="radio" name="priority" value="1day" /> <span className="outer">
+		<span className="inner"></span></span><div className="radio-option-label-text"> 1 day</div>
+		</label>
+		</div>
+		</div>
+
+
+
+
+		<div className="form-item desc"><textarea type="text" ref="desc" placeholder="Description" maxLength="300"></textarea> </div>
+
+		<div  className="form-item"><button type="submit" className="button">Add Task</button> </div>
+		</form>
+		)
+}
+shouldComponentUpdate(nextProps, nextState){
+	return (nextProps.show !== this.props.show || nextProps.hideAddTask !== this.props.hideAddTask || this.state !== nextState)
+}
+render(){
+	if(Meteor.user().profile.tut.addTasks === false){
+		if(window.innerWidth <= 992 && this.props.index === 1){ 
+			this.clearTutStage();
 		}
-		
-		/* Relevant parts of AddTask stage 2; this should probably be spun off into it's own component */
-		renderStage2(){
-			let nowTime = moment().add(1, 'hour').format("HH:mm");
-			return (
-				<form onSubmit={this.addTask.bind(this)} className={this.state.stage1 ?  "animated slideOutRight" : "animated slideInRight"}>
-				<div className="form-item"><span className='form-item-label'> Title </span><input className="typeable" type="text" ref="newTask" defaultValue={this.state.tagType}  required maxLength="75"/> </div>
-				<div className="form-item"><span className='form-item-label'> Date </span><input className="typeable" id="new-task-date" type="date" ref="dateStart" defaultValue={this.props.selectedDate} /> </div>
-				<div className="form-item"><span className='form-item-label'> Time </span><input className="typeable" id="new-task-time" type="time" ref="timeStart"  defaultValue={nowTime} /> </div>
-				
-				{this.state.hasBeenOptimized ? <div className="form-item" style={{"color": "#1de9b6", "fontSize" : "0.6em", "textAlign" : "center"}}><span className='form-item-label mdi mdi-alert-circle'></span><span> {'\u00A0'} This date and time has been optimized for you!</span> </div> : ""}
-				
-
-				<div className="form-item"> Set Alarm? 
-				<div className="checkbox">
-				<input id="has-alarm-toggle" type="checkbox" readOnly="" defaultChecked={this.state.showAlarmVisible}ref="hasAlarm" onClick={this.showAlarm.bind(this)} />
-				<label htmlFor="has-alarm-toggle"></label>
-				</div>
-				</div>
-				<div id="alarm-radio-wrapper" className={"form-item " + (this.state.showAlarmVisible ? "" : "hidden")}> 
-				<div className="radio-option-wrapper">
-				<label className="radio" htmlFor="priority-radio-low">
-				<input id="priority-radio-low" ref="5min" type="radio" name="priority" value="5min" defaultChecked={true}/> 
-				<span className="outer"><span className="inner"></span></span><div className="radio-option-label-text">5 min</div>
-				</label>
-				</div>	
-				<div className="radio-option-wrapper">
-				<label className="radio" htmlFor="priority-radio-med">
-				<input id="priority-radio-med" ref="30min" type="radio" name="priority" value="30min" /> <span className="outer">
-				<span className="inner"></span></span><div className="radio-option-label-text">30 min</div>
-				</label>
-				</div>	
-				<div className="radio-option-wrapper">
-				<label className="radio" htmlFor="priority-radio-high">
-				<input id="priority-radio-high" ref="1hour" type="radio" name="priority" value="1hour" /> <span className="outer">
-				<span className="inner"></span></span><div className="radio-option-label-text">1 hour</div>
-				</label>
-				</div>	
-				<div className="radio-option-wrapper">
-				<label className="radio" htmlFor="priority-radio-critical">
-				<input id="priority-radio-critical" ref="1day" type="radio" name="priority" value="1day" /> <span className="outer">
-				<span className="inner"></span></span><div className="radio-option-label-text"> 1 day</div>
-				</label>
-				</div>
-				</div>
-				
-
-
-
-				<div className="form-item desc"><textarea type="text" ref="desc" placeholder="Description" maxLength="300"></textarea> </div>
-
-				<div  className="form-item"><button type="submit" className="button">Add Task</button> </div>
-				</form>
-				)
+		if(window.innerWidth > 992 && window.innerWidth < 1400 && this.props.show){ 
+			this.clearTutStage();
 		}
-		shouldComponentUpdate(nextProps, nextState){
-			return (nextProps.show !== this.props.show || nextProps.hideAddTask !== this.props.hideAddTask || this.state !== nextState)
-		}
-		render(){
-			return(
-				<div id="add-tasks" className={this.props.show ? "animated slideInRight" : "animated slideOutRight"}>
-				<div className="form-item" id="add-task-form-nav"><i className="mdi mdi-close" onClick={this.clearTask.bind(this)}></i><div>New Task</div></div>
-				{this.state.stage1 ? this.renderStage1() : this.renderStage2()}
-				
-				</div>);
-
+		if(window.innerWidth >= 1400){ 
+			this.clearTutStage();
 		}
 	}
+	return(
+		<div id="add-tasks" className={this.props.show ? "animated slideInRight" : "animated slideOutRight"}>
+		<div className="form-item" id="add-task-form-nav"><i className="mdi mdi-close" onClick={this.clearTask.bind(this)}></i><div>New Task</div></div>
+		{this.state.stage1 ? this.renderStage1() : this.renderStage2()}
+
+		</div>);
+
+}
+}

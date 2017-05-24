@@ -17,8 +17,6 @@ import 'animate.css';
 
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import moment from 'moment';
-import Joyride from 'react-joyride';
-import	'react-joyride/lib/react-joyride-compiled.css';
 
 import 'loaders.css';
 
@@ -246,12 +244,6 @@ displayNotification(notice) {
 	/* Mark this notification as seen and do not re-show it */
 	Meteor.call("seeNotification", notice);
 }
-callback(){
-	console.log(this);
-	// if(this.index === 2){
-	// 	this.setState({viewMode : 'addTask'})
-	// }
-}
 render(){
 	/* Based on screen size and current state, determine which windows should be open */
 	let viewTaskList =  this.state.viewMode === 'taskList' ? true : this.state.width >= 992 ? true : false;
@@ -297,62 +289,38 @@ render(){
 			viewMode={this.state.viewMode}
 			loggedInChange={this.props.loggedInChange.bind(this)}
 			/> 
-			<Joyride
-			ref="joyride"
-			steps={stepsDesktop}
-			run={!Meteor.user().profile.hasCompletedTutorial}
-			autoStart={!Meteor.user().profile.hasCompletedTutorial}
-			debug={true}
-			callback={this.callback.bind(this)}
-			holePadding={0}
-			showBackButton={true}
-			type={"continuous"}
-			disableOverlay={true}
-			showSkipButton={true}
-			/>
+			{Meteor.user().profile.tut.login === false ? swal({
+				title:"Welcome!",
+			 text: "Thanks for using Tadu! Get Started by entering your weekly schedule or creating a new task using the icons at the top.",
+			  type: "success", 
+			  closeOnConfirm: true, }, ()=>{Meteor.call("toggleCompleteTour", "login")}) : ""}
+				</div>
+				: 
+				<div className="wrapper">
+				<MobileLayout 
+				filteredTasks={filteredTasks}
+				width={this.state.width}
+				changeIndex={this.changeIndex}
+				selectDate={this.selectDate}
+				showDetail={this.showDetail}
+				hideAddTask={this.hideAddTask}
+				selectedDate={this.state.selectedDate}
+				loggedInChange={this.props.loggedInChange.bind(this)}
+				/>
+				{Meteor.user().profile.tut.login === false ? swal({
+				title:"Welcome!",
+			 text: "Thanks for using Tadu! Get Started by entering your weekly schedule or creating a new task using the icons at the top.",
+			  type: "success", 
+			  closeOnConfirm: true, }, ()=>{Meteor.call("toggleCompleteTour", "login")}) : ""}
+				</div>
+			} 
+			{newNotice !== undefined ? this.notify(newNotice) : ""}
+
+			<Menu show={this.state.taskDetail !== null} className="task-detail" toggleMenu={this.hideDetail.bind(this)}> 
+			<TaskDetail taskDetail={taskDetail} closeDetail={this.hideDetail}/>
+			</Menu>
+
 			</div>
-			: 
-			<MobileLayout 
-			filteredTasks={filteredTasks}
-			width={this.state.width}
-			changeIndex={this.changeIndex}
-			selectDate={this.selectDate}
-			showDetail={this.showDetail}
-			hideAddTask={this.hideAddTask}
-			selectedDate={this.state.selectedDate}
-			loggedInChange={this.props.loggedInChange.bind(this)}
-			/>
-		} 
-		{newNotice !== undefined ? this.notify(newNotice) : ""}
-
-		<Menu show={this.state.taskDetail !== null} className="task-detail" toggleMenu={this.hideDetail.bind(this)}> 
-		<TaskDetail taskDetail={taskDetail} closeDetail={this.hideDetail}/>
-		</Menu>
-
-		</div>
-		)
+			)
 	}
 }
-
-const stepsDesktop = [
-{title: "Welcome!",
-text: "Thanks for using Tadu! Before you get going would you like to take a tour? It will only take a minute and should help you understand how to make Tadu work best for you.",
-selector: '#calendar',
-position: "top-left"
-},
-{title: "The Calendar",
-text: "To no surprise, this is your calendar, it's pretty blank at the moment, but once you start creating tasks you'll see an indicator of how many tasks you have that day. Speaking of tasks let's make a new one now!",
-selector: '.month-wrapper',
-position: "top-left"
-},
-{title: "Create a Task!",
-text: "This is where you create new Tasks. Anything you do once in a while can be created here. Tadu uses tags to figure out when you're most likely to be productive. This way, we're not telling you when to do something, but rather helping you build productive habits to get as much done with as much success. We'll try setting up a meeting!",
-selector: '#add-tasks',
-position: "left"
-},
-{title: "What just happened?",
-text: "When you want to create a new Task, Tadu analyzes your natural biorhythm and schedule to determine the best time for this meeting. If you want to change anything you can, but otherwise we're done!",
-selector: '#add-tasks',
-position: "left"
-}
-];

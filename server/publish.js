@@ -24,7 +24,6 @@ Meteor.publish("allUsers", function () {
      'username': 1,
      'createdAt': 1,
      'profile': 1,
-     'tut' : 1
 	}})
 }
  );
