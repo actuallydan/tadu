@@ -55,12 +55,12 @@
 
 #### What Needs Done
 * Documentation
-* Still tries to schedule things on the day of, hours in the past
 * Graphical glitch on calendar headers with non-mac things
 	* Occurs with:
 	* Linux, Windows OS regardless of Browser
 * Cordova/Electron offline functionality?
 ------------
+* Ionicons
 * Share Tasks
 
 

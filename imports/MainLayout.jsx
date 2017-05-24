@@ -21,10 +21,15 @@ import moment from 'moment';
 import 'loaders.css';
 
 /* Instantiate MiniMongo local database collections */
-Tasks = new Mongo.Collection('Tasks');
-TagTypes = new Mongo.Collection("TagTypes");
-Notifications = new Mongo.Collection("Notifications");
-Schedules = new Mongo.Collection("Schedules");
+OnlineTasks = new Mongo.Collection('Tasks');
+OnlineTagTypes = new Mongo.Collection("TagTypes");
+OnlineNotifications = new Mongo.Collection("Notifications");
+OnlineSchedules = new Mongo.Collection("Schedules");
+
+Tasks = new Ground.Collection(OnlineTasks, 'Tasks');
+TagTypes = new Ground.Collection(OnlineTagTypes, 'TagTypes');
+Notifications = new Ground.Collection(OnlineNotifications, 'Notifications');
+Schedules = new Ground.Collection(OnlineSchedules, 'Schedules');
 
 let toggleTitle;
 

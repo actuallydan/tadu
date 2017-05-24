@@ -104,26 +104,26 @@ export default class TaskDetail extends React.Component{
 				</div>
 				<div id="alarm-radio-wrapper" className={"form-item " + (this.state.showAlarmVisible ? "" : "hidden")} style={{borderBottom : "1px solid #424242", padding: "1em 0.5em 0.5em 0"}}> 
 				<div className="radio-option-wrapper">
-				<label className="radio" htmlFor="priority-radio-low">
-				<input id="priority-radio-low" ref="5min" type="radio" name="priority" value="5min" defaultChecked={this.props.taskDetail.alarm === 5}/> 
+				<label className="radio" htmlFor="edit-alarm-option-low">
+				<input id="edit-alarm-option-low" ref="5min" type="radio" name="alarm" value="5min" defaultChecked={this.props.taskDetail.alarm === 5}/> 
 				<span className="outer"><span className="inner"></span></span><div className="radio-option-label-text">5 min</div>
 				</label>
 				</div>	
 				<div className="radio-option-wrapper">
-				<label className="radio" htmlFor="priority-radio-med">
-				<input id="priority-radio-med" ref="30min" type="radio" name="priority" value="30min" defaultChecked={this.props.taskDetail.alarm === 30}/> <span className="outer">
+				<label className="radio" htmlFor="edit-alarm-option-med">
+				<input id="edit-alarm-option-med" ref="30min" type="radio" name="alarm" value="30min" defaultChecked={this.props.taskDetail.alarm === 30}/> <span className="outer">
 				<span className="inner"></span></span><div className="radio-option-label-text">30 min</div>
 				</label>
 				</div>	
 				<div className="radio-option-wrapper">
-				<label className="radio" htmlFor="priority-radio-high">
-				<input id="priority-radio-high" ref="1hour" type="radio" name="priority" value="1hour" defaultChecked={this.props.taskDetail.alarm === 60}/> <span className="outer">
+				<label className="radio" htmlFor="edit-alarm-option-high">
+				<input id="edit-alarm-option-high" ref="1hour" type="radio" name="alarm" value="1hour" defaultChecked={this.props.taskDetail.alarm === 60}/> <span className="outer">
 				<span className="inner"></span></span><div className="radio-option-label-text">1 hour</div>
 				</label>
 				</div>	
 				<div className="radio-option-wrapper">
-				<label className="radio" htmlFor="priority-radio-critical">
-				<input id="priority-radio-critical" ref="1day" type="radio" name="priority" value="1day" defaultChecked={this.props.taskDetail.alarm === 1440}/> <span className="outer">
+				<label className="radio" htmlFor="edit-alarm-option-critical">
+				<input id="edit-alarm-option-critical" ref="1day" type="radio" name="alarm" value="1day" defaultChecked={this.props.taskDetail.alarm === 1440}/> <span className="outer">
 				<span className="inner"></span></span><div className="radio-option-label-text"> 1 day</div>
 				</label>
 				</div>

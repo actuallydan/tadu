@@ -18,16 +18,13 @@ Meteor.methods({
 			timeUTC: task.timeUTC
 		});
 
-		// Get this user's tags
+		/* Get this user's tags */
 		let user = TagTypes.findOne({"userId" : Meteor.userId()});
-		console.log("has been used: " + user.tags[0].uses);
-		// Find tag in array 
+		/* Find tag in array  */
 		let index = user.tags.findIndex((tag)=>{return tag.type === task.tagType});
-		// console.log("Index: " + index);
-		// Increment
+		/* Increment */
 		user.tags[index].uses++;
-		// console.log("Tag to increment:" + user.tags[index]toString(), "Uses after incrementing: " + user.tags[index].uses);
-		// Update user's tags
+		/* Update user's tags */
 		TagTypes.update(user._id, {
 			$set: {tags: user.tags }
 		});
@@ -135,15 +132,12 @@ Meteor.methods({
 		let possibleTimes = [];
 		const offset = data.today.getDay();
 		const thisHour = data.today.toJSON().substring(11,13) - new Date().getTimezoneOffset() / 60 + ":00";
-		// console.log("the current hour is " + thisHour + " local time");
 
 		/* Populate array of all possible times */
 		for( let i = 0; i < daysOfWeek.length; i++) {
 			let pointer = (i + offset) % daysOfWeek.length; 
-
 			hours.map((hour)=>{
 				if(mySched.schedule[daysOfWeek[pointer]][hour] === null){
-
 					/* If we're looking at hours in today's block, make sure we're not looking at blocks that have already occured */
 					if(i === 0 && hour > thisHour){ 
 						possibleTimes.push({"day" : pointer, "time": hour});
@@ -153,14 +147,17 @@ Meteor.methods({
 				} 
 			})
 		}
-		// console.log("There are " + possibleTimes.length + " times that are free");
+
+		/* Find the block of time with the highest probability as soon as possible
+		* If there are no probable blocks, start over with a lower target
+		*/
 		let target = 0.7;
 		let tempPossibilites = [];
 		while(target > 0.1){
 			tempPossibilites = possibleTimes;
 			// console.log("Filtering with a target of " + (target * 100) + "%");
-			/* Filter out all times to remove hours where user has less than a the target % of completing task 
-			*	To prioritize blocks that are soonest, there is a 5% decay of action potential per day in the future to schedule a task
+			/* Filter out all times to remove hours where user has less than target % probability of completing task 
+			*	To prioritize blocks that are soonest, there is a 1% decay of action potential per day in the future to schedule a task
 			*/
 			tempPossibilites = tempPossibilites.filter((coord)=>{
 				let daysFromToday = (coord.day - new Date().getDay()) < 0 ? 7 - Math.abs(coord.day - new Date().getDay()): (coord.day - new Date().getDay())
@@ -268,5 +265,5 @@ const hours = ["00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "0
 
 let tags = ["Homework", "Study", "Doctor", "Exercise", "Meeting", "Groceries", "Errands", "Music Practice", "Cleaning"];
 
-const bioCurve = [0.3, 0.32, 0.35, 0.37, 0.4, 0.45, 0.5, 0.57, 0.65, 0.73, 0.8, 0.85, 0.73, 0.6, 0.57, 0.5, 0.57, 0.6, 0.73, 0.6, 0.5, 0.4, 0.37, 0.33];
+const bioCurve = [0.38, 0.41, 0.42, 0.45, 0.49, 0.54, 0.61, 0.68, 0.76, 0.83, 0.87, 0.76, 0.63, 0.61, 0.54, 0.61, 0.63, 0.76, 0.63, 0.54, 0.45, 0.42, 0.41, 0.38];
 
