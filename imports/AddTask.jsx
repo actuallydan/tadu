@@ -93,10 +93,11 @@ export default class AddTask extends Component {
 	}
 	/* Method to move to stage 2 of task creation which is additional and optional details */
 	taskStage2(e) {
-		/* grab the tag type and save it fin state for task creation (see addTask() )*/
+		/* grab the tag type and save it in state for task creation (see addTask() )*/
 		let tag = e.target.getAttribute("data-tag") === null ? e.target.parentElement.getAttribute("data-tag").trim() : e.target.getAttribute("data-tag").trim();
 		/* Setting the state to stage1 = false re-renders the component to show stage 2 */
-		this.showLoader();
+		if(navigator.onLine){
+			this.showLoader();
 		Meteor.call("scheduleBestTime", {"tag": tag , "today": new Date() }, (err, res)=>{
 			if(err){
 				swal("Oops...", err, "error")
@@ -113,6 +114,18 @@ export default class AddTask extends Component {
 
 			}
 		});
+		} else {
+			/* when there are network issues we can skip the automation bits */
+				let bestDate = moment().format();
+				this.setState({
+					stage1 : false,
+					tagType : tag,
+				}, ()=>{
+					document.getElementById("new-task-date").value = bestDate.substring(0, 10);
+					document.getElementById("new-task-time").value = bestDate.substring(11, 16);
+				});
+				
+		}
 	}
 	showAlarm(){
 		this.setState({
