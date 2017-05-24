@@ -12,11 +12,13 @@ import TaskDetail from './TaskDetail.jsx';
 import Loader from './Loader.jsx';
 import Menu from './Menu.jsx';
 
-/* 3rd party CSS libraries */
+/* 3rd party libraries */
 import 'animate.css';
 
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import moment from 'moment';
+import Joyride from 'react-joyride';
+import	'react-joyride/lib/react-joyride-compiled.css';
 
 import 'loaders.css';
 
@@ -158,58 +160,58 @@ export default class MainLayout extends TrackerReact(React.Component) {
 	notify(notice){
 	// let audio = new Audio('audio_file.mp3');
 	// audio.play();
-  	document.title = "Task Alert!";
-  	toggleTitle = setInterval(()=>{
-  			switch(document.title){
-  				case notice.data.text:
-  				document.title = "Task Alert!";
-  				break;
-  				case "Task Alert!":
-  				document.title = notice.data.text;
-  				break;
-  			}
-  		}, 1500);
-  	toggleTitle;
-  	if (Notification.permission !== "granted"){
-  		/* Tell the user their task is due */
-	  	if(!document.hasFocus()){
-	  		window.addEventListener('focus', ()=>{
+	document.title = "Task Alert!";
+	toggleTitle = setInterval(()=>{
+		switch(document.title){
+			case notice.data.text:
+			document.title = "Task Alert!";
+			break;
+			case "Task Alert!":
+			document.title = notice.data.text;
+			break;
+		}
+	}, 1500);
+	toggleTitle;
+	if (Notification.permission !== "granted"){
+		/* Tell the user their task is due */
+		if(!document.hasFocus()){
+			window.addEventListener('focus', ()=>{
 				this.displayNotification(notice);
-	  		});
-	  		window.removeEventListener('focus');
-	  	}
-  	} else {
-  		/* The only difference being that the notification will get the user's attention better */
-  		const notification = new Notification(notice.data.tag, {
-  			icon: '../img/tadu_logo.png',
-  			body: notice.data.tag + " @ " + moment(notice.data.timeStart, "HH:mm").format("h:mm a"),
-  		});
-  		notification.onclick = ()=>{
-  			/* Switch to Tadu tab if need be */
-  			window.focus();
-  			this.displayNotification(notice);
-  			notification.close();
-  		};
+			});
+			window.removeEventListener('focus');
+		}
+	} else {
+		/* The only difference being that the notification will get the user's attention better */
+		const notification = new Notification(notice.data.tag, {
+			icon: '../img/tadu_logo.png',
+			body: notice.data.tag + " @ " + moment(notice.data.timeStart, "HH:mm").format("h:mm a"),
+		});
+		notification.onclick = ()=>{
+			/* Switch to Tadu tab if need be */
+			window.focus();
+			this.displayNotification(notice);
+			notification.close();
+		};
 
-  	}
-  }
-  displayNotification(notice) {
-  	clearInterval(toggleTitle);
-  	document.title = "Tadu";
-  	swal({
-  				title: notice.data.tag,
-  				text: notice.data.text + "<br/> Have you completed it?",
-  				type: "warning",
-  				showCancelButton: true,
-  				confirmButtonText: "Yes, it's done!",
-  				cancelButtonText: "No, I need to reschedule",
-  				closeOnConfirm: false,
-  				closeOnCancel: false,
-  				html: true
-  			},
-  			function(isConfirm){
-  				if (isConfirm) {
-  					swal("Good job!", "I'm so proud of you", "success");
+	}
+}
+displayNotification(notice) {
+	clearInterval(toggleTitle);
+	document.title = "Tadu";
+	swal({
+		title: notice.data.tag,
+		text: notice.data.text + "<br/> Have you completed it?",
+		type: "warning",
+		showCancelButton: true,
+		confirmButtonText: "Yes, it's done!",
+		cancelButtonText: "No, I need to reschedule",
+		closeOnConfirm: false,
+		closeOnCancel: false,
+		html: true
+	},
+	function(isConfirm){
+		if (isConfirm) {
+			swal("Good job!", "I'm so proud of you", "success");
 	  				// Update task completion status to true
 	  				Meteor.call('toggleTask', notice.data);
 	  				Meteor.call("changeThreshold", {tag: notice.data.tag, date: notice.data.dateStart, time: notice.data.timeStart, amt: 0.1})
@@ -241,72 +243,116 @@ export default class MainLayout extends TrackerReact(React.Component) {
 					});
 	  			}
 	  		});
-  			/* Mark this notification as seen and do not re-show it */
-  			Meteor.call("seeNotification", notice);
-  }
-  render(){
-  	/* Based on screen size and current state, determine which windows should be open */
-  	let viewTaskList =  this.state.viewMode === 'taskList' ? true : this.state.width >= 992 ? true : false;
-  	let viewAddTask = this.state.viewMode === 'addTask' ? true : this.state.width >= 1400 ? true : false;
+	/* Mark this notification as seen and do not re-show it */
+	Meteor.call("seeNotification", notice);
+}
+callback(){
+	console.log(this);
+	// if(this.index === 2){
+	// 	this.setState({viewMode : 'addTask'})
+	// }
+}
+render(){
+	/* Based on screen size and current state, determine which windows should be open */
+	let viewTaskList =  this.state.viewMode === 'taskList' ? true : this.state.width >= 992 ? true : false;
+	let viewAddTask = this.state.viewMode === 'addTask' ? true : this.state.width >= 1400 ? true : false;
 
-  	/* Whether or not task detail modal should be visible right now  is based on whether there is a task currently in state */
-  	let taskDetail = this.state.taskDetail !== null ? this.state.taskDetail : "" ;
-  	/* Get notifications to see if the user has any that need resolved and to display old notifications in tray at top of Calendar */
-  	let newNotice = Notifications.findOne({seen: false});
-  	let filteredTasks = Tasks.find().fetch().filter(
-  		(task) => {
-  			return task.dateStart === this.state.selectedDate;
-  		}
-  		).sort(
-  		(a, b) => {
-  			return a.dateStart + "T" + a.timeStart > b.dateStart + "T" +b.timeStart;
-  		}
-  		);
-  		filteredTasks = filteredTasks.length === 0 ? <div id="no-tasks-message" className='animated pulse' ><p>You're free all day!</p><img src="../img/tadu_logo.png" className="no-tasks-icon"></img></div> : filteredTasks.map( (task) => {
-  			return <TaskSingle key={task._id} task={task} showDetail={this.showDetail.bind(this)}/>
-  		});
-  		return(
-  			<div className="wrapper" id="top-wrapper">
-  			{	Session.get('tasks_loaded') === false ||  Session.get('tagTypes_loaded') === false || Session.get('notifications_loaded') === false || Session.get('schedules_loaded') === false
-  				?
-  				<Loader />
-  				:
-  				this.state.width > 992 
-  				? 
-  				<DesktopLayout 
-				filteredTasks={filteredTasks}
-				width={this.state.width}
-				selectDate={this.selectDate}
-				showTasks={this.showTasks}
-				showDetail={this.showDetail}
-				viewAddTask={viewAddTask}
-				hideAddTask={this.hideAddTask}
-				selectedDate={this.selectedDate}
-				viewTaskList={viewTaskList}
-				selectedDate={this.state.selectedDate}
-				showView={this.showView}
-				viewMode={this.state.viewMode}
-				loggedInChange={this.props.loggedInChange.bind(this)}
-  				/> 
-  				: 
-  				<MobileLayout 
-  				filteredTasks={filteredTasks}
-  				width={this.state.width}
-  				changeIndex={this.changeIndex}
-  				selectDate={this.selectDate}
-  				showDetail={this.showDetail}
-  				hideAddTask={this.hideAddTask}
-				selectedDate={this.state.selectedDate}
-				loggedInChange={this.props.loggedInChange.bind(this)}
-  				/>
-  			} 
-  			{newNotice !== undefined ? this.notify(newNotice) : ""}
+	/* Whether or not task detail modal should be visible right now  is based on whether there is a task currently in state */
+	let taskDetail = this.state.taskDetail !== null ? this.state.taskDetail : "" ;
+	/* Get notifications to see if the user has any that need resolved and to display old notifications in tray at top of Calendar */
+	let newNotice = Notifications.findOne({seen: false});
+	let filteredTasks = Tasks.find().fetch().filter(
+		(task) => {
+			return task.dateStart === this.state.selectedDate;
+		}
+		).sort(
+		(a, b) => {
+			return a.dateStart + "T" + a.timeStart > b.dateStart + "T" +b.timeStart;
+		}
+		);
+		filteredTasks = filteredTasks.length === 0 ? <div id="no-tasks-message" className='animated pulse' ><p>You're free all day!</p><img src="../img/tadu_logo.png" className="no-tasks-icon"></img></div> : filteredTasks.map( (task) => {
+			return <TaskSingle key={task._id} task={task} showDetail={this.showDetail.bind(this)}/>
+		});
+		return(
+			<div className="wrapper" id="top-wrapper">
+			{	Session.get('tasks_loaded') === false ||  Session.get('tagTypes_loaded') === false || Session.get('notifications_loaded') === false || Session.get('schedules_loaded') === false
+			?
+			<Loader />
+			:
+			this.state.width > 992 
+			? 
+			<div className="wrapper">
+			<DesktopLayout 
+			filteredTasks={filteredTasks}
+			width={this.state.width}
+			selectDate={this.selectDate}
+			showTasks={this.showTasks}
+			showDetail={this.showDetail}
+			viewAddTask={viewAddTask}
+			hideAddTask={this.hideAddTask}
+			selectedDate={this.selectedDate}
+			viewTaskList={viewTaskList}
+			selectedDate={this.state.selectedDate}
+			showView={this.showView}
+			viewMode={this.state.viewMode}
+			loggedInChange={this.props.loggedInChange.bind(this)}
+			/> 
+			<Joyride
+			ref="joyride"
+			steps={stepsDesktop}
+			run={!Meteor.user().profile.hasCompletedTutorial}
+			autoStart={!Meteor.user().profile.hasCompletedTutorial}
+			debug={true}
+			callback={this.callback.bind(this)}
+			holePadding={0}
+			showBackButton={true}
+			type={"continuous"}
+			disableOverlay={true}
+			showSkipButton={true}
+			/>
+			</div>
+			: 
+			<MobileLayout 
+			filteredTasks={filteredTasks}
+			width={this.state.width}
+			changeIndex={this.changeIndex}
+			selectDate={this.selectDate}
+			showDetail={this.showDetail}
+			hideAddTask={this.hideAddTask}
+			selectedDate={this.state.selectedDate}
+			loggedInChange={this.props.loggedInChange.bind(this)}
+			/>
+		} 
+		{newNotice !== undefined ? this.notify(newNotice) : ""}
 
-  			<Menu show={this.state.taskDetail !== null} className="task-detail" toggleMenu={this.hideDetail.bind(this)}> 
-  			<TaskDetail taskDetail={taskDetail} closeDetail={this.hideDetail}/>
-  			</Menu>
-  			
-  			</div>
-  			)
-  	}
-  }
+		<Menu show={this.state.taskDetail !== null} className="task-detail" toggleMenu={this.hideDetail.bind(this)}> 
+		<TaskDetail taskDetail={taskDetail} closeDetail={this.hideDetail}/>
+		</Menu>
+
+		</div>
+		)
+	}
+}
+
+const stepsDesktop = [
+{title: "Welcome!",
+text: "Thanks for using Tadu! Before you get going would you like to take a tour? It will only take a minute and should help you understand how to make Tadu work best for you.",
+selector: '#calendar',
+position: "top-left"
+},
+{title: "The Calendar",
+text: "To no surprise, this is your calendar, it's pretty blank at the moment, but once you start creating tasks you'll see an indicator of how many tasks you have that day. Speaking of tasks let's make a new one now!",
+selector: '.month-wrapper',
+position: "top-left"
+},
+{title: "Create a Task!",
+text: "This is where you create new Tasks. Anything you do once in a while can be created here. Tadu uses tags to figure out when you're most likely to be productive. This way, we're not telling you when to do something, but rather helping you build productive habits to get as much done with as much success. We'll try setting up a meeting!",
+selector: '#add-tasks',
+position: "left"
+},
+{title: "What just happened?",
+text: "When you want to create a new Task, Tadu analyzes your natural biorhythm and schedule to determine the best time for this meeting. If you want to change anything you can, but otherwise we're done!",
+selector: '#add-tasks',
+position: "left"
+}
+];

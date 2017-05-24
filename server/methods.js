@@ -208,6 +208,14 @@ Meteor.methods({
 		Schedules.update(mySched._id, {
 			$set: {thresholds : mySched.thresholds}
 		});
+	},
+	toggleCompleteTour(){
+		if(!Meteor.userId()){
+			throw new Meteor.Error('not-authorized');
+		} 
+		Meteor.users.update(Meteor.userId(), {
+			$set: {hasCompletedTutorial: !Meteor.user().profile.hasCompletedTutorial}
+		});
 	}
 });
 
