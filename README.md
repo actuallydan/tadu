@@ -59,6 +59,11 @@
 	* Occurs with:
 	* Linux, Windows OS regardless of Browser
 * Cordova/Electron offline functionality?
+* iOS 
+	* Splash screen
+	* Notifications width
+	* Loader After stage2 create tasks
+	* Either no background or all translucent background 
 ------------
 * Ionicons
 * Share Tasks
