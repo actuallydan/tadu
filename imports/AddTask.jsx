@@ -308,7 +308,7 @@ export default class AddTask extends Component {
 renderStage2(){
 	let nowTime = moment().add(1, 'hour').format("HH:mm");
 	return (
-		<form onSubmit={this.addTask.bind(this)} className={this.state.stage1 ?  "animated slideOutRight" : "animated slideInRight"}>
+		<form onSubmit={this.addTask.bind(this)} className={this.state.stage1 ?  "animated slideOutRight" : "animated pulse"}>
 		<div className="form-item"><span className='form-item-label'> Title </span><input className="typeable" type="text" ref="newTask" defaultValue={this.state.tagType}  required maxLength="75"/> </div>
 		<div className="form-item"><span className='form-item-label'> Date </span><input className="typeable" id="new-task-date" type="date" ref="dateStart" defaultValue={this.props.selectedDate} /> </div>
 		<div className="form-item"><span className='form-item-label'> Time </span><input className="typeable" id="new-task-time" type="time" ref="timeStart"  defaultValue={nowTime} /> </div>
