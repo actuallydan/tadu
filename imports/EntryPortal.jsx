@@ -95,10 +95,18 @@ export default class EntryPortal extends React.Component {
 						/* There was an issue with existing accounts, parameter length wasn't sufficient etc.*/
 						swal("Oops...", err.reason, "error");
 					} else {
-						 /* Meteor will automagically sign in users after successful account creation so we can trigger state update in parent to escape this prison */
+						/* Meteor will automagically sign in users after successful account creation so we can trigger state update in parent to escape this prison */
 						this.props.loggedInChange(true);
-						Meteor.call("addDefaultTags");
-						Meteor.call("addDefaultSchedule");
+						Meteor.call("addDefaultSchedule", Meteor.userId(), (err)=>{
+							if(err){
+								swal("Awkward...", err, "error");
+							}
+							Meteor.call("addDefaultTags", Meteor.userId(), (err)=>{
+								if(err){
+									swal("Awkward...", err, "error");
+								}
+							});
+						});
 					}
 				});				
 			} catch (e){
@@ -122,15 +130,15 @@ export default class EntryPortal extends React.Component {
 			<div id="entry-portal"> 
 			
 			{this.state.showLogin ? 
-			<Login showLogin={this.state.showLogin} tryLogin={this.tryLogin} handleChangeForm={this.handleChangeForm.bind(this)} loggedInChange={this.props.loggedInChange.bind(this)}/> 
-			:
-			 <Register showLogin={this.state.showLogin} tryRegister={this.tryRegister} handleChangeForm={this.handleChangeForm.bind(this)}  showPolicy={this.togglePolicy.bind(this)} loggedInChange={this.props.loggedInChange.bind(this)}/>
-			 }
-			 <Menu show={this.state.showPolicy} toggleMenu={this.togglePolicy.bind(this)}>
-			 	<Policy />
-			 </Menu>
-			 </div>
-			  ) 
-	
+				<Login showLogin={this.state.showLogin} tryLogin={this.tryLogin} handleChangeForm={this.handleChangeForm.bind(this)} loggedInChange={this.props.loggedInChange.bind(this)}/> 
+				:
+				<Register showLogin={this.state.showLogin} tryRegister={this.tryRegister} handleChangeForm={this.handleChangeForm.bind(this)}  showPolicy={this.togglePolicy.bind(this)} loggedInChange={this.props.loggedInChange.bind(this)}/>
+			}
+			<Menu show={this.state.showPolicy} toggleMenu={this.togglePolicy.bind(this)}>
+			<Policy />
+			</Menu>
+			</div>
+			) 
+
 	}
 }

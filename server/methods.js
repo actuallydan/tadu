@@ -85,6 +85,7 @@ Meteor.methods({
 		});
 	},
 	addDefaultTags(){
+		console.log('Attempting to create default tags');
 		let myTags = {
 			userId: Meteor.userId(),
 			tags: []
@@ -92,6 +93,7 @@ Meteor.methods({
 		tags.map((tag)=>{ myTags.tags.push({"type" : tag, "uses" : 0})  });
 
 		TagTypes.insert(myTags);
+		console.log("successfully created default tags");
 	},
 	seeNotification(notice){
 		if(Meteor.userId() !== notice.userId){
@@ -102,6 +104,7 @@ Meteor.methods({
 		})
 	},
 	addDefaultSchedule(){
+		console.log('Attempting to create default schedule');
 		/* From the user's profile, get their bedtime and use that as an offset for their actual bioCurve. Then pass their bioCurve into the Thresholds Object parameters */
 		let myBioCurve = offsetBioCurve(parseInt(Meteor.user().profile.bedHour.substring(0,2)))
 		let schedule = {
@@ -110,6 +113,7 @@ Meteor.methods({
 			thresholds: Thresholds(myBioCurve)
 		};
 		Schedules.insert(schedule);
+		console.log("Successfully created default schedule");
 	},
 	modifySchedule(coords){
 		if(!Meteor.userId()){

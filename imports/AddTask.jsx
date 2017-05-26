@@ -29,7 +29,6 @@ export default class AddTask extends Component {
 		this.setState({search: event.target.value});
 	}
 	clearTutStage(){
-		let context = this;
 		swal({
 			title:"Creating New Tasks",
 			text: "Tadu uses a tags to determine the best time for Tasks. Choose a tag, or create your own and let Tadu find the best time for it.",
@@ -38,7 +37,7 @@ export default class AddTask extends Component {
 		},
 		()=>{
 			Meteor.call("toggleCompleteTour", "addTasks");
-		})
+		});
 	}
 	/* Once we've found the ideal tag and added any additional details to our task we try to add it to the database */
 	addTask(event){
@@ -362,7 +361,7 @@ shouldComponentUpdate(nextProps, nextState){
 	return (nextProps.show !== this.props.show || nextProps.hideAddTask !== this.props.hideAddTask || this.state !== nextState)
 }
 render(){
-	if(Meteor.user().profile.tut.addTasks === false){
+	if(Meteor.user().profile.tut.addTasks === false && Meteor.user().profile.tut.login){
 		if(window.innerWidth <= 992 && this.props.index === 1){ 
 			this.clearTutStage();
 		}
