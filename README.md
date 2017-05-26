@@ -55,6 +55,8 @@
 
 #### What Needs Done
 * Documentation
+* Refactor convert AddTask 1 & 2 to stateless and move refs to state in AddTask.jsx
+* " with Register and Login
 * Graphical glitch on calendar headers with non-mac things
 	* Occurs with:
 	* Linux, Windows OS regardless of Browser

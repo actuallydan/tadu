@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import moment from 'moment';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import Loader from './Loader.jsx';
+import AddTaskStage1 from './AddTaskStage1.jsx';
+import AddTaskStage2 from './AddTaskStage2.jsx';
 
 export default class AddTask extends Component {
 	constructor(props) {
@@ -97,33 +99,33 @@ export default class AddTask extends Component {
 		/* Setting the state to stage1 = false re-renders the component to show stage 2 */
 		if(navigator.onLine){
 			this.showLoader();
-		Meteor.call("scheduleBestTime", {"tag": tag , "today": new Date() }, (err, res)=>{
-			if(err){
-				swal("Oops...", err, "error")
-			} else {
-				let daysFromToday = res.day - new Date().getDay();
-				let bestDate = moment(res.time, "HH:mm").add(daysFromToday, "days").format();
-				this.setState({
-					stage1 : false,
-					tagType : tag,
-					hasBeenOptimized : true
-				});
-				document.getElementById("new-task-date").value = bestDate.substring(0, 10);
-				document.getElementById("new-task-time").value = bestDate.substring(11, 16);
-
-			}
-		});
-		} else {
-			/* when there are network issues we can skip the automation bits */
-				let bestDate = moment().format();
-				this.setState({
-					stage1 : false,
-					tagType : tag,
-				}, ()=>{
+			Meteor.call("scheduleBestTime", {"tag": tag , "today": new Date() }, (err, res)=>{
+				if(err){
+					swal("Oops...", err, "error")
+				} else {
+					let daysFromToday = res.day - new Date().getDay();
+					let bestDate = moment(res.time, "HH:mm").add(daysFromToday, "days").format();
+					this.setState({
+						stage1 : false,
+						tagType : tag,
+						hasBeenOptimized : true
+					});
 					document.getElementById("new-task-date").value = bestDate.substring(0, 10);
 					document.getElementById("new-task-time").value = bestDate.substring(11, 16);
-				});
-				
+
+				}
+			});
+		} else {
+			/* when there are network issues we can skip the automation bits */
+			let bestDate = moment().format();
+			this.setState({
+				stage1 : false,
+				tagType : tag,
+			}, ()=>{
+				document.getElementById("new-task-date").value = bestDate.substring(0, 10);
+				document.getElementById("new-task-time").value = bestDate.substring(11, 16);
+			});
+
 		}
 	}
 	showAlarm(){
@@ -193,193 +195,52 @@ export default class AddTask extends Component {
 	/* Relevant parts of AddTask stage 1; this should probably be spun off into it's own component */
 	renderStage1(){
 		/* Get allthe tags by this user and sort by most often used for quicker selection */
-		let myTags = TagTypes.findOne();
-		let tags = ["Homework", "Study", "Doctor", "Exercise", "Meeting", "Groceries", "Errands", "Music Practice", "Cleaning"];
-		let n = 0;
-			// myTags = myTags[0].tags.sort((a , b)=>{return a.uses > b.uses});
-			return (
-				<div>
-				<div id="search-wrapper">
-				<i id="search-icon" className="mdi mdi-magnify"></i>
-				<input id="search" type="text" value={this.state.search} onChange={this.updateSearch.bind(this)} placeholder="Select Category or Search"/>
-				</div>
-				{	this.state.showLoader
-					?
-					<Loader width={"100%"}/>
-					:
-					/* If the user hasn't started searching give them the dialpad, otherwise show them the most used results */
-					this.state.search !== "" ? "" :
-					<div id="global-tags">
-					<p className="global-tag-wrapper" data-tag="Homework" onClick={this.taskStage2.bind(this)}>
-					<i className="tag-icon mdi mdi-pencil"></i>
-					<span className="global-tag-label">Homework</span>
-					</p>
-
-					<p className="global-tag-wrapper" onClick={this.taskStage2.bind(this)} data-tag="Study">
-					<i className="tag-icon mdi mdi-book-open-variant"></i>
-					<span className="global-tag-label">Study</span>
-					</p>					
-					<p className="global-tag-wrapper" onClick={this.taskStage2.bind(this)} data-tag="Doctor">
-					<i className="tag-icon mdi mdi-stethoscope"></i>
-					<span className="global-tag-label">Doctor</span>
-					</p>
-
-					<p className="global-tag-wrapper" onClick={this.taskStage2.bind(this)} data-tag="Exercise">
-					<i className="tag-icon mdi mdi-run"></i>
-					<span className="global-tag-label">Exercise</span>
-					</p>					
-					<p className="global-tag-wrapper" onClick={this.taskStage2.bind(this)} data-tag="Meeting">
-					<i className="tag-icon mdi mdi-account-multiple"></i>
-					<span className="global-tag-label">Meeting</span>
-					</p>					
-					<p className="global-tag-wrapper" onClick={this.taskStage2.bind(this)} data-tag="Groceries">
-					<i className="tag-icon mdi mdi-food-apple"></i>
-					<span className="global-tag-label">Groceries</span>
-					</p>
-
-					<p className="global-tag-wrapper" onClick={this.taskStage2.bind(this)} data-tag="Errands">
-					<i className="tag-icon mdi mdi-car"></i>
-					<span className="global-tag-label">Errands</span>
-					</p>					
-					<p className="global-tag-wrapper" onClick={this.taskStage2.bind(this)} data-tag="Music Practice">
-					<i className="tag-icon mdi mdi-music-note"></i>
-					<span className="global-tag-label">Music Practice</span>
-					</p>					
-					<p className="global-tag-wrapper" onClick={this.taskStage2.bind(this)} data-tag="Cleaning">
-					<i className="tag-icon mdi mdi-cup-water"></i>
-					<span className="global-tag-label">Cleaning</span>
-					</p>
-					<p className="global-tag-wrapper no-tags" style={{width: '100%', "margin": "0 auto"}} onClick={this.createNewTag.bind(this)}>
-					<i className="tag-icon mdi mdi-tag"></i>
-					<span className="global-tag-label">New Tag</span>
-					</p>
-
-
-					</div>
-				}
-				{
-					myTags === undefined ? "" :
-					// TODO: clean up A LOT
-					myTags.tags.filter((tag)=>{ 
-						if(this.state.search.trim() === ""){
-							// return if not in array
-							return !tags.includes(tag.type);
-						} else {
-							return tag.type.toLowerCase().indexOf(this.state.search.toLowerCase()) !== -1;
-						}
-					})
-					.sort((a, b)=> {
-						return a.uses < b.uses;
-					})
-					.map((tag)=>{ 
-						n++;
-						let colorClass = "green";
-						switch(Math.floor(Math.random() * 3)){
-							case 0:
-							colorClass = "green";
-							break;
-							case 1:
-							colorClass = "dark-green";
-							break;
-							case 2:
-							colorClass = "light-green";
-							break;
-						}
-						return (<div className={"event-tag-tile " + colorClass} key={tag.type} data-uses={tag.uses} data-id={tag._id} data-tag={tag.type} onClick={this.taskStage2.bind(this)}> {tag.type}</div>)
-					}
-					)
-				}
-				{
-					n === 0 && this.state.search !== "" ? 
-					<p className="global-tag-wrapper no-tags" onClick={this.createNewTag.bind(this)}>
-					<label>Looking for something else? Create a new tag for next time!</label>
-					<i className="tag-icon mdi mdi-tag"></i>
-					<span className="global-tag-label">Create New Tag</span>
-					</p>
-					: 
-					""
-				}
-				</div>
-				)
-}
-
-/* Relevant parts of AddTask stage 2; this should probably be spun off into it's own component */
-renderStage2(){
-	let nowTime = moment().add(1, 'hour').format("HH:mm");
-	return (
-		<form onSubmit={this.addTask.bind(this)} className={this.state.stage1 ?  "animated slideOutRight" : "animated pulse"}>
-		<div className="form-item"><span className='form-item-label'> Title </span><input className="typeable" type="text" ref="newTask" defaultValue={this.state.tagType}  required maxLength="75"/> </div>
-		<div className="form-item"><span className='form-item-label'> Date </span><input className="typeable" id="new-task-date" type="date" ref="dateStart" defaultValue={this.props.selectedDate} /> </div>
-		<div className="form-item"><span className='form-item-label'> Time </span><input className="typeable" id="new-task-time" type="time" ref="timeStart"  defaultValue={nowTime} /> </div>
-
-		{this.state.hasBeenOptimized ? <div className="form-item" style={{"color": "#1de9b6", "fontSize" : "0.6em", "textAlign" : "center"}}><span className='form-item-label mdi mdi-alert-circle'></span><span> {'\u00A0'} This date and time has been optimized for you!</span> </div> : ""}
-
-
-		<div className="form-item"> Set Alarm? 
-		<div className="checkbox">
-		<input id="has-alarm-toggle" type="checkbox" readOnly="" defaultChecked={this.state.showAlarmVisible}ref="hasAlarm" onClick={this.showAlarm.bind(this)} />
-		<label htmlFor="has-alarm-toggle"></label>
-		</div>
-		</div>
-		<div id="alarm-radio-wrapper" className={"form-item " + (this.state.showAlarmVisible ? "" : "hidden")}> 
-		<div className="radio-option-wrapper">
-		<label className="radio" htmlFor="alarm-option-low">
-		<input id="alarm-option-low" ref="5min" type="radio" name="alarm" value="5min" defaultChecked={true}/> 
-		<span className="outer"><span className="inner"></span></span><div className="radio-option-label-text">5 min</div>
-		</label>
-		</div>	
-		<div className="radio-option-wrapper">
-		<label className="radio" htmlFor="alarm-option-med">
-		<input id="alarm-option-med" ref="30min" type="radio" name="alarm" value="30min" /> <span className="outer">
-		<span className="inner"></span></span><div className="radio-option-label-text">30 min</div>
-		</label>
-		</div>	
-		<div className="radio-option-wrapper">
-		<label className="radio" htmlFor="alarm-option-high">
-		<input id="alarm-option-high" ref="1hour" type="radio" name="alarm" value="1hour" /> <span className="outer">
-		<span className="inner"></span></span><div className="radio-option-label-text">1 hour</div>
-		</label>
-		</div>	
-		<div className="radio-option-wrapper">
-		<label className="radio" htmlFor="alarm-option-critical">
-		<input id="alarm-option-critical" ref="1day" type="radio" name="alarm" value="1day" /> <span className="outer">
-		<span className="inner"></span></span><div className="radio-option-label-text"> 1 day</div>
-		</label>
-		</div>
-		</div>
-
-
-
-
-		<div className="form-item desc"><textarea type="text" ref="desc" placeholder="Description" maxLength="300"></textarea> </div>
-
-		<div  className="form-item"><button type="submit" className="button">Add Task</button> </div>
-		</form>
+		return (
+			<AddTaskStage1 
+			search={this.state.search}
+			updateSearch={this.updateSearch.bind(this)}
+			showLoader={this.state.showLoader}
+			taskStage2={this.taskStage2.bind(this)}
+			createNewTag={this.createNewTag.bind(this)}
+		/>
 		)
-}
-shouldComponentUpdate(nextProps, nextState){
-	return (nextProps.show !== this.props.show || nextProps.hideAddTask !== this.props.hideAddTask || this.state !== nextState)
-}
-render(){
-	if(Meteor.user().profile.tut.addTasks === false && Meteor.user().profile.tut.login){
-		if(window.innerWidth <= 992 && this.props.index === 1){ 
-			this.clearTutStage();
-		}
-		if(window.innerWidth > 992 && window.innerWidth < 1400 && this.props.show){ 
-			this.clearTutStage();
-		}
-		if(window.innerWidth >= 1400){ 
-			this.clearTutStage();
-		}
 	}
-	let display = window.innerWidth >= 1400 ? !this.state.stage1 ?  "visible" : "hidden" : "visible";
-	let icon = this.state.stage1 ? "mdi mdi-close" : "mdi mdi-refresh"
-	return(
-		<div id="add-tasks" className={this.props.show ? "animated slideInRight" : "animated slideOutRight"}>
-		<div className="form-item" id="add-task-form-nav"><i className={icon} onClick={this.clearTask.bind(this)} style={{visibility : display}}></i><div>New Task</div></div>
-		{this.state.stage1 ? this.renderStage1() : this.renderStage2()}
 
-		</div>);
-
-}
+	/* Relevant parts of AddTask stage 2; this should probably be spun off into it's own component */
+	renderStage2(){
+		let nowTime = moment().add(1, 'hour').format("HH:mm");
+		return (
+			<AddTaskStage2 selectedDate={this.props.selectedDate} now={nowTime} addTask={this.addTask.bind(this)}
+			stage1={this.state.stage1}
+			tagType={this.state.tagType}
+			hasBeenOptimized={this.state.hasBeenOptimized}
+			showAlarmVisible={this.state.showAlarmVisible}
+			showAlarm={this.showAlarm.bind(this)}
+			/>
+			)
+	}
+	shouldComponentUpdate(nextProps, nextState){
+		return (nextProps.show !== this.props.show || nextProps.hideAddTask !== this.props.hideAddTask || this.state !== nextState)
+	}
+	render(){
+		/* Display tut if user hasn't signed in before */
+		if(Meteor.user().profile.tut.addTasks === false && Meteor.user().profile.tut.login){
+			if(window.innerWidth <= 992 && this.props.index === 1){ 
+				this.clearTutStage();
+			}
+			if(window.innerWidth > 992 && window.innerWidth < 1400 && this.props.show){ 
+				this.clearTutStage();
+			}
+			if(window.innerWidth >= 1400){ 
+				this.clearTutStage();
+			}
+		}
+		let display = window.innerWidth >= 1400 ? !this.state.stage1 ?  "visible" : "hidden" : "visible";
+		let icon = this.state.stage1 ? "mdi mdi-close" : "mdi mdi-refresh"
+		return(
+			<div id="add-tasks" className={this.props.show ? "animated slideInRight" : "animated slideOutRight"}>
+			<div className="form-item" id="add-task-form-nav"><i className={icon} onClick={this.clearTask.bind(this)} style={{visibility : display}}></i><div>New Task</div></div>
+			{this.state.stage1 ? this.renderStage1() : this.renderStage2()}
+			</div>);
+	}
 }
