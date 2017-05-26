@@ -4,6 +4,7 @@
 	font-family: "Rajdhani", sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
+	font-smoothing: antialiased;
 }
 ::-webkit-scrollbar { 
 	display: none; 

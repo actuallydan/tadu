@@ -63,7 +63,7 @@
 	* Splash screen
 	* Notifications width
 	* Loader After stage2 create tasks
-	* Either no background or all translucent background 
+* Registration on mobile browsers doesn't create schedule or tags 
 ------------
 * Ionicons
 * Share Tasks
