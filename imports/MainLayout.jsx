@@ -161,8 +161,8 @@ export default class MainLayout extends TrackerReact(React.Component) {
 	* Accomodates for both Notifcation users and otherwise
 	*/
 	notify(notice){
-	// let audio = new Audio('audio_file.mp3');
-	// audio.play();
+	let audio = new Audio('/img/job-done.mp3');
+	audio.play();
 	document.title = "Task Alert!";
 	toggleTitle = setInterval(()=>{
 		switch(document.title){
@@ -272,7 +272,7 @@ render(){
 		});
 		return(
 			<div className="wrapper" id="top-wrapper">
-			{	Session.get('tasks_loaded') === false ||  Session.get('tagTypes_loaded') === false || Session.get('notifications_loaded') === false || Session.get('schedules_loaded') === false
+			{ Session.get('tasks_loaded') === false ||  Session.get('tagTypes_loaded') === false || Session.get('notifications_loaded') === false || Session.get('schedules_loaded') === false
 			?
 			<Loader />
 			:
