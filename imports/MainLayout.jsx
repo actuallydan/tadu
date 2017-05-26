@@ -161,8 +161,9 @@ export default class MainLayout extends TrackerReact(React.Component) {
 	* Accomodates for both Notifcation users and otherwise
 	*/
 	notify(notice){
-	let audio = new Audio('/img/job-done.mp3');
-	audio.play();
+		let audio = new Audio('/img/job-done.mp3');
+		audio.volume = 0.5;
+		audio.play();
 	document.title = "Task Alert!";
 	toggleTitle = setInterval(()=>{
 		switch(document.title){
@@ -184,18 +185,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
 			window.removeEventListener('focus');
 		}
 	} else {
-		/* The only difference being that the notification will get the user's attention better */
-		const notification = new Notification(notice.data.tag, {
-			icon: '../img/tadu_logo.png',
-			body: notice.data.tag + " @ " + moment(notice.data.timeStart, "HH:mm").format("h:mm a"),
-		});
-		notification.onclick = ()=>{
-			/* Switch to Tadu tab if need be */
-			window.focus();
-			this.displayNotification(notice);
-			notification.close();
-		};
-
+		this.displayNotification(notice);
 	}
 }
 displayNotification(notice) {
@@ -272,7 +262,7 @@ render(){
 		});
 		return(
 			<div className="wrapper" id="top-wrapper">
-			{ Session.get('tasks_loaded') === false ||  Session.get('tagTypes_loaded') === false || Session.get('notifications_loaded') === false || Session.get('schedules_loaded') === false
+			{Session.get('tasks_loaded') === false ||  Session.get('tagTypes_loaded') === false || Session.get('notifications_loaded') === false || Session.get('schedules_loaded') === false
 			?
 			<Loader />
 			:
