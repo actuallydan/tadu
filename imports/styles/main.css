@@ -112,7 +112,7 @@ html, body, #root {
 	background: rgba(0,0,0,0.5);
 	z-index: 100;
 }
-#user-menu{
+.user-menu{
 	width: 80%;
 	margin: 1em auto;
 	height: auto;
@@ -124,6 +124,17 @@ html, body, #root {
 	top: 5%;
 	position: relative;
 	font-size: 1.1em;
+}
+.menu-slide-in {
+	    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+    width: 60%;
+    animation: slideInLeft;
+    border: none;
+    border-right: 1px solid #1de9b6;
 }
 /* 
 * mobile first
@@ -263,7 +274,7 @@ html, body, #root {
 	width: 100%;
 }
 #cal-month {
-	background-color: rgba(0, 0, 0, 0.3);
+	background-color: transparent;
 	position: absolute;
 	top: 0;
 	z-index: 2;
@@ -348,7 +359,7 @@ html, body, #root {
 	text-align: left;
 }
 #cal-year {
-	background-color: rgba(0, 0, 0, 0.3);
+	background-color: transparent;
 	position: absolute;
 	top: 0;
 	margin-top: calc(100vh / 13);
@@ -368,7 +379,7 @@ html, body, #root {
 	margin-top: calc(100vh / 13);
 }
 #schedule-header{
-	background-color: rgba(0, 0, 0, 0.3);
+	background-color: transparent;
 }
 #schedule tr td {
 	border-right: 1px solid #424242;
@@ -971,10 +982,15 @@ medium screens
 	.notice-time {
 		width: 20%;
 	}
-	#user-menu {
+	.user-menu {
 		font-size: 1.5em;
 		top: 7%;
 		padding: 2%;
+	}
+	.menu-slide-in {
+		width: 30%;
+		top: 0;
+		padding: 0;
 	}
 	#cal-year{
 		position: relative;

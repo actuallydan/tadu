@@ -48,7 +48,7 @@ export default class Schedule extends TrackerReact(React.Component) {
 					width: window.innerWidth > 1400 ? "60%" : window.innerWidth > 992 ? "71%" : "100%",
 					position: "fixed",
 					display: "inline-flex",
-					backgroundColor: " rgba(0, 0, 0, 0.3)",
+					backgroundColor: " rgba(24, 24, 24, 0.2)",
 					fontSize : "1.5em",
 					top: "calc(100vh / 13 * 2)",
 					zIndex: 4,

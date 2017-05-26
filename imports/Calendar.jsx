@@ -157,17 +157,7 @@ export default class Calendar extends TrackerReact(Component) {
 			<QuickTasks filteredTasks={this.props.filteredTasks}/>
 			</div>	
 			{/* Menu for all other nav items (logout etc) */}
-			<Menu show={this.state.showMenu} toggleMenu={this.toggleMenu.bind(this)}>
-			<div className="wrapper">
-				<div className="menu-header"> Menu </div>
-				<div className="menu-item" onClick={this.loggedInChange.bind(this)}>
-				<div className="menu-icon mdi mdi-exit-to-app"></div>
-						<div className="menu-text">Logout</div>
-				</div>
-				</div>
-			</Menu>
-			{/* Menu for all other nav items (logout etc) */}
-			<Menu show={this.state.showMenu} toggleMenu={this.toggleMenu.bind(this)}>
+			<Menu show={this.state.showMenu} toggleMenu={this.toggleMenu.bind(this)} className="menu-slide-in">
 			<div className="wrapper">
 				<div className="menu-header"> Menu </div>
 				<div className="menu-item" onClick={this.loggedInChange.bind(this)}>
