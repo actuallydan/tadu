@@ -162,7 +162,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
 	*/
 	notify(notice){
 		let audio = new Audio('/img/job-done.mp3');
-		audio.volume = 0.5;
+		// audio.volume = 0.7;
 		audio.play();
 	document.title = "Task Alert!";
 	toggleTitle = setInterval(()=>{
@@ -176,17 +176,14 @@ export default class MainLayout extends TrackerReact(React.Component) {
 		}
 	}, 1500);
 	toggleTitle;
-	if (Notification.permission !== "granted"){
-		/* Tell the user their task is due */
-		if(!document.hasFocus()){
+	if(!document.hasFocus()){
 			window.addEventListener('focus', ()=>{
 				this.displayNotification(notice);
 			});
 			window.removeEventListener('focus');
+		} else {
+			this.displayNotification(notice);
 		}
-	} else {
-		this.displayNotification(notice);
-	}
 }
 displayNotification(notice) {
 	clearInterval(toggleTitle);
