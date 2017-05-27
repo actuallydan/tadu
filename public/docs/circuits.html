@@ -4,9 +4,112 @@
 	<title>All My Circuits</title>
 </head>
 <body>
-<div id="splash">TADU</div>
-	<script type="text/javascript">
-	'use strict';
+    <div id="first-container" class="container">
+        <div id="nav">
+            <img src="../img/untitled.png" id="nav-logo" />
+            <button id="to-login">LOGIN</button>
+        </div>
+        <video loop muted autoplay poster="../img/Underground-Traffic.jpg" preload="true">
+            <source src="../img/Underground-Traffic.mp4" type="video/mp4" />
+        </video>
+        <canvas id="splashCanvas"></canvas>
+        <div id="splash">TADU</div>
+    </div>
+    <div class="container">
+        Words?
+    </div>
+    <style type="text/css">
+
+        #nav {
+            height: 4em;
+            width: 100%;
+            background: rgba(24,24,24,0.8);
+            position: fixed;
+            top: 0;
+            z-index: 6;
+        }
+        #nav-logo {
+            height: 100%;
+            width: auto;
+            padding-left: 2em;
+            display: inline-block;
+        }
+        #to-login {
+            color: #FFF;
+            border: 1px solid #FFF;
+            display: inline-block;
+            background: transparent;
+            border-radius: 0;
+            float: right;
+            height: 66%;
+            margin: 0.7em 2em;
+            font-size: 1em;
+            width: 10%;
+        }
+        .container {
+            width: 100%;
+            height: auto;
+            max-height: 100%;
+        }
+        canvas {
+            position:relative;
+            opacity: 0.3;
+        }
+
+        video {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          opacity: 0.5;
+      }
+      video:after{
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.3);
+        position: absolute;
+        top: 0;
+    }
+
+    @media (min-aspect-ratio: 16/9) {
+      video {
+        height: 300%;
+        top: -100%;
+    }
+}
+
+@media (max-aspect-ratio: 16/9) {
+  video {
+    width: 300%;
+    left: -100%;
+}
+}
+
+@media (max-width: 767px) {
+    #first-container .container {
+        background: url('../img/videoframe.jpg') center center / cover no-repeat;
+    }
+
+    video {
+        display: none;
+    }
+}
+#splash {
+    position: absolute;
+    top: 30%;
+    margin: 0 auto;
+    color: #FFF;
+    font-family: 'Anivers', sans-serif;
+    font-weight: bold;
+    z-index: 3;
+    font-size: 6em;
+    width: 100%;
+    text-align: center;
+}
+</style>
+<script type="text/javascript">
+ 'use strict';
 
 // requestanimation polyfill
 (function () {
@@ -34,33 +137,27 @@
 }());
 
 // setup stuff.
-var canvas = document.createElement("canvas"),
-    ctx = canvas.getContext("2d"),
-    width = window.innerWidth,
-    height = window.innerHeight,
-    settings = {
-        background: "#0D4D2B",
-        traceColor: "#1de9b6",
-        traceFill: "#000000",
-        startTraces : 30,
-        totalTraces : 50,
-        redraw: function () {
-            reinit();
-        }  
-    };
-
-
-
-canvas.width = width;
-canvas.height = height;
-document.body.appendChild(canvas);
+var canvas = document.getElementById("splashCanvas"),
+ctx = canvas.getContext("2d"),
+settings = {
+    background: "#0D4D2B",
+    traceColor: "#1de9b6",
+    traceFill: "#000000",
+    startTraces : 30,
+    totalTraces : 50,
+    redraw: function () {
+        reinit();
+    }  
+};
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
 function Trace(settings) {
     settings = settings || {};
     // this.x = settings.x || Math.ceil((Math.random() * width) / 4) * 4;
     // this.y = settings.y || Math.ceil((Math.random() * height) / 4) * 4;
     this.x = window.innerWidth / 2;
-     this.y = window.innerHeight / 2;
+    this.y = window.innerHeight / 2;
 
     this.points = [];
     this.points.push({
@@ -80,22 +177,22 @@ function Trace(settings) {
 
 Trace.prototype.update = function () {
     var x = this.lastPoint.x,
-        y = this.lastPoint.y,
-        dx = this.x - x,
-        dy = this.y - y;
+    y = this.lastPoint.y,
+    dx = this.x - x,
+    dy = this.y - y;
 
     // if its greater than .01 keep moving
     if (Math.random() > 0.01) {
         var velX = Math.cos(this.angle) * this.speed,
-            velY = Math.sin(this.angle) * this.speed,
-            checkPointX = this.x + (Math.cos(this.angle) * 8),
-            checkPointY = this.y + (Math.sin(this.angle) * 8),
-            imageData = ctx.getImageData(checkPointX, checkPointY, 3, 3),
-            pxlData = imageData.data,
-            collision = false;
+        velY = Math.sin(this.angle) * this.speed,
+        checkPointX = this.x + (Math.cos(this.angle) * 8),
+        checkPointY = this.y + (Math.sin(this.angle) * 8),
+        imageData = ctx.getImageData(checkPointX, checkPointY, 3, 3),
+        pxlData = imageData.data,
+        collision = false;
 
         // check if its in bounds.
-        if (checkPointX > 0 && checkPointX < width && checkPointY > 0 && checkPointY < height) {
+        if (checkPointX > 0 && checkPointX < window.innerWidth && checkPointY > 0 && checkPointY < window.innerHeight) {
             // check if the point in front is clear or not.
             for (var i = 0, n = pxlData.length; i < n; i += 4) {
                 var alpha = imageData.data[i + 3];
@@ -192,8 +289,8 @@ Trace.prototype.render = function () {
 
 // init
 var traces = [],
-    traceNum = settings.startTraces,
-    reqAnimFrameInstance = null;
+traceNum = settings.startTraces,
+reqAnimFrameInstance = null;
 
 for (var b = 0; b < traceNum; b++) {
     traces.push(new Trace({
@@ -206,7 +303,7 @@ function reinit() {
     cancelAnimationFrame(reqAnimFrameInstance);
     traces = [];
     traceNum = settings.startTraces;
-    ctx.clearRect(0, 0, width, height);
+    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
     for (var b = 0; b < traceNum; b++) {
         traces.push(new Trace({
@@ -222,7 +319,7 @@ ctx.fillStyle = "#242424";
 ctx.lineWidth = 1;
 
 function doTrace() {
-    ctx.clearRect(0, 0, width, height);
+    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
     for (var b = 0; b < traces.length; b++) {
         traces[b].render();
@@ -237,39 +334,6 @@ function doTrace() {
 }
 
 doTrace();
-  </script>
-  <style type="text/css">
-body {
-    padding:0;
-    margin:0;
-    background:#242424;
-    overflow:hidden;
-}
-canvas {
-    position:absolute;
-top: 0;
-}
-body:after{
-	content: ' ';
-	background: rgba(24,24,24,0.3);
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	padding: 0;
-	margin: 0;
-	}
-#splash {
-position: absolute;
-    top: 30%;
-    margin: 0 auto;
-    color: #FFF;
-    font-family: Helvetica, sans-serif;
-    font-weight: bold;
-    z-index: 3;
-    font-size: 6em;
-    width: 100%;
-    text-align: center;
-}
-  </style>
+</script>
 </body>
 </html>

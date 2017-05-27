@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import MainLayout from '../imports/MainLayout.jsx';
 import EntryPortal from '../imports/EntryPortal.jsx';
+import SplashPage from './SplashPage.jsx';
 
 Ground.Collection(Meteor.users);
 
@@ -22,6 +23,7 @@ export default class App extends Component {
 		super();
 		this.state = {
 			loggedIn: Meteor.userId() === null ? false : true,
+			showLogin: false
 		};
 		this.loggedInChange = this.loggedInChange.bind(this);
 	}
@@ -33,11 +35,19 @@ export default class App extends Component {
 			loggedIn: flag
 		});
 	}
+	showLogin(){
+		this.setState({
+			showLogin: !this.state.showLogin
+		});
+	}
 	/* Render method should only switch our logged in state */
 	render(){
 		return(
 			<div className="wrapper">
-			{this.state.loggedIn ?
+			{!Meteor.isCordova && !this.state.showLogin && !this.state.loggedIn ?
+				<SplashPage showLogin={this.showLogin.bind(this)} />
+				:
+				this.state.loggedIn ?
 				<MainLayout loggedInChange={this.loggedInChange}/>
 				:
 				<EntryPortal loggedInChange={this.loggedInChange}/>
