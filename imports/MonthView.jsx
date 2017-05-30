@@ -6,7 +6,13 @@ export default class MonthView extends React.Component {
 	constructor(props){
 		super();
 	}
-	render (){
+	componentWillUpdate(){
+document.querySelector(".month-wrapper").classList.remove("pulse");
+	}
+	componentDidUpdate(){
+		document.querySelector(".month-wrapper").classList.add("pulse");
+	}
+	render (){		
 		let _year = this.props.year, _month = this.props.month;
 		var daysBefore = new Date(_year, _month, 1).getDay();
 		var tempCal = {};
@@ -24,7 +30,7 @@ export default class MonthView extends React.Component {
 		/* Create calendar days with Day components, each has it's own style depending on whether its in the month, is selected, or is today */
 		
 		return(
-			<div className="month-wrapper">
+			<div className="month-wrapper animated pulse">
 			{
 				_calArray.map((day)=>{
 					let _inThisMonth = parseInt(day.substring(5, 7)) === this.props.monthShowing.getMonth() + 1 ? true : false;

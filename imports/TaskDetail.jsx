@@ -43,10 +43,10 @@ export default class TaskDetail extends React.Component{
 			} else {
 				swal("Success", "Task Updated", "success", ()=>{
 					this.forceUpdate();
+					this.props.closeDetail.bind(this);
 				});
 			}
 		});
-		this.props.closeDetail.bind(this);
 	}
 	componentDidUpdate(){
 		if(this.props.taskDetail !== null){
