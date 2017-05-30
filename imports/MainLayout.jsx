@@ -11,6 +11,7 @@ import TaskSingle from './TaskSingle.jsx';
 import TaskDetail from './TaskDetail.jsx';
 import Loader from './Loader.jsx';
 import Menu from './Menu.jsx';
+import Toast from './Toast.jsx';
 
 /* 3rd party libraries */
 import 'animate.css';
@@ -19,6 +20,8 @@ import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import moment from 'moment';
 
 import 'loaders.css';
+import { ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 /* Instantiate MiniMongo local database collections */
 OnlineTasks = new Mongo.Collection('Tasks');
@@ -175,8 +178,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
 			}
 		}, 1500);
 		toggleTitle;
-		this.displayNotification(notice);
-
+		toast(<Toast onClick={()=>{this.displayNotification(notice);toast.dismiss()}}  iconClass={"mdi-alarm-check"} text={notice.data.text} secondary={moment(notice.data.timeStart, "HH:mm").format("h:mm a")}/>)
 	}
 	displayNotification(notice) {
 		clearInterval(toggleTitle);
@@ -237,7 +239,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
 		/* Whether or not task detail modal should be visible right now  is based on whether there is a task currently in state */
 		let taskDetail = this.state.taskDetail !== null ? this.state.taskDetail : "" ;
 		/* Get notifications to see if the user has any that need resolved and to display old notifications in tray at top of Calendar */
-		let newNotices = Notifications.find({seen: false}).fetch();
+		let newNotice = Notifications.findOne({seen: false});
 		let filteredTasks = Tasks.find().fetch().filter(
 			(task) => {
 				return task.dateStart === this.state.selectedDate;
@@ -299,11 +301,12 @@ export default class MainLayout extends TrackerReact(React.Component) {
 					closeOnConfirm: true, }, ()=>{Meteor.call("toggleCompleteTour", "login")}) : ""}
 				</div>
 			} 
-			{newNotices.length !== 0 && newNotices !== undefined ? newNotices.map((notice)=>{this.notify(notice)}) : ""}
+			{newNotice !== undefined ? this.notify(newNotice) : ""}
 
 			<Menu show={this.state.taskDetail !== null} className="task-detail" toggleMenu={this.hideDetail.bind(this)}> 
 			<TaskDetail taskDetail={taskDetail} closeDetail={this.hideDetail}/>
 			</Menu>
+		      <ToastContainer position={this.state.width > 992 ? "bottom-right" : "bottom-center"} hideProgressBar={true}/>
 
 			</div>
 			)

@@ -5,6 +5,9 @@ import Loader from './Loader.jsx';
 import AddTaskStage1 from './AddTaskStage1.jsx';
 import AddTaskStage2 from './AddTaskStage2.jsx';
 
+import {toast} from 'react-toastify';
+import Toast from './Toast.jsx';
+
 export default class AddTask extends Component {
 	constructor(props) {
 		super(props);
@@ -81,7 +84,7 @@ export default class AddTask extends Component {
 				} else {
 					/* Everything is great; Task is successfully submitted, clear the title for the next task, find some way to inform the user and close the window if necessary*/
 					taskRefs.newTask.value = "";
-					swal("Success", "Task Created", "success");
+					toast(<Toast onClick={toast.dismiss}  iconClass={"mdi-check"} text={"Task Created"} secondary={""}/>, {autoClose: 2000});
 					this.clearTask();
 					this.setState({
 						showAlarmVisible : true

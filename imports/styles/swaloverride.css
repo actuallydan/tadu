@@ -82,3 +82,19 @@
   height: 3px;
   background-color: #f44336;
 }
+.toastify-content{
+  background: #242424;
+    border: #1de9b6 1px solid;
+    box-shadow: none;
+    min-height: 0;
+}
+.toastify__body{
+  font-size: 1.1em;
+}
+.toastify__close {
+  color: #FFF;
+}
+.toastify__close:hover {
+    opacity: 1;
+    color: #1de9b6;
+}

@@ -598,7 +598,7 @@ label {
 	background: transparent;
 	border: none;
 	border-bottom: 1px solid #1de9b6;
-	resize: vertical;
+	resize: none;
 	height: 5em;
 }
 .form-item button{
@@ -626,7 +626,7 @@ label {
 #alarm-radio-wrapper{
 	display: inline-flex;
 	width: 100%;
-	padding-top: 0.5em 0.5em 0.5em 0;
+	padding: 0.5em 0.5em 0.5em 0;
 }
 .radio-option-wrapper{
 	display: inline-flex;
@@ -698,14 +698,7 @@ label {
 	margin: 0;
 	color: #616161;
 }
-// .task-detail {
-// 	.radio .outer {
-// 		margin: -1em auto 0.5em;
-// 	}
-// 	.radio-option-label-text {
-// 		padding-left: 1em;
-// 	}
-// }
+
 /* Add tasks and quick tasks*/
 .task-single{
 	padding: 0.1em 0 0 0.2em;
@@ -717,7 +710,7 @@ label {
 }
 .task-title{
 	padding: 0 0 0 0.5em;
-	font-size: 1.5em;
+	font-size: 1.4em;
 	white-space: nowrap;
 	width: 12em;
 	display: inline-block;

@@ -12,6 +12,7 @@ import 'normalize-css';
 import '../imports/styles/main.css';
 
 /* 3rd party imports */
+import 'react-toastify/dist/ReactToastify.min.css'; 
 import swal from 'sweetalert';
 import 'sweetalert/dist/sweetalert.css';
 

@@ -54,6 +54,7 @@
 * 5.0 Tadu Concierge 
 
 #### What Needs Done
+* Scheduler is overlapping tasks again
 * Documentation
 * Refactor convert AddTask 1 & 2 to stateless and move refs to state in AddTask.jsx
 * " with Register and Login
