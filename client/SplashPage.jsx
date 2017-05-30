@@ -17,10 +17,72 @@ export default class SplashPage extends Component {
 			</video>
 			<canvas id="splashCanvas"></canvas>
 			<div id="splash">TADU</div>
-			<div id="by-line">Spend less time scheduling things. More time getting them done.</div>
+			<div id="by-line">
+			Spend less time scheduling. More time on yourself.
+			<br/>
+						<div className="mdi mdi-chevron-down" onClick={()=>{document.getElementById('learn').scrollIntoView({ behavior: "smooth"});}}></div>
+
 			</div>
-			<div className="container">
-			Words man
+			</div>
+			<div className="container" id="learn">
+			<div className="container-by-line">Tadu helps you build a better schedule.</div>
+			<div className="responsive-card">
+			<div className="card-icon mdi mdi-account-circle"></div>
+			<div className="card-byline">Tadu works with you</div>
+			<div className="card-desc">Based on your "body clock" and daily routine, Tadu suggests times where you're much more likely to complete a task</div>
+			</div>
+			<div className="responsive-card">
+			<div className="card-icon mdi mdi-chart-line"></div>
+			<div className="card-byline">Procrastinate Smarter</div>
+			<div className="card-desc">Tadu recognizes your daily achievements and helps you accomplish them when you're at your peak. Giving you peace of mind if you're in a rut.</div>
+			</div>
+			<div className="responsive-card">
+			<div className="card-icon mdi mdi-tag-outline"></div>
+			<div className="card-byline">Morning or Night Person?</div>
+			<div className="card-desc">You're better at some things than others at different times. Tadu builds your schedule around what type of task you need to create.</div>
+			</div>
+			</div>
+			<div className="container full-width">
+			<div className="seventy-five">
+			<div className="card-byline">Tadu is Sensible</div>
+			<div className="card-desc">
+			Obviously you can't exercise if you're at work or in class, even if that's the best time to do it. 
+			Tadu knows that. Tasks are set around your daily routine, which you set once and change as needed.
+			</div>
+			</div>
+			<div className="twenty-five">
+			<div className="card-icon mdi mdi-timetable"></div>
+
+			</div>
+			</div>
+			<div className="container full-width">
+			<div className="twenty-five">
+			<div className="card-icon mdi mdi-television-guide"></div>
+
+			</div>
+			<div className="seventy-five">
+			<div className="card-byline">No Clunky Menus</div>
+			<div className="card-desc">
+			Unlike many calendar apps, Tadu uses a minimalist interface to show only what you really want (what you really REALLY want). 
+			Whether you're creating a new task, checking notifications, changing your username, updating a task, or setting a new daily schedule, everything is nearby.
+			</div>
+			</div>
+			
+			</div>
+			<div className="container full-width">
+			<div className="seventy-five">
+			<div className="card-byline">Realtime Task Management</div>
+			<div className="card-desc">
+			Tadu is resilient and realtime. If you lose connection temporarily, Tadu keeps track of changes and makes them available immediately across all of your devices and intelligently manages changes.
+			</div>
+			</div>
+			<div className="twenty-five">
+			<div className="card-icon mdi mdi-timetable"></div>
+			</div>
+			</div>
+			<div className="container call-to-action">
+			<div className="container-by-line">Start using the smartest productivity platform today.</div>
+			<button className="call-to-action-button" onClick={this.props.showLogin.bind(this)}>Get Started</button>
 			</div>
 			</div>
 			)

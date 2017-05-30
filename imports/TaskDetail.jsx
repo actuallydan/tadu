@@ -35,16 +35,12 @@ export default class TaskDetail extends React.Component{
 			alarm: alarm,
 			timeUTC: alarm !== null ? moment(this.refs.dateStart.value.trim() + "T" + this.refs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16) : null,
 		};
-		console.log(updatedTask);
 
 		Meteor.call("updateTask", updatedTask, (err)=>{
 			if(err){
 				swal("Sorry!", "There was an error updating your task, please try again later", "error");
 			} else {
-				swal("Success", "Task Updated", "success", ()=>{
-					this.forceUpdate();
-					this.props.closeDetail.bind(this);
-				});
+				swal("Success", "Task Updated", "success");
 			}
 		});
 	}
@@ -55,23 +51,25 @@ export default class TaskDetail extends React.Component{
 				document.getElementById("edit-task-time").value = this.props.taskDetail.timeStart;
 				document.getElementById("edit-task-desc").value = this.props.taskDetail.desc !== null ? this.props.taskDetail.desc : "";
 				document.getElementById("has-alarm-toggle").checked = this.state.showAlarmVisible;
-				this.state.showAlarmVisible ? this.clicker( this.props.taskDetail.alarm) : "";
+				this.state.showAlarmVisible ? this.clicker(this.props.taskDetail.alarm) : "";
 			}
 	}
 	clicker(alarm){
-		const clicker = {
+		const clickThis = {
 			5 : ()=>{document.getElementById("priority-radio-low").click()},
 			30 : ()=>{document.getElementById("priority-radio-med").click()},
 			60 : ()=>{document.getElementById("priority-radio-high").click()},
 			1440 : ()=>{document.getElementById("priority-radio-critical").click()},
 		}
-		clicker[alarm];
+		clickThis[alarm];
 	}
 	componentDidMount(){
 		if(this.props.taskDetail !== null){
 			this.setState({
 				showAlarmVisible: this.props.taskDetail.alarm !== null
-			})
+			}, ()=>{
+				this.state.showAlarmVisible ? this.clicker(this.props.taskDetail.alarm) : "";
+			});
 		}
 	}
 	showAlarm(){

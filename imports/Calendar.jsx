@@ -26,7 +26,7 @@ export default class Calendar extends TrackerReact(Component) {
 			monthShowing : new Date(),
 			showNotifications: false,
 			weekView: false,
-			showMenu: false
+			showMenu: false,
 		};
 	}/* Triggers update in parent to tell app what day we are concerned with (changes current tasks view) 
 	* Also updates state to delegate the coveted "selected-day" theme to child Day components
@@ -40,8 +40,12 @@ export default class Calendar extends TrackerReact(Component) {
 	*/
 	prevMonth(){
 		this.setState({
-			monthShowing : new Date(this.state.monthShowing.getFullYear(), this.state.monthShowing.getMonth() - 1, this.state.monthShowing.getDate())
+			monthShowing : new Date(this.state.monthShowing.getFullYear(), this.state.monthShowing.getMonth() - 1, this.state.monthShowing.getDate()),
 		});
+		if(!this.state.weekView){
+			document.querySelector(".month-wrapper").classList.remove("pulse");
+			setTimeout(()=>{document.querySelector(".month-wrapper").classList.add("pulse")}, 100);
+		}
 	}
 	/* Move forward 1 month 
 	* Set state to date object of 1 month in the future
@@ -49,8 +53,12 @@ export default class Calendar extends TrackerReact(Component) {
 	*/
 	nextMonth(){
 		this.setState({
-			monthShowing : new Date(this.state.monthShowing.getFullYear(), this.state.monthShowing.getMonth() + 1, this.state.monthShowing.getDate())
+			monthShowing : new Date(this.state.monthShowing.getFullYear(), this.state.monthShowing.getMonth() + 1, this.state.monthShowing.getDate()),
 		});
+		if(!this.state.weekView){
+			document.querySelector(".month-wrapper").classList.remove("pulse");
+			setTimeout(()=>{document.querySelector(".month-wrapper").classList.add("pulse")}, 100);
+		}
 	}
 	/* Do not update component if, on mobile, we're just sliding from one index to another or it will try to re-render at each frame (yikes) */
 	shouldComponentUpdate(nextProps, nextState){

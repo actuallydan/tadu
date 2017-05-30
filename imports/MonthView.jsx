@@ -6,12 +6,6 @@ export default class MonthView extends React.Component {
 	constructor(props){
 		super();
 	}
-	componentWillUpdate(){
-document.querySelector(".month-wrapper").classList.remove("pulse");
-	}
-	componentDidUpdate(){
-		document.querySelector(".month-wrapper").classList.add("pulse");
-	}
 	render (){		
 		let _year = this.props.year, _month = this.props.month;
 		var daysBefore = new Date(_year, _month, 1).getDay();
