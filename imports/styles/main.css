@@ -57,7 +57,6 @@ html, body, #root {
 	height: 100%;
 	margin: 0; 
 	padding: 0;
-	overflow: hidden;
 	background-color: #242424;
 }
 #top-wrapper::before {
@@ -1135,6 +1134,11 @@ large screens
 .hidden {
 	display: none !important;
 }
+.normalFont {
+	font-size: 1em;
+    height: 70%;
+    overflow: hidden;
+}
 @keyframes click {
 	0%   { box-shadow: 0 0 1px rgba(29, 233, 182, 0.5);
 		transform: perspective(1em) translateZ(-1px);
@@ -1189,6 +1193,10 @@ large screens
 	margin: 0.7em 2em;
 	font-size: 1em;
 	width: 26%;
+}
+#to-login:hover {
+	background: #FFF;
+	color: #242424;
 }
 .container {
 	width: 100%;

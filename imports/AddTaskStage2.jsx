@@ -1,14 +1,19 @@
 import React, {Component} from 'react';
 
 export default class AddTaskStage2 extends React.Component {
+	submit(e){
+		/* Stop the event from triggering a POST request */ 
+		e.preventDefault();
+		this.props.addTask(this.refs);
+	}
 	render(){
 		return(
-			<form onSubmit={this.props.addTask.bind(this)} className={this.props.stage1 ?  "animated slideOutRight" : "animated pulse"}>
+			<form onSubmit={this.submit.bind(this)} className={this.props.stage1 ?  "animated slideOutRight" : "animated pulse"}>
 			<div className="form-item"><span className='form-item-label'> Title </span><input className="typeable" type="text" ref="newTask" defaultValue={this.props.tagType}  required maxLength="75"/> </div>
 			<div className="form-item"><span className='form-item-label'> Date </span><input className="typeable" id="new-task-date" type="date" ref="dateStart" defaultValue={this.props.selectedDate} /> </div>
-			<div className="form-item"><span className='form-item-label'> Time </span><input className="typeable" id="new-task-time" type="time" ref="timeStart"  defaultValue={nowTime} /> </div>
+			<div className="form-item"><span className='form-item-label'> Time </span><input className="typeable" id="new-task-time" type="time" ref="timeStart"  defaultValue={this.props.nowTime} /> </div>
 
-			{this.props.hasBeenOptimized ? <div className="form-item" style={{"color": "#1de9b6", "fontSize" : "0.6em", "textAlign" : "center"}}><span className='form-item-label mdi mdi-alert-circle'></span><span> {'\u00A0'} This.props date and time has been optimized for you!</span> </div> : ""}
+			{this.props.hasBeenOptimized ? <div className="form-item" style={{"color": "#1de9b6", "fontSize" : "0.6em", "textAlign" : "center"}}><span className='form-item-label mdi mdi-alert-circle'></span><span> {'\u00A0'} This date and time has been optimized for you!</span> </div> : ""}
 
 
 			<div className="form-item"> Set Alarm? 

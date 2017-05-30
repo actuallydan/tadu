@@ -9,7 +9,7 @@ const Menu = (props)=> {
 
 	return (
 		<div className="menu-mask" style={{display: props.show ? "block" : "none"}} onClick={close}>
-		<div className={props.show ? "user-menu animated bounceIn " + props.className : "bounceOut"}>
+		<div className={props.show ? "user-menu animated pulse " + props.className : "bounceOut"}>
 			{props.children}
 		</div>
 		</div>

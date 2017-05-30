@@ -131,11 +131,16 @@ Meteor.methods({
 		});
 	},
 	scheduleBestTime(data){
+		// const t0 = new Date().getTime();
 		// console.log("Attempting to find the best time");
 		let mySched = Schedules.findOne({userId : Meteor.userId()});
 		let possibleTimes = [];
 		const offset = data.today.getDay();
 		const thisHour = data.today.toJSON().substring(11,13) - new Date().getTimezoneOffset() / 60 + ":00";
+		const todayFormatted = data.today.toJSON().substring(0,10);
+
+		/* Get this upcoming week's tasks to match against */
+		let tasks = Tasks.find({userId: Meteor.userId()}, {gte: todayFormatted, lte: moment(todayFormatted, "YYYY-MM-DD").add(7, 'days').format("YYYY-MM-DD")}).fetch();
 
 		/* Populate array of all possible times */
 		for( let i = 0; i < daysOfWeek.length; i++) {
@@ -155,7 +160,7 @@ Meteor.methods({
 		/* Find the block of time with the highest probability as soon as possible
 		* If there are no probable blocks, start over with a lower target
 		*/
-		let target = 0.7;
+		let target = 0.5;
 		let tempPossibilites = [];
 		while(target > 0.1){
 			tempPossibilites = possibleTimes;
@@ -173,7 +178,7 @@ Meteor.methods({
 				let daysFromToday = coord.day - data.today.getDay();
 				let bestDate = moment().add(daysFromToday, "days").format();	
 				// console.log("There is " + (Tasks.findOne({userId: Meteor.userId(), dateStart : bestDate.substring(0,10) , timeStart: {$regex: coord.time.substring(0,2) + ".*"}}) !== undefined ? "something" : "nothing") + " on " + bestDate.substring(0,10) + " at " + coord.time)
-				return Tasks.findOne({userId: Meteor.userId(), dateStart : bestDate.substring(0,10) , timeStart: {$regex: coord.time.substring(0,2) + ".*"}}) === undefined;
+				return tasks.findIndex((task)=>{ task.dateStart === bestDate !== - 1})
 			});
 			// console.log("At " + (target * 100) + "%, there are " + tempPossibilites.length + " times available with no other tasks scheduled")
 
@@ -188,6 +193,7 @@ Meteor.methods({
 
 		console.log(possibleTimes[0], possibleTimes.length)
 		/* For now, return the first best time */
+		// console.log(new Date().getTime() - t0)
 		return possibleTimes[0];
 
 	},
@@ -221,7 +227,7 @@ Meteor.methods({
 		Meteor.users.update(Meteor.userId(), {
 			$set: { 
 				profile: { 
-				tut: usertut
+					tut: usertut
 				}
 			}
 		});
@@ -257,8 +263,8 @@ const offsetBioCurve = (offset)=>{
 	offset = 24 - offset;
 	let newCurve = [];
 	for( var i=0; i < bioCurve.length; i++) {
- 	   var pointer = (i + offset) % bioCurve.length;
-   	 	newCurve.push(bioCurve[pointer]);
+		var pointer = (i + offset) % bioCurve.length;
+		newCurve.push(bioCurve[pointer]);
 	}
 	return newCurve;
 };

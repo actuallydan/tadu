@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import Loader from './Loader.jsx';
 
 export default class AddTaskStage1 extends Component {
 	render(){

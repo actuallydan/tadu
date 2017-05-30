@@ -19,6 +19,9 @@ export default class SplashPage extends Component {
 			<div id="splash">TADU</div>
 			<div id="by-line">Spend less time scheduling things. More time getting them done.</div>
 			</div>
+			<div className="container">
+			Words man
+			</div>
 			</div>
 			)
 	}

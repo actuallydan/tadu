@@ -11,7 +11,6 @@ Meteor.startup(() => {
     '/img/iOS/',
     '/img/untitled.png',
     '/img/untitled.svg',
-    '/img/untitled.svg',
     '/img/readme.txt',
     '/img/TaduLaunch.png',
     '/img/Underground-Traffic.mp4',

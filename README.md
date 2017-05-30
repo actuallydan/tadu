@@ -63,9 +63,7 @@
 * Cordova/Electron offline functionality?
 * iOS 
 	* Splash screen
-	* Notifications width
-	* Loader After stage2 create tasks
-* Registration on mobile browsers doesn't create schedule or tags 
+* BUG: Registration on mobile browsers doesn't create schedule or tags 
 ------------
 * Ionicons
 * Share Tasks

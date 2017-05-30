@@ -42,17 +42,14 @@ export default class AddTask extends Component {
 		});
 	}
 	/* Once we've found the ideal tag and added any additional details to our task we try to add it to the database */
-	addTask(event){
-		/* Stop the event from triggering a POST request */ 
-		event.preventDefault();
-
+	addTask(taskRefs){
 		/* Create the task object that will be sent to the server to be stored in the database
 		* As of now we need the task title (text), the date and time of the task to start, the time as UTC for the server, the user's ID, and the description
 		*/ 
 
 		/* Get alarm if any */
 		let alarm = null;
-		if(this.refs.hasAlarm.checked){
+		if(taskRefs.hasAlarm.checked){
 			if(this.state.alarm === "5min"){
 				alarm = 5;
 			} else if(this.state.alarm === "30min"){
@@ -64,15 +61,15 @@ export default class AddTask extends Component {
 			}
 		}
 		let task = {
-			text : this.refs.newTask.value.trim(),
-			dateStart : this.refs.dateStart.value.trim(),
-			timeStart : this.refs.timeStart.value.trim(),
+			text : taskRefs.newTask.value.trim(),
+			dateStart : taskRefs.dateStart.value.trim(),
+			timeStart : taskRefs.timeStart.value.trim(),
 			tagType : this.state.tagType,
 			userId: Meteor.userId(),
-			desc: this.refs.desc.value.trim(),
+			desc: taskRefs.desc.value.trim(),
 			completed: false,
 			alarm: alarm,
-			timeUTC: alarm !== null ? moment(this.refs.dateStart.value.trim() + "T" + this.refs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16) : null
+			timeUTC: alarm !== null ? moment(taskRefs.dateStart.value.trim() + "T" + taskRefs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16) : null
 		};
 
 		/* Call Meteor to abscond with our earthly woes and store it in the database if possible */
@@ -83,7 +80,7 @@ export default class AddTask extends Component {
 					swal("Oops...", err, "error");
 				} else {
 					/* Everything is great; Task is successfully submitted, clear the title for the next task, find some way to inform the user and close the window if necessary*/
-					this.refs.newTask.value = "";
+					taskRefs.newTask.value = "";
 					swal("Success", "Task Created", "success");
 					this.clearTask();
 					this.setState({
@@ -210,7 +207,10 @@ export default class AddTask extends Component {
 	renderStage2(){
 		let nowTime = moment().add(1, 'hour').format("HH:mm");
 		return (
-			<AddTaskStage2 selectedDate={this.props.selectedDate} now={nowTime} addTask={this.addTask.bind(this)}
+			<AddTaskStage2 
+			selectedDate={this.props.selectedDate} 
+			now={nowTime} 
+			addTask={this.addTask.bind(this)}
 			stage1={this.state.stage1}
 			tagType={this.state.tagType}
 			hasBeenOptimized={this.state.hasBeenOptimized}
