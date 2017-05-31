@@ -906,14 +906,14 @@ medium screens
 		margin: 0
 	}
 	#entry-portal{
-		font-size: 1.1em;
+		font-size: 1em;
 	}
 	#entry-portal::before {
 		content: none;
 	}
 	#login-form, #register-form {
 		width: 60%;
-		margin: 3em auto;
+		margin: 0.5em auto;
 		height: auto;
 		padding-bottom: 2em;
 	}
@@ -923,7 +923,7 @@ medium screens
 	.toggle-login{
 		position: relative;
 		bottom: 0;	
-		margin: 2em 0 0;
+		margin: 0;
 	}
 	.task-detail {
 		font-size: 1.2em;
@@ -1257,9 +1257,9 @@ video:after{
 	font-family: 'Rajdhani', sans-serif;
 	z-index: 3;
 	font-size: 1.2em;
-	width: 90%;
+	width: 100%;
 	text-align: center;
-	margin: 1em;
+	margin: 1em auto;
 }
 .container-by-line{
 	color: #FFF;
@@ -1286,7 +1286,7 @@ font-size: 5em;
 color: #616161;
     width: 100%;
     text-align: center;
-    font-size: 2em;
+    font-size: 1.8em;
 }
 .card-desc{
 	color: #FFF;
@@ -1364,10 +1364,11 @@ background-size: cover;
 	#by-line{
 		font-size: 1.5em;
 		width: 100%;
+		margin-left: 0;
 	}
 	.responsive-card{
 		width: 33%;
-		display: inline-block;
+		display: inline-table;
 	}
 	.container {
 		max-height: 100%;

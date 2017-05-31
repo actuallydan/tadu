@@ -130,18 +130,22 @@ Meteor.methods({
 			$set : {schedule : mySchedule.schedule}
 		});
 	},
+	/* Boy howdy you better sit down for this one
+	*  Method to schedule the best possible time for an incoming task
+	*  Gets the user's current date, time, and the tag they're using to find the best time for it in the coming week
+	*  given their liklihood to complete it.
+	*/
 	scheduleBestTime(data){
 		// const t0 = new Date().getTime();
 		// console.log("Attempting to find the best time");
 		let mySched = Schedules.findOne({userId : Meteor.userId()});
 		let possibleTimes = [];
 		const offset = data.today.getDay();
-		const thisHour = data.today.toJSON().substring(11,13) - new Date().getTimezoneOffset() / 60 + ":00";
+		const thisHour = data.today.toJSON().substring(11,13) - data.today.getTimezoneOffset() / 60 < 10 ? "0" + (data.today.toJSON().substring(11,13) - data.today.getTimezoneOffset() / 60) + ":00" : (data.today.toJSON().substring(11,13) - data.today.getTimezoneOffset() / 60) + ":00";
 		const todayFormatted = data.today.toJSON().substring(0,10);
 
 		/* Get this upcoming week's tasks to match against */
 		let tasks = Tasks.find({userId: Meteor.userId()}, {gte: todayFormatted, lte: moment(todayFormatted, "YYYY-MM-DD").add(7, 'days').format("YYYY-MM-DD")}).fetch();
-
 		/* Populate array of all possible times */
 		for( let i = 0; i < daysOfWeek.length; i++) {
 			let pointer = (i + offset) % daysOfWeek.length; 
@@ -160,7 +164,7 @@ Meteor.methods({
 		/* Find the block of time with the highest probability as soon as possible
 		* If there are no probable blocks, start over with a lower target
 		*/
-		let target = 0.5;
+		let target = 0.6;
 		let tempPossibilites = [];
 		while(target > 0.1){
 			tempPossibilites = possibleTimes;
@@ -170,15 +174,16 @@ Meteor.methods({
 			*/
 			tempPossibilites = tempPossibilites.filter((coord)=>{
 				let daysFromToday = (coord.day - new Date().getDay()) < 0 ? 7 - Math.abs(coord.day - new Date().getDay()): (coord.day - new Date().getDay())
+				// console.log("At ", coord, " there is a " + mySched.thresholds[daysOfWeek[coord.day]][coord.time][data.tag] + " chance")	
 				return (mySched.thresholds[daysOfWeek[coord.day]][coord.time][data.tag] - daysFromToday * 0.01) >= target;
 			});
 			// console.log("At " + (target * 100) + "%, there are " + tempPossibilites.length + " times available")
 			/* Filter out all times to remove hours where task is already set */
 			tempPossibilites = tempPossibilites.filter((coord)=>{
-				let daysFromToday = coord.day - data.today.getDay();
+				let daysFromToday = coord.day - data.today.getDay() >= 0 ? coord.day - data.today.getDay() : 7 + (coord.day - data.today.getDay());
 				let bestDate = moment().add(daysFromToday, "days").format();	
 				// console.log("There is " + (Tasks.findOne({userId: Meteor.userId(), dateStart : bestDate.substring(0,10) , timeStart: {$regex: coord.time.substring(0,2) + ".*"}}) !== undefined ? "something" : "nothing") + " on " + bestDate.substring(0,10) + " at " + coord.time)
-				return tasks.findIndex((task)=>{ task.dateStart === bestDate !== - 1})
+				return tasks.findIndex((task)=>{ return task.dateStart === bestDate.substring(0,10) && task.timeStart === coord.time}) === - 1;
 			});
 			// console.log("At " + (target * 100) + "%, there are " + tempPossibilites.length + " times available with no other tasks scheduled")
 
@@ -191,7 +196,7 @@ Meteor.methods({
 		}
 		possibleTimes = tempPossibilites;
 
-		console.log(possibleTimes[0], possibleTimes.length)
+		// console.log(possibleTimes[0], possibleTimes.length)
 		/* For now, return the first best time */
 		// console.log(new Date().getTime() - t0)
 		return possibleTimes[0];
@@ -275,5 +280,5 @@ const hours = ["00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "0
 
 let tags = ["Homework", "Study", "Doctor", "Exercise", "Meeting", "Groceries", "Errands", "Music Practice", "Cleaning"];
 
-const bioCurve = [0.38, 0.41, 0.42, 0.45, 0.49, 0.54, 0.61, 0.68, 0.76, 0.83, 0.87, 0.76, 0.63, 0.61, 0.54, 0.61, 0.63, 0.76, 0.63, 0.54, 0.45, 0.42, 0.41, 0.38];
+const bioCurve = [0.38, 0.41, 0.42, 0.45, 0.49, 0.54, 0.61, 0.68, 0.76, 0.83, 0.87, 0.76, 0.63, 0.61, 0.54, 0.61, 0.63, 0.76, 0.7, 0.67, 0.65, 0.6, 0.55, 0.5];
 
