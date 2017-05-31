@@ -5,6 +5,10 @@
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	font-smoothing: antialiased;
+	  -webkit-box-sizing: content-box;
+     -moz-box-sizing: content-box;
+       -o-box-sizing: content-box;
+          box-sizing: content-box;
 }
 ::-webkit-scrollbar { 
 	display: none; 
@@ -21,10 +25,10 @@ input, button, textarea, input[type=submit] {
 	appearance: none !important;
 	-webkit-appearance: none !important;
 	-webkit-border-radius: 0 !important;
-	-moz-box-sizing: content-box;
-	-webkit-box-sizing: content-box;
-	box-sizing: content-box;
-	padding: 0;
+	// -moz-box-sizing: content-box;
+	// -webkit-box-sizing: content-box;
+	// box-sizing: content-box;
+	// padding: 0;
 }
 @font-face {
 	font-family: "Rajdhani";
@@ -602,12 +606,13 @@ label {
 	height: 5em;
 }
 .form-item button{
-	margin: 0 auto;
-	width: 100%;
+	margin: 0 2.5%;
+	width: 95%;
 	font-size: 1em;
 	color: #1de9b6;
 	background: transparent;
 	border: 1px solid #1de9b6;
+	padding: 0;
 }
 .form-item button:focus{
 	-webkit-animation: click 0.25s;
