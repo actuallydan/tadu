@@ -54,13 +54,9 @@
 * 5.0 Tadu Concierge 
 
 #### What Needs Done
-* Fix Add Task Button centerin issue
 * Documentation
 * Refactor convert AddTask 1 & 2 to stateless and move refs to state in AddTask.jsx
 * " with Register and Login
-* Graphical glitch on calendar headers with non-mac things
-	* Occurs with:
-	* Linux, Windows OS regardless of Browser
 * Cordova/Electron offline functionality?
 * iOS 
 	* Splash screen

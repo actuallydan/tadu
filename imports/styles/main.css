@@ -227,6 +227,7 @@ html, body, #root {
 }
 .login-register-button {
 	text-align: center;
+	line-height: 1.3em;
 }
 .login-register-button .button:focus {
 	-webkit-animation: click 0.5s;
@@ -290,6 +291,9 @@ html, body, #root {
 	font-size: 2em;
 	color: #FFF;
 	margin-left: 5vw;
+	height: 100%;
+	vertical-align: middle;
+	line-height: 130%;
 }
 #action-bar{
 	position: absolute;
@@ -342,11 +346,15 @@ html, body, #root {
 	float: right;
 	margin: 0.5em 0;
 }
+.menu-header {
+	line-height: 1.3em;
+}
 .menu-item{
 	width: 100%;
 	background-color: transparent;
 	color: #FFF;
 	cursor: pointer;
+	line-height: 1.3em;
 }
 .menu-item:hover{
 	background-color: #1de9b6;
@@ -613,7 +621,12 @@ label {
 	background: transparent;
 	border: 1px solid #1de9b6;
 	padding: 0;
+	line-height: 1.6em;
 }
+.form-item button:hover {
+	background: #1de9b6;
+	color: #242424;
+	}
 .form-item button:focus{
 	-webkit-animation: click 0.25s;
 	-moz-animation: click 0.25s;
@@ -951,6 +964,7 @@ medium screens
 		font-size: 1.5em;
 		background-color: rgba(24, 24, 24, 0.3);
 		color: #FFF;
+		line-height: 1.3em;
 	}
 	#tasks-wrapper{
 		margin: 0;
