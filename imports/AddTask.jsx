@@ -176,7 +176,8 @@ export default class AddTask extends Component {
 					swal("Tag Created!", "We'll pick up where you left off", "success");
 					context.setState({
 						stage1 : false,
-						tagType : inputValue.trim()
+						tagType : inputValue.trim(),
+						hasBeenOptimized: false
 					});
 				}
 			})
