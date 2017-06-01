@@ -1,8 +1,11 @@
 import moment from 'moment';
 
+/* Server methods to be called by client */
 Meteor.methods({
+	/* taskes a task object and stores it in the Tasks Collection for this user as well as increments the tag to make it more visible */
 	addTask(task){
-		if(!Meteor.userId()){
+		/* Make sure user exists */
+		if(!Meteor.userId() !== task.userId){
 			throw new Meteor.Error('not-authorized');
 		} 
 		Tasks.insert({
@@ -17,7 +20,6 @@ Meteor.methods({
 			alarm: task.alarm,
 			timeUTC: task.timeUTC
 		});
-
 		/* Get this user's tags */
 		let user = TagTypes.findOne({"userId" : Meteor.userId()});
 		/* Find tag in array  */
@@ -30,7 +32,9 @@ Meteor.methods({
 		});
 
 	},
+	/* toggle the completion status of a task. This is reflected in the user's task list as being checked off or not */
 	toggleTask(task){
+		/* Make sure user exists */
 		if(Meteor.userId() !== task.userId){
 			throw new Meteor.Error('not-authorized');
 		}
@@ -38,7 +42,12 @@ Meteor.methods({
 			$set: {completed: !task.completed }
 		})
 	},
+	/* Update an exisitng task, accepts a task object and updates the fields except for the userId, completed, createdAt */
 	updateTask(task){
+		/* Make sure user changing task is the owner */
+		if(!Meteor.userId() !== task.userId){
+			throw new Meteor.Error('not-authorized');
+		}
 		Tasks.update(task._id, {
 			$set: {
 				text : task.text,
@@ -50,42 +59,59 @@ Meteor.methods({
 			}
 		});
 	},
-	deleteTask(task){
-		if(Meteor.userId() !== task.userId){
+	/* Takes a task object, but we only need to send the id, consider only sending the id over the wire */
+	deleteTask(taskId){
+		/* Make sure user changing task is the owner */
+		if(Meteor.userId()){
 			throw new Meteor.Error('not-authorized');
 		}
-		Tasks.remove(task._id);
+		Tasks.remove(taskId);
 	}, 
+	/* Not used in production but useful for tests; Much slower than client implementation */
 	getTasks(){
 		return Tasks.find().fetch();
 	},
+	/* Create a new tag for that user, takes a string for the tag  and adds it to the Tag types object and adds it to the thresholds object */
 	addTag(tag){
+		/* Make sure user is the owner */
 		if(!Meteor.userId()){
 			throw new Meteor.Error('not-authorized');
 		} 
 		let user = TagTypes.findOne({"userId" : Meteor.userId()});
+
 		/* Make sure tag isn't already in DB */
 		if(user.tags.findIndex((thisTag)=>{ return thisTag.type.toLowerCase() === tag.toLowerCase()}) !== -1){
 			return "exists";
 		}
+		/* Tag is new so we add it to the array of objects */
 		user.tags.push({"type" : tag, "uses" : 0});
 
+		/* save changes  to tag types object */
 		TagTypes.update(user._id, {
 			$set: {tags: user.tags }
 		});
 
+		/* Update Schedule Thresholds to include this tag 
+		* For Each day of the week, for each hour we want to add the threshold of completing this tag
+		*  Depending on the number of custom tags, this object could get huge(r) but as long as it's indexable it should be fine 
+		*/
 		let mySched = Schedules.findOne({"userId" : Meteor.userId()});
 		daysOfWeek.map((day)=>{
 			hours.map((hour)=>{
 				mySched.thresholds[day][hour][tag] = bioCurve[hours.indexOf(hour)];
 			});
 		});
+		/* Update the schedule object */
 		Schedules.update(mySched._id, {
 			$set: {thresholds: mySched.thresholds}
 		});
 	},
+	/* On Setup add the nine initial tags to the user's tagTypes object */
 	addDefaultTags(){
-		console.log('Attempting to create default tags');
+		/* Make sure user is the owner */
+		if(!Meteor.userId()){
+			throw new Meteor.Error('not-authorized');
+		} 
 		let myTags = {
 			userId: Meteor.userId(),
 			tags: []
@@ -93,9 +119,10 @@ Meteor.methods({
 		tags.map((tag)=>{ myTags.tags.push({"type" : tag, "uses" : 0})  });
 
 		TagTypes.insert(myTags);
-		console.log("successfully created default tags");
 	},
+	/* After triggering a notification and clicking on the alert, change the notice object so that we don't see the same thing twice */
 	seeNotification(notice){
+		/* Make sure user is the owner */
 		if(Meteor.userId() !== notice.userId){
 			throw new Meteor.Error('not-authorized');
 		}
@@ -103,8 +130,12 @@ Meteor.methods({
 			$set: {seen: true }
 		})
 	},
+	/* On Setup add initial schedule object for the user */
 	addDefaultSchedule(){
-		console.log('Attempting to create default schedule');
+		/* Make sure user is the owner */
+		if(!Meteor.userId()){
+			throw new Meteor.Error('not-authorized');
+		} 
 		/* From the user's profile, get their bedtime and use that as an offset for their actual bioCurve. Then pass their bioCurve into the Thresholds Object parameters */
 		let myBioCurve = offsetBioCurve(parseInt(Meteor.user().profile.bedHour.substring(0,2)))
 		let schedule = {
@@ -113,9 +144,10 @@ Meteor.methods({
 			thresholds: Thresholds(myBioCurve)
 		};
 		Schedules.insert(schedule);
-		console.log("Successfully created default schedule");
 	},
+	/* User is trying to make a change to one cell of their schedule, takes in a coordinate string (e.g. Sun-03:00 === Sunday @ 3AM) to tell us where on the schedule grid they're changing the data*/
 	modifySchedule(coords){
+		/* Make sure user is the owner */
 		if(!Meteor.userId()){
 			throw new Meteor.Error('not-authorized');
 		} 
@@ -124,8 +156,10 @@ Meteor.methods({
 		day = coords.substring(0, 3);
 		hour = coords.substring(4, 9);
 
+		/* If they were currently busy, allow them to be not busy and vice versa. Later this will support different types */
 		mySchedule.schedule[day][hour] = mySchedule.schedule[day][hour] === null ? {"type" : "work"} : null;
 
+		/* Save changes to the schedule */
 		Schedules.update(mySchedule._id, {
 			$set : {schedule : mySchedule.schedule}
 		});
@@ -202,6 +236,10 @@ Meteor.methods({
 		return possibleTimes[0];
 
 	},
+	/* I hope you're still sitting because this is gross */
+	/* This method adjusts the probability that a user will complete an action on a given day at a given time after either failure or success 
+	* Accepts a data object containing a date, time, and tag
+	*/
 	changeThreshold(data){
 		let mySched = Schedules.findOne({userId : Meteor.userId()});
 		let weekDay = moment(data.date, "YYYY-MM-DD").format("E");
@@ -209,14 +247,17 @@ Meteor.methods({
 		// console.log("old threshold:" + mySched.thresholds[daysOfWeek[weekDay]][hour][data.tag] + " data amt to change by: " + data.amt);
 		/* Update Action Potential at given weekday, at given time, for given tag */
 		if(mySched.thresholds[daysOfWeek[weekDay]][hour][data.tag] + data.amt >= 1){
+			/* User completed a task but it would push the probability over 100% so we cap it there */
 			mySched.thresholds[daysOfWeek[weekDay]][hour][data.tag] = 1;
 		} else if(mySched.thresholds[daysOfWeek[weekDay]][hour][data.tag] + data.amt <= 0){
+			/* User didn't quite complete a task but it would push the probability below 0% so we cap it there */
 			mySched.thresholds[daysOfWeek[weekDay]][hour][data.tag] = 0;
 		} else {
+			/* Change the user's threshold by incoming amount */
 			mySched.thresholds[daysOfWeek[weekDay]][hour][data.tag] += data.amt;
 		}
 		// console.log("new threshold:" + mySched.thresholds[daysOfWeek[weekDay]][hour][data.tag] + " data amt to change by: " + data.amt);
-
+		/* Save changes */
 		Schedules.update(mySched._id, {
 			$set: {thresholds : mySched.thresholds}
 		});
@@ -239,35 +280,44 @@ Meteor.methods({
 	}
 });
 
+/* Schedule Object constructor - creates a 7*24 grid of Block objects to simulate the user's hourly schedule */
 const Schedule = ()=>{
 	const self = {};
 	daysOfWeek.map((day)=>{self[day] = Block() })
 	return self;
 };
+/* Thresholds Object Constructor - contains action potential (P(complete a task at assigned time) for each tag type for each hour of each day 
+* Takes a biocurve array of floats that represents a discrete productivity curve over the day
+* For each hour get an object that represents the AP of each task at that hour and day
+*/
 const Thresholds = (myBioCurve) => {
 	const self = {};
-
 	daysOfWeek.map((day)=>{ self[day] = {} }); 
 	daysOfWeek.map((day)=>{ hours.map((hour)=>{ self[day][hour] = HourThresholdObj(hour, myBioCurve)  })   });
 	return self;
 };
+/* HourThresholdObj Constructor - an object that lists the AP for completing a task in that hour 
+* Takes an hour string and finds the AP for that hour given a specific bioCurve
+*/
 const HourThresholdObj = (hour, myBioCurve)=>{
 	let self = {}; 
 	tags.map((tag)=>{ self[tag] = myBioCurve[hours.indexOf(hour)]});
 	return self;
 };
+/* Block Constructor - an object to store user activity for each hour of the day */
 const Block = ()=>{ 
 	const self = {};
-
 	hours.map((hour)=>{
 		self[hour] = null
 	})
 	return self;
 };
+/* A discrete-stepped array representing the AP of a human during each over of the day assuming the first hour is 12 AM, 
+* this method takes an offset in hours and shifts the curve to match when the user goes to sleep (the default is 12AM) */
 const offsetBioCurve = (offset)=>{
 	offset = 24 - offset;
 	let newCurve = [];
-	for( var i=0; i < bioCurve.length; i++) {
+	for( var i = 0; i < bioCurve.length; ++i) {
 		var pointer = (i + offset) % bioCurve.length;
 		newCurve.push(bioCurve[pointer]);
 	}

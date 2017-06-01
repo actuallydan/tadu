@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 
+/* Default Component for Toast, supplied to toastify 'toast' method when a user does a minor action */
 const Toast = (props) =>{
 	const toast = {
 		item: {

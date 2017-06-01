@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 
+/* What does it look like? */
 const Policy = () =>{
 	return(
 		<div className="wrapper" style={{overflowY: "scroll", height: "75vh", fontSize: "0.8em", textAlign: "left"}}>

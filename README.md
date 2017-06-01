@@ -12,9 +12,8 @@
 8. AnimateCSS (https://daneden.github.io/animate.css/)
 9. Material Design Icons  (https://materialdesignicons.com/)
 10. SweetAlert (https://www.npmjs.com/package/sweetalert)
-11. Rodal (https://github.com/chenjiahan/rodal)
-12. React-Tooltip (https://github.com/wwayne/react-tooltip)
-13. Meteor Electron (https://github.com/electron-webapps/meteor-electron)
+11. React-Tooltip (https://github.com/wwayne/react-tooltip)
+12. Meteor Electron (https://github.com/electron-webapps/meteor-electron)
 
 #### Version Roadmap
 * 0.0.0.0.5 Replace "Event" with "Task" 
@@ -57,6 +56,10 @@
 * Documentation
 * Refactor convert AddTask 1 & 2 to stateless and move refs to state in AddTask.jsx
 * " with Register and Login
+* deleteTask method should only accept task ID, not entire task
+* Speed up addTag method (currently ~170ms from client)
+* Test to see if Schedule needs to subscribe --> can be stateless?
+* Does Notifications Menu need to have Notifications Menu
 * Cordova/Electron offline functionality?
 * iOS 
 	* Splash screen

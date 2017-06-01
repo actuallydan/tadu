@@ -17,23 +17,48 @@ export default class EntryPortal extends React.Component {
 		this.state = {
 			showLogin: true,
 			showPolicy: false,
+			loginStateData: {
+				'loginEmail': "",
+				'loginPassword': "",
+			},
+			registerStateData : {
+				'registerEmail' : "",
+				'registerPassword' : "",
+				'registerUsername' : "",
+				'registerBedHour' : "",
+			}
 		};
 	}
 	/* Method that actually updates the state to show whichever form isn't present */
 	handleChangeForm() {
 		this.setState({showLogin : !this.state.showLogin});
 	}
-
+	changeLoginState(div){
+		this.setState({
+			loginStateData: {
+				'loginEmail': div.email,
+				'loginPassword': div.password,
+			}});
+	}
+	changeRegisterState(div){
+		this.setState({ 
+			registerStateData : {
+				'registerEmail' : div.email,
+				'registerPassword' : div.password,
+				'registerUsername' : div.username,
+				'registerBedHour' : div.bedHour,
+			}});
+	}
 	/* After user submit's login form we attempt to sign them in */
 	tryLogin(event){
 		/* Stop from from submitting and page from refreshing. What is this 2012? */
 		event.preventDefault();
-		/* Because this works weird in JS, i'm making sure it points to the current component we're in, not a meteor method or something else */
+		/* Because this works weird in JS, make sure it points to the current component we're in, not a meteor method or something else */
 		const context = this;
-
+		console.log(this.state.loginStateData);
 		/* Grab, trim, and ideally sanitize user login data */
-		const email = this.refs.email.value.trim();
-		const password = this.refs.password.value.trim();
+		const email = this.state.loginStateData.loginEmail;
+		const password = this.state.loginStateData.loginPassword;
 
 		/* Make sure both fields have data in them otherwise ignore it in case of errant enter or mouse click to prevent needless alerting of user */
 		if ( email !== "" && password !== "") {
@@ -67,20 +92,20 @@ export default class EntryPortal extends React.Component {
 		const bad = "~`,<>/?'\";:]}[{\|+=)(*&^%$#!";
 
 		for(var i = 0; i < bad.length; i++){
-			if(this.refs.email.value.indexOf(bad[i]) >= 0 || this.refs.username.value.indexOf(bad[i]) >= 0){
+			if(this.state.registerStateData.registerEmail.indexOf(bad[i]) >= 0 || this.state.registerStateData.registerUsername.indexOf(bad[i]) >= 0){
 				valid = false;
 				break;    
 			}
 		}
 
-		if (this.refs.username.value.trim() !== "" && this.refs.password.value.trim() !== "" && this.refs.email.value.trim() !== "" && valid && this.refs.bedHour.value !== "") {
+		if (this.state.registerStateData.registerUsername !== "" && this.state.registerStateData.registerPassword !== "" && this.state.registerStateData.registerEmail !== "" && valid && this.state.registerStateData.registerBedHour !== "") {
 			/* Get the time the user ususally goes to bed to build their social circadian rhythm around that */
 			const user = {
-				username: this.refs.username.value.trim(),
-				password: this.refs.password.value.trim(),
-				email: this.refs.email.value.trim(),
+				username: this.state.registerStateData.registerUsername,
+				password: this.state.registerStateData.registerPassword,
+				email: this.state.registerStateData.registerEmail,
 				profile: {
-					bedHour: this.refs.bedHour.value,
+					bedHour: this.state.registerStateData.registerBedHour,
 					tut : {
 						'login' : false,
 						'schedule' : false,
@@ -125,14 +150,31 @@ export default class EntryPortal extends React.Component {
 		});
 	}
 	render(){
+				console.log(this.state.loginStateData);
+
 		/* Swaps out which form should be visible based on this component's state: register or login. Also display the pirvacy policy because links don't work by default in Cordova */
 		return (
 			<div id="entry-portal"> 
 			
 			{this.state.showLogin ? 
-				<Login showLogin={this.state.showLogin} tryLogin={this.tryLogin} handleChangeForm={this.handleChangeForm.bind(this)} loggedInChange={this.props.loggedInChange.bind(this)}/> 
+				<Login 
+				showLogin={this.state.showLogin} 
+				tryLogin={this.tryLogin} 
+				handleChangeForm={this.handleChangeForm.bind(this)} 
+				loggedInChange={this.props.loggedInChange.bind(this)} 
+				changeLoginState={this.changeLoginState.bind(this)}
+				loginStateData={this.state.loginStateData}
+				/> 
 				:
-				<Register showLogin={this.state.showLogin} tryRegister={this.tryRegister} handleChangeForm={this.handleChangeForm.bind(this)}  showPolicy={this.togglePolicy.bind(this)} loggedInChange={this.props.loggedInChange.bind(this)}/>
+				<Register 
+				showLogin={this.state.showLogin} 
+				tryRegister={this.tryRegister} 
+				handleChangeForm={this.handleChangeForm.bind(this)}  
+				showPolicy={this.togglePolicy.bind(this)} 
+				loggedInChange={this.props.loggedInChange.bind(this)}
+				changeRegisterState={this.changeRegisterState.bind(this)}
+				registerStateData={this.state.registerStateData}
+				/>
 			}
 			<Menu show={this.state.showPolicy} toggleMenu={this.togglePolicy.bind(this)}>
 			<Policy />

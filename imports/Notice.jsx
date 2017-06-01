@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import moment from 'moment';
 
+/* Display an individual notice in the notification list */
 const Notice = (props)=> {
 	const noticeType = {
 		'taskAlert' :'mdi-alarm-check',

@@ -2,6 +2,8 @@ import React from 'react';
 import Day from './Day.jsx';
 import moment from 'moment';
 
+/* The actual Calendar part of the Calendar Component, generates the month from the given day and maps out the month's tasks 
+* There has to be a way to make this stateless */
 export default class MonthView extends React.Component {
 	constructor(props){
 		super();

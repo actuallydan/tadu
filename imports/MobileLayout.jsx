@@ -22,7 +22,6 @@ export default class MobileLayout extends React.Component {
 				index: index
 			});
 		}
-		
 	}
 	/* Triggered when manually switching views (with button) */
 	changeIndex(e){
@@ -37,7 +36,6 @@ export default class MobileLayout extends React.Component {
 	render(){
 		return(
 			<SwipeableViews index={this.state.index}  style={{height: "100vh"}} onSwitching={this.onChangeIndex.bind(this)}>
-  				
   				<Calendar 
   				index={this.state.index}
   				filteredTasks={this.props.filteredTasks} 

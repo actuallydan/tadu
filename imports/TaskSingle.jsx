@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import swal from 'sweetalert';
 import moment from 'moment';
 
+/* A single task to be displayed on either the Left Task List div or the quick tasks div on mobile */
 const TaskSingle = (props)=> {
 	const deleteTask = ()=>{
 		swal({
@@ -10,7 +11,7 @@ const TaskSingle = (props)=> {
 			type: "warning",
 			showCancelButton: true
 		}, function(){
-			Meteor.call('deleteTask', props.task);
+			Meteor.call('deleteTask', props.task._id);
 		});
 	};
 	const showDetail = (event)=>{

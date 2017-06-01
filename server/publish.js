@@ -1,8 +1,10 @@
+/* Instantiate server database/collections */
 Tasks = new Mongo.Collection('Tasks');
 TagTypes = new Mongo.Collection("TagTypes");
 Notifications = new Mongo.Collection("Notifications");
 Schedules = new Mongo.Collection("Schedules");
 
+/* Publish data to client */
 /* to get a user's userId use this.userId  */
 Meteor.publish("userTasks", function(){
 	return Tasks.find({userId: this.userId});
@@ -17,7 +19,7 @@ Meteor.publish("schedules", function(){
 	return Schedules.find({userId: this.userId}, {fields: {"thresholds" : 0}} );
 });
 Meteor.publish("allUsers", function () {
-	return Meteor.users.find({},
+	return Meteor.users.find({_id: this.userId},
 	{fields: {
      // specific fields to return
      '_id' : 1,

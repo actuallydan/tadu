@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Notice from './Notice.jsx';
 
+/* Component to list notifications */
 const NotificationsWrapper = (props)=>{
 			return (
 				<div className="wrapper" style={{overflow: "scroll"}}>

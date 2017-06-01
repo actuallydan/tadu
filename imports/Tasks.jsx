@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import moment from 'moment';
 
+/* Component to display tasks */
 const Tasks = (props)=>{
 	const showDetail = (event)=>{
 		props.showDetail(event);

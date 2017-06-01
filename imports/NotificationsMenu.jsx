@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import NotificationsWrapper from './NotificationsWrapper.jsx';
 import Menu from './Menu.jsx';
 
+/* Wrap notifications wrapper in Menu Component */
 const NotificationsMenu = (props)=>{
 	return(
 		<Menu show={props.showNotifications} toggleMenu={props.toggleNotices} className={"normalFont"}> 
