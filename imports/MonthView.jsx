@@ -10,16 +10,16 @@ export default class MonthView extends React.Component {
 	}
 	render (){		
 		let _year = this.props.year, _month = this.props.month;
-		var daysBefore = new Date(_year, _month, 1).getDay();
-		var tempCal = {};
+		let daysBefore = moment(this.props.monthShowing, "YYYY-MM-DD").set('date', 1).format('e');
+		let tempCal = {};
 		for (var i = daysBefore; i > 0; --i) {
-			tempCal[new Date(_year, _month, -1 * i + 1).toJSON().substring(0, 10)] = {
-				events: this.props.tasks.filter((event)=>{return event.dateStart === new Date(_year, _month, -1 * i + 1).toJSON().substring(0, 10) })
+			tempCal[moment(this.props.monthShowing, "YYYY-MM-DD").set('date', 1).subtract(i, 'days').format("YYYY-MM-DD")] = {
+				events: this.props.tasks.filter((event)=>{return event.dateStart === moment(this.props.monthShowing, "YYYY-MM-DD").set('date', 1).subtract(i, 'days').format("YYYY-MM-DD") })
 			};
 		}
 		for (var i = 0; i < 35 + (7 - daysBefore); i++) {
-			tempCal[new Date(_year, _month, 1 + i).toJSON().substring(0, 10)] = {
-				events: this.props.tasks.filter((event)=>{return event.dateStart === new Date(_year, _month, i + 1).toJSON().substring(0, 10) })
+			tempCal[moment(this.props.monthShowing, "YYYY-MM-DD").set('date', 1).add(i, 'days').format("YYYY-MM-DD")] = {
+				events: this.props.tasks.filter((event)=>{return event.dateStart === moment(this.props.monthShowing, "YYYY-MM-DD").set('date', 1).add(i, 'days').format("YYYY-MM-DD") })
 			};
 		} /* To iteratively index into cal obj */
 		var _calArray = Object.keys(tempCal); 
@@ -29,7 +29,7 @@ export default class MonthView extends React.Component {
 			<div className="month-wrapper animated pulse">
 			{
 				_calArray.map((day)=>{
-					let _inThisMonth = parseInt(day.substring(5, 7)) === this.props.monthShowing.getMonth() + 1 ? true : false;
+					let _inThisMonth = day.substring(5, 7) === this.props.month ? true : false;
 					let _isToday = day === this.props.today ? true : false;
 					let _isSelected = day === this.props.selectedDate ? true : false;
 					let _dayStyles = {

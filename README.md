@@ -53,17 +53,19 @@
 * 5.0 Tadu Concierge 
 
 #### What Needs Done
-* Documentation
+* Bugs
+	* Calendar renders incorrectly in different timezones
+	* Notifications duplicate
+	* Registration on mobile browsers doesn't create schedule or tags 
+* Improvements
+	* On < 992 || < 1400 #add-task should push tasks right 
+	* Reduce Redundancy in MonthView where creating calObject
+------------ For Next Version
 * Refactor convert AddTask 1 & 2 to stateless and move refs to state in AddTask.jsx
 * Speed up addTag method (currently ~170ms from client)
 * Test to see if Schedule needs to subscribe --> can be stateless?
-* Does Notifications Menu need to have Notifications Menu?
-* Cordova/Electron offline functionality?
 * iOS 
 	* Splash screen
-* BUG: Registration on mobile browsers doesn't create schedule or tags 
-
-------------
 * Ionicons
 * Share Tasks
 

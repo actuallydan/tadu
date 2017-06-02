@@ -174,10 +174,10 @@ Meteor.methods({
 		// console.log("Attempting to find the best time");
 		let mySched = Schedules.findOne({userId : Meteor.userId()});
 		let possibleTimes = [];
-		const offset = data.today.getDay();
-		const thisHour = data.today.toJSON().substring(11,13) - data.today.getTimezoneOffset() / 60 < 10 ? "0" + (data.today.toJSON().substring(11,13) - data.today.getTimezoneOffset() / 60) + ":00" : (data.today.toJSON().substring(11,13) - data.today.getTimezoneOffset() / 60) + ":00";
-		const todayFormatted = data.today.toJSON().substring(0,10);
-
+		const offset = moment(data.today, "YYYY-MM-DDTHH:mm:ss").format('e');
+		const thisHour = moment(data.today, "YYYY-MM-DDTHH:mm:ss").format('HH:00');
+		const todayFormatted = moment(data.today, "YYYY-MM-DDTHH:mm:ss").format('YYYY-MM-DD');
+		console.log(data.today)
 		/* Get this upcoming week's tasks to match against */
 		let tasks = Tasks.find({userId: Meteor.userId()}, {gte: todayFormatted, lte: moment(todayFormatted, "YYYY-MM-DD").add(7, 'days').format("YYYY-MM-DD")}).fetch();
 		/* Populate array of all possible times */
@@ -207,14 +207,14 @@ Meteor.methods({
 			*	To prioritize blocks that are soonest, there is a 1% decay of action potential per day in the future to schedule a task
 			*/
 			tempPossibilites = tempPossibilites.filter((coord)=>{
-				let daysFromToday = (coord.day - new Date().getDay()) < 0 ? 7 - Math.abs(coord.day - new Date().getDay()): (coord.day - new Date().getDay())
+				let daysFromToday = (coord.day - offsetBioCurve) < 0 ? 7 - Math.abs(coord.day - offset): (coord.day - offset)
 				// console.log("At ", coord, " there is a " + mySched.thresholds[daysOfWeek[coord.day]][coord.time][data.tag] + " chance")	
 				return (mySched.thresholds[daysOfWeek[coord.day]][coord.time][data.tag] - daysFromToday * 0.01) >= target;
 			});
 			// console.log("At " + (target * 100) + "%, there are " + tempPossibilites.length + " times available")
 			/* Filter out all times to remove hours where task is already set */
 			tempPossibilites = tempPossibilites.filter((coord)=>{
-				let daysFromToday = coord.day - data.today.getDay() >= 0 ? coord.day - data.today.getDay() : 7 + (coord.day - data.today.getDay());
+				let daysFromToday = coord.day - offset >= 0 ? coord.day - offset : 7 + (coord.day - offset);
 				let bestDate = moment().add(daysFromToday, "days").format();	
 				// console.log("There is " + (Tasks.findOne({userId: Meteor.userId(), dateStart : bestDate.substring(0,10) , timeStart: {$regex: coord.time.substring(0,2) + ".*"}}) !== undefined ? "something" : "nothing") + " on " + bestDate.substring(0,10) + " at " + coord.time)
 				return tasks.findIndex((task)=>{ return task.dateStart === bestDate.substring(0,10) && task.timeStart === coord.time}) === - 1;

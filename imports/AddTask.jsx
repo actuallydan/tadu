@@ -61,6 +61,8 @@ export default class AddTask extends Component {
 				alarm = 60;
 			} else if(this.state.alarm === "1day"){
 				alarm = 1440;
+			} else {
+				alarm = 5;
 			}
 		}
 		let task = {
@@ -99,11 +101,11 @@ export default class AddTask extends Component {
 		/* Setting the state to stage1 = false re-renders the component to show stage 2 */
 		if(navigator.onLine){
 			this.showLoader();
-			Meteor.call("scheduleBestTime", {"tag": tag , "today": new Date() }, (err, res)=>{
+			Meteor.call("scheduleBestTime", {"tag": tag , "today": moment().format("YYYY-MM-DDTHH:mm:ss") }, (err, res)=>{
 				if(err){
 					swal("Oops...", err, "error")
 				} else {
-					let daysFromToday = res.day - new Date().getDay();
+					let daysFromToday = res.day - parseInt(moment().format('e'));
 					let bestDate = moment(res.time, "HH:mm").add(daysFromToday, "days").format();
 					this.setState({
 						stage1 : false,

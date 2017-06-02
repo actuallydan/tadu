@@ -21,8 +21,8 @@ export default class Calendar extends TrackerReact(Component) {
 		* and whether or not to display notifications tray
 		*/
 		this.state = {
-			today : new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000)).toJSON().substring(0, 10),
-			monthShowing : new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000)),
+			today : moment().format("YYYY-MM-DD"),
+			monthShowing : moment().format("YYYY-MM-DD"),
 			showNotifications: false,
 			weekView: false,
 			showMenu: false,
@@ -39,7 +39,7 @@ export default class Calendar extends TrackerReact(Component) {
 	*/
 	prevMonth(){
 		this.setState({
-			monthShowing : new Date(this.state.monthShowing.getFullYear(), this.state.monthShowing.getMonth() - 1, this.state.monthShowing.getDate()),
+			monthShowing : moment(this.state.monthShowing, "YYYY-MM-DD").subtract(1 ,'months').format("YYYY-MM-DD"),
 		});
 		if(!this.state.weekView){
 			document.querySelector(".month-wrapper").classList.remove("pulse");
@@ -52,7 +52,7 @@ export default class Calendar extends TrackerReact(Component) {
 	*/
 	nextMonth(){
 		this.setState({
-			monthShowing : new Date(this.state.monthShowing.getFullYear(), this.state.monthShowing.getMonth() + 1, this.state.monthShowing.getDate()),
+			monthShowing : moment(this.state.monthShowing, "YYYY-MM-DD").add(1, 'months').format("YYYY-MM-DD"),
 		});
 		if(!this.state.weekView){
 			document.querySelector(".month-wrapper").classList.remove("pulse");
@@ -80,7 +80,7 @@ export default class Calendar extends TrackerReact(Component) {
 		this.setState({showMenu: !this.state.showMenu});
 	}
 	render(){
-		let tasks = Tasks.find({"dateStart" : {$regex: this.state.monthShowing.toJSON().substring(0,4) + ".*"}}).fetch();
+		let tasks = Tasks.find({"dateStart" : {$regex: this.state.monthShowing.substring(0,7) + ".*"}}).fetch();
 		let notices = Notifications.find({}, {sort: {'timestamp': -1}, limit: 10}).fetch();
 
 		const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -94,11 +94,11 @@ export default class Calendar extends TrackerReact(Component) {
 			toggleWeekView={this.toggleWeekView.bind(this)}
 			width={this.props.width}
 			showAddTask={this.showAddTask.bind(this)}
-			month={months[this.state.monthShowing.getMonth()]}
+			month={moment(this.state.monthShowing, "YYYY-MM-DD").format('MMMM')}
 			weekView={this.state.weekView}
 			/> 
 
-			<CalYear year={this.state.monthShowing.getFullYear()} />
+			<CalYear year={this.state.monthShowing.substring(0,4)} />
 			<CalWeek prevMonth={this.prevMonth.bind(this)} nextMonth={this.nextMonth.bind(this)} weekView={this.state.weekView}/> 
 
 				<div id="cal-body" className={this.state.weekView ? "row-11" : "row-6"}>
@@ -113,8 +113,8 @@ export default class Calendar extends TrackerReact(Component) {
 					selectedDate={this.props.selectedDate} 
 					selectDate={this.selectDate.bind(this)}
 					monthShowing={this.state.monthShowing}
-					year={this.state.monthShowing.getFullYear()}
-					month={this.state.monthShowing.getMonth()}
+					year={this.state.monthShowing.substring(0,4)}
+					month={this.state.monthShowing.substring(5,7)}
 					width={this.props.width}
 					tasks={tasks}
 					/>

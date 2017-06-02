@@ -22,6 +22,8 @@ export default class TaskDetail extends React.Component{
 				alarm = 60;
 			} else if(this.refs["1day"].checked){
 				alarm = 1440;
+			} else {
+				alarm = 5;
 			}
 		}
 		const updatedTask = {

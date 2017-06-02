@@ -179,11 +179,12 @@ export default class MainLayout extends TrackerReact(React.Component) {
 			}
 		}, 1500);
 		toggleTitle;
+		toast.dismiss();
 		toast(<Toast onClick={()=>{this.displayNotification(notice);toast.dismiss()}}  iconClass={"mdi-alarm-check"} text={notice.data.text} secondary={moment(notice.data.timeStart, "HH:mm").format("h:mm a")}/>)
 	}
 	displayNotification(notice) {
 		clearInterval(toggleTitle);
-		document.title = "Tadu";
+		document.title = "Tadu | The Sensible Scheduler";
 		swal({
 			title: notice.data.tag,
 			text: notice.data.text + "<br/> Have you completed it?",
