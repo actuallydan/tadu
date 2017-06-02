@@ -1005,6 +1005,7 @@ medium screens
 		width: 30%;
 		top: 0;
 		padding: 0;
+		height: 100%;
 	}
 	#cal-year{
 		position: relative;
