@@ -264,6 +264,7 @@ html, body, #root {
 }
 .toggle-login span {
 	color: #1de9b6;
+	cursor: pointer;
 }
 .react-swipeable-view-container div {
 	// height: 100vh;
@@ -662,7 +663,6 @@ label {
 }
 .radio .outer {
 	position: relative;
-	left: 0.5em;
 }
 .radio:hover .inner {
 	-webkit-transform: scale(0.5);
@@ -691,13 +691,13 @@ label {
 	background-color: #1de9b6;
 }
 .radio .outer {
-	height: 20px;
-	width: 20px;
-	display: block;
-	margin: -1em 1.5em 0.5em 1.5em;
-	border: 3px solid #1de9b6;
-	border-radius: 50%;
-	background-color: transparent;
+    height: 20px;
+    width: 20px;
+    display: block;
+    margin: -1em auto 0.5em;
+    border: 3px solid #1de9b6;
+    border-radius: 50%;
+    background-color: transparent;
 }
 .radio .inner {
 	-webkit-transition: all 0.25s ease-in-out;
@@ -829,7 +829,7 @@ label {
 /* Task Detail */
 .task-detail {
 	font-size: 1.2em;
-	top: 5%;
+	top: 1vh;
 }
 .task-detail #update-task-header {
 	text-align: center;
@@ -837,7 +837,9 @@ label {
 }
 .task-detail form {
 	height: 100%;
-	overflow: scroll;
+	overflow-y: scroll;
+	overflow-x: hidden;
+
 }
 .task-detail .edit-item {
 	height: 2em;
@@ -869,16 +871,14 @@ label {
 .task-detail .radio .outer {
 	margin: -1.5em auto 0.6em;
 }
-.task-detail .radio-option-label-text{
-	text-indent: 1em;
-}
 .task-detail .edit-item button {
-	width: 100%;
+    width: calc(100% - 2px);
 	height: 2em;
 	font-size: inherit;
 	border: 1px solid #1de9b6;
 	color: #1de9b6;
 	background-color: #242424;
+	padding: 0;
 }
 .task-detail .edit-item button:focus {
 	-webkit-animation: click 0.5s;
@@ -945,7 +945,6 @@ medium screens
 	}
 	.task-detail {
 		font-size: 1.2em;
-		top: 4%;
 	}
 	#tasks {
 		display: inline-block;
@@ -996,8 +995,11 @@ medium screens
 	}
 	.user-menu {
 		font-size: 1.5em;
-		top: 7%;
+		top: 1vh;
 		padding: 2%;
+		overflow-y: scroll;
+		overflow-x: hidden;
+		height: 80%;
 	}
 	.menu-slide-in {
 		width: 30%;
@@ -1306,6 +1308,7 @@ color: #616161;
     width: 100%;
     text-align: center;
     font-size: 1.8em;
+    line-height: 1.3em;
 }
 .card-desc{
 	color: #FFF;
@@ -1388,9 +1391,6 @@ background-size: cover;
 	.responsive-card{
 		width: 33%;
 		display: inline-table;
-	}
-	.container {
-		max-height: 100%;
 	}
 	.full-width {
 		padding: 4em 0;

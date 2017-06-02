@@ -18,7 +18,8 @@ Meteor.startup(() => {
     '/img/call-to-action.jpg',
     '/fonts/Licenses/',
     '/img/tadu_logo_bg.png',
-    '/img/favicon.ico'
+    '/node_modules/',
+    '/fonts/'
   ]
 });
   /* Not super funcitonal SyncedCron setup */

@@ -54,11 +54,9 @@ export default class EntryPortal extends React.Component {
 		/* Stop from from submitting and page from refreshing. What is this 2012? */
 		event.preventDefault();
 		/* Because this works weird in JS, make sure it points to the current component we're in, not a meteor method or something else */
-		const context = this;
-		console.log(this.state.loginStateData);
 		/* Grab, trim, and ideally sanitize user login data */
-		const email = this.state.loginStateData.loginEmail;
-		const password = this.state.loginStateData.loginPassword;
+		let email = this.state.loginStateData.loginEmail;
+		let password = this.state.loginStateData.loginPassword;
 
 		/* Make sure both fields have data in them otherwise ignore it in case of errant enter or mouse click to prevent needless alerting of user */
 		if ( email !== "" && password !== "") {
@@ -150,8 +148,6 @@ export default class EntryPortal extends React.Component {
 		});
 	}
 	render(){
-				console.log(this.state.loginStateData);
-
 		/* Swaps out which form should be visible based on this component's state: register or login. Also display the pirvacy policy because links don't work by default in Cordova */
 		return (
 			<div id="entry-portal"> 
@@ -159,7 +155,7 @@ export default class EntryPortal extends React.Component {
 			{this.state.showLogin ? 
 				<Login 
 				showLogin={this.state.showLogin} 
-				tryLogin={this.tryLogin} 
+				tryLogin={this.tryLogin.bind(this)} 
 				handleChangeForm={this.handleChangeForm.bind(this)} 
 				loggedInChange={this.props.loggedInChange.bind(this)} 
 				changeLoginState={this.changeLoginState.bind(this)}
@@ -168,7 +164,7 @@ export default class EntryPortal extends React.Component {
 				:
 				<Register 
 				showLogin={this.state.showLogin} 
-				tryRegister={this.tryRegister} 
+				tryRegister={this.tryRegister.bind(this)} 
 				handleChangeForm={this.handleChangeForm.bind(this)}  
 				showPolicy={this.togglePolicy.bind(this)} 
 				loggedInChange={this.props.loggedInChange.bind(this)}

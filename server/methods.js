@@ -5,8 +5,8 @@ Meteor.methods({
 	/* taskes a task object and stores it in the Tasks Collection for this user as well as increments the tag to make it more visible */
 	addTask(task){
 		/* Make sure user exists */
-		if(!Meteor.userId() !== task.userId){
-			throw new Meteor.Error('not-authorized');
+		if(Meteor.userId() !== task.userId){
+			throw new Meteor.Error('Not authorized');
 		} 
 		Tasks.insert({
 			text: task.text,
@@ -45,7 +45,7 @@ Meteor.methods({
 	/* Update an exisitng task, accepts a task object and updates the fields except for the userId, completed, createdAt */
 	updateTask(task){
 		/* Make sure user changing task is the owner */
-		if(!Meteor.userId() !== task.userId){
+		if(Meteor.userId() !== task.userId){
 			throw new Meteor.Error('not-authorized');
 		}
 		Tasks.update(task._id, {
@@ -62,8 +62,8 @@ Meteor.methods({
 	/* Takes a task object, but we only need to send the id, consider only sending the id over the wire */
 	deleteTask(taskId){
 		/* Make sure user changing task is the owner */
-		if(Meteor.userId()){
-			throw new Meteor.Error('not-authorized');
+		if(!Meteor.userId()){
+			throw new Meteor.Error('Not authorized');
 		}
 		Tasks.remove(taskId);
 	}, 

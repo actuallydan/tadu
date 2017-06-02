@@ -3,18 +3,12 @@ import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import moment from 'moment';
 import Loader from './Loader.jsx';
 
-Session.set('schedule_loaded', false); 
+// Session.set('schedule_loaded', false); 
 
 export default class Schedule extends TrackerReact(React.Component) {
 	constructor(){
 		super();
-		this.state ={
-			subscription: {
-				schedules: Meteor.subscribe("schedules", ()=>{
-					Session.set('schedule_loaded', true); 
-				})
-			}
-		}
+		
 	}
 	componentDidMount(){
 		if(Meteor.user().profile.tut.schedule === false){
@@ -38,7 +32,7 @@ export default class Schedule extends TrackerReact(React.Component) {
 				} 
 			})
 		}
-		renderComponentActually(){
+		render(){
 			const hours = ["00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"];
 
 			const fakeDaysofWeek = ["Blank", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -94,8 +88,5 @@ export default class Schedule extends TrackerReact(React.Component) {
 				</tbody>
 				</table>
 				</div>)
-		}
-		render(){
-			return(!Session.get("schedule_loaded") ? <Loader width={window.innerWidth >= 1400 ? "60%" : window.innerWidth > 992 ? "70%" : "100%"}/> : this.renderComponentActually() )
 		}
 	}

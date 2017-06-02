@@ -165,6 +165,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
 	*/
 	notify(notice){
 		let audio = new Audio('/img/job-done.mp3');
+		audio.volume = 0.5;
 		audio.play();
 		document.title = "Task Alert!";
 		toggleTitle = setInterval(()=>{

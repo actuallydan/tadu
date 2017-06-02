@@ -55,15 +55,14 @@
 #### What Needs Done
 * Documentation
 * Refactor convert AddTask 1 & 2 to stateless and move refs to state in AddTask.jsx
-* " with Register and Login
-* deleteTask method should only accept task ID, not entire task
 * Speed up addTag method (currently ~170ms from client)
 * Test to see if Schedule needs to subscribe --> can be stateless?
-* Does Notifications Menu need to have Notifications Menu
+* Does Notifications Menu need to have Notifications Menu?
 * Cordova/Electron offline functionality?
 * iOS 
 	* Splash screen
 * BUG: Registration on mobile browsers doesn't create schedule or tags 
+
 ------------
 * Ionicons
 * Share Tasks

@@ -8,10 +8,9 @@ import CalYear from './CalYear.jsx';
 import CalWeek from './CalWeek.jsx';
 import UserMenu from './UserMenu.jsx';
 import NotificationsMenu from './NotificationsMenu.jsx';
-
+import moment from 'moment';
 /* 3rd party plugins*/
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
-import moment from 'moment';
 
 export default class Calendar extends TrackerReact(Component) {
 	constructor(props){
@@ -23,7 +22,7 @@ export default class Calendar extends TrackerReact(Component) {
 		*/
 		this.state = {
 			today : new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000)).toJSON().substring(0, 10),
-			monthShowing : new Date(),
+			monthShowing : new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000)),
 			showNotifications: false,
 			weekView: false,
 			showMenu: false,
