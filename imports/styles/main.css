@@ -55,6 +55,25 @@ input, button, textarea, input[type=submit] {
 	color:    #1de9b6;
 }
 
+#search::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+	color:    #1de9b6;
+	text-align: center;
+}
+#search:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+	color:    #1de9b6;
+	opacity:  1;
+	text-align: center;
+}
+#search::-moz-placeholder { /* Mozilla Firefox 19+ */
+	color:    #1de9b6;
+	opacity:  1;
+	text-align: center;
+}
+#search:-ms-input-placeholder { /* Internet Explorer 10-11 */
+	color:    #1de9b6;
+	text-align: center;
+}
+
 /* Structure */
 html, body, #root {
 	width: 100%;
@@ -500,6 +519,7 @@ html, body, #root {
 	display: inline-flex;
 	width: 100%;
 	color: #FFF;
+	padding: 0.5em 0 !important;
 }
 #add-task-form-nav i{
 	position: relative;
@@ -507,6 +527,7 @@ html, body, #root {
 	font-size: 1.25em;
 	cursor: pointer;
 	width: 10%;
+	left: 0.3em;
 }
 #add-task-form-nav div {
 	width: 76%;

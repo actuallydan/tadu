@@ -10,7 +10,7 @@
 6. XCode & iOS Simulator
 7. Heroku
 8. AnimateCSS (https://daneden.github.io/animate.css/)
-9. Material Design Icons  (https://materialdesignicons.com/)
+9. Material Design Icons (https://materialdesignicons.com/)
 10. SweetAlert (https://www.npmjs.com/package/sweetalert)
 11. React-Tooltip (https://github.com/wwayne/react-tooltip)
 12. Meteor Electron (https://github.com/electron-webapps/meteor-electron)
@@ -66,5 +66,6 @@
 	* Splash screen
 * Ionicons
 * Share Tasks
+* Get NEXT best time in addTask (return whole array and not just one) 
 
 
