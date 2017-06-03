@@ -174,10 +174,10 @@ Meteor.methods({
 		// console.log("Attempting to find the best time");
 		let mySched = Schedules.findOne({userId : Meteor.userId()});
 		let possibleTimes = [];
-		const offset = moment(data.today, "YYYY-MM-DDTHH:mm:ss").format('e');
+		const offset = parseInt(moment(data.today, "YYYY-MM-DDTHH:mm:ss").format('e')) ;
 		const thisHour = moment(data.today, "YYYY-MM-DDTHH:mm:ss").format('HH:00');
 		const todayFormatted = moment(data.today, "YYYY-MM-DDTHH:mm:ss").format('YYYY-MM-DD');
-		console.log(data.today)
+
 		/* Get this upcoming week's tasks to match against */
 		let tasks = Tasks.find({userId: Meteor.userId()}, {gte: todayFormatted, lte: moment(todayFormatted, "YYYY-MM-DD").add(7, 'days').format("YYYY-MM-DD")}).fetch();
 		/* Populate array of all possible times */

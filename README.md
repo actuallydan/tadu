@@ -54,8 +54,6 @@
 
 #### What Needs Done
 * Bugs
-	* Calendar renders incorrectly in different timezones
-	* Notifications duplicate
 	* Registration on mobile browsers doesn't create schedule or tags 
 * Improvements
 	* On < 992 || < 1400 #add-task should push tasks right 
