@@ -56,7 +56,6 @@
 * Bugs
 	* Registration on mobile browsers doesn't create schedule or tags 
 * Improvements
-	* On < 992 || < 1400 #add-task should push tasks right 
 	* Reduce Redundancy in MonthView where creating calObject
 ------------ For Next Version
 * Refactor convert AddTask 1 & 2 to stateless and move refs to state in AddTask.jsx

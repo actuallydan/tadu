@@ -7,7 +7,7 @@ const Tasks = (props)=>{
 		props.showDetail(event);
 	};
 	return(
-		<div id="tasks">
+		<div id="tasks" className={props.pushLeft ? "push-left" : 'push-right'}>
 		<div className="hide-on-large hide-on-med"></div>
 		<div id="task-list-header">{moment(props.selectedDate, "YYYY-MM-DD").format("ddd MMMM Do")} </div>
 		<ul id="tasks-wrapper">

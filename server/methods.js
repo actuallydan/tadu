@@ -108,6 +108,7 @@ Meteor.methods({
 	},
 	/* On Setup add the nine initial tags to the user's tagTypes object */
 	addDefaultTags(){
+		console.log("creating tags");
 		/* Make sure user is the owner */
 		if(!Meteor.userId()){
 			throw new Meteor.Error('not-authorized');
@@ -119,6 +120,8 @@ Meteor.methods({
 		tags.map((tag)=>{ myTags.tags.push({"type" : tag, "uses" : 0})  });
 
 		TagTypes.insert(myTags);
+				console.log("created tags");
+
 	},
 	/* After triggering a notification and clicking on the alert, change the notice object so that we don't see the same thing twice */
 	seeNotification(notice){
@@ -132,6 +135,8 @@ Meteor.methods({
 	},
 	/* On Setup add initial schedule object for the user */
 	addDefaultSchedule(){
+		console.log("creating schedule");
+		console.log(Meteor.userId())
 		/* Make sure user is the owner */
 		if(!Meteor.userId()){
 			throw new Meteor.Error('not-authorized');
@@ -144,6 +149,8 @@ Meteor.methods({
 			thresholds: Thresholds(myBioCurve)
 		};
 		Schedules.insert(schedule);
+		console.log("schedule created");
+
 	},
 	/* User is trying to make a change to one cell of their schedule, takes in a coordinate string (e.g. Sun-03:00 === Sunday @ 3AM) to tell us where on the schedule grid they're changing the data*/
 	modifySchedule(coords){

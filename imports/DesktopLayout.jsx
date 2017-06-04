@@ -16,6 +16,7 @@ const DesktopLayout = (props)=>{
 				showDetail={props.showDetail} 
 				selectedDate={props.selectedDate} 
 				showCal={props.showView}
+				pushLeft={props.viewAddTask}
 			/>
 			<Calendar 
 			filteredTasks={props.filteredTasks} 

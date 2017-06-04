@@ -119,7 +119,8 @@ export default class EntryPortal extends React.Component {
 						swal("Oops...", err.reason, "error");
 					} else {
 						/* Meteor will automagically sign in users after successful account creation so we can trigger state update in parent to escape this prison */
-						this.props.loggedInChange(true);
+								console.log(Meteor.userId())
+
 						Meteor.call("addDefaultSchedule", Meteor.userId(), (err)=>{
 							if(err){
 								swal("Awkward...", err, "error");
@@ -127,6 +128,8 @@ export default class EntryPortal extends React.Component {
 							Meteor.call("addDefaultTags", Meteor.userId(), (err)=>{
 								if(err){
 									swal("Awkward...", err, "error");
+								} else {
+									this.props.loggedInChange(true);
 								}
 							});
 						});

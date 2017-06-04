@@ -1175,6 +1175,14 @@ large screens
 	height: 70%;
 	overflow: hidden;
 }
+.push-left {
+	margin-left: -30%;
+	transition: margin-left 0.25s ease;
+}
+.push-right {
+	margin-left: 0;
+	transition: margin-left 0.25s ease;
+}
 @keyframes click {
 	0%   { box-shadow: 0 0 1px rgba(29, 233, 182, 0.5);
 		transform: perspective(1em) translateZ(-1px);

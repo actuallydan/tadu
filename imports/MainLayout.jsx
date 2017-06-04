@@ -262,7 +262,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
 				:
 				this.state.width > 992 
 				? 
-				<div className="wrapper">
+				<div className={this.state.viewMode === "addTask" ? "wrapper push-left" : "wrapper push-right"}>
 				<DesktopLayout 
 				filteredTasks={filteredTasks}
 				width={this.state.width}
