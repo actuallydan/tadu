@@ -30,16 +30,16 @@
 * 1.0 Heroku Deployed Meteor Server and Web App 
 * 1.2 iOS App deployed using Meteor backend
 * 1.2.5 Android deployed using Meteor backend
-* 1.2.6 Sensibility Update 
-	* Habits (Superlatives)
 * 1.3 Electron App for Windows, MacOS, Linux
 * 1.4 Migration of Server
 	* VPS or Dedicated Heroku Server
 * 1.5 Full Release
 * 1.6 Sensibility Update 
-	* Create Repeated Tasks Automatically
+	* Create Repeated Tasks Automatically 
 * 1.7 Sensibility Update 
 	* Optimizer considers context of prospective task before and after time slot
+* 1.7.1 Sensibility Update 
+	* Habits (Superlatives)
 * 2.0 Share & Assign Tasks
 	* Task Chat (see Meteor Pigeon)
 * 2.1 Location Aware
@@ -47,6 +47,7 @@
 		* This will later be used to optimize schedule consider time/distance efficiency
 	* Routing to Task-Completers
 		* Grades Task-Completers on frequency of ability to complete a user's task
+* 2.2 Tadu chatbot
 * 3.0 Enterprise Productivity Platform
 * 3.5 Voice to Task 
 * 4.0 Embedded Tadu List 
@@ -59,6 +60,8 @@
 	* Reduce Redundancy in MonthView where creating calObject
 ------------ For Next Version
 * Refactor convert AddTask 1 & 2 to stateless and move refs to state in AddTask.jsx
+* Recurring Tasks
+* Add schedule and tagtypes index to user profile
 * Speed up addTag method (currently ~170ms from client)
 * Test to see if Schedule needs to subscribe --> can be stateless?
 * iOS 
