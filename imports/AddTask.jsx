@@ -105,7 +105,9 @@ export default class AddTask extends Component {
 				if(err){
 					swal("Oops...", err, "error")
 				} else {
-					let daysFromToday = res.day - parseInt(moment().format('e'));
+					// let daysFromToday = res.day - parseInt(moment().format('e'));
+					let daysFromToday = res.day - parseInt(moment().format('e')) >= 0 ? res.day - parseInt(moment().format('e')) : 7 + (res.day - parseInt(moment().format('e')));
+					console.log(daysFromToday, res.day);
 					let bestDate = moment(res.time, "HH:mm").add(daysFromToday, "days").format();
 					this.setState({
 						stage1 : false,
