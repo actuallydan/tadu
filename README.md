@@ -48,6 +48,8 @@
 	* Routing to Task-Completers
 		* Grades Task-Completers on frequency of ability to complete a user's task
 * 2.2 Tadu chatbot
+* 2.3 Sub Tasks
+* 2.4 Metrics
 * 3.0 Enterprise Productivity Platform
 * 3.5 Voice to Task 
 * 4.0 Embedded Tadu List 
