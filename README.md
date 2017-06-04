@@ -54,12 +54,11 @@
 * 5.0 Tadu Concierge 
 
 #### What Needs Done
-* Bugs
-	* Registration on mobile browsers doesn't create schedule or tags 
 * Improvements
 	* Reduce Redundancy in MonthView where creating calObject
 ------------ For Next Version
 * Refactor convert AddTask 1 & 2 to stateless and move refs to state in AddTask.jsx
+* Make Cron job easier on server (on task create add to notifications and have notifications only show if they are older than now)
 * Recurring Tasks
 * Add schedule and tagtypes index to user profile
 * Speed up addTag method (currently ~170ms from client)

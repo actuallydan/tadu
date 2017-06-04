@@ -152,6 +152,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
 	}
 	/* Gets a date string in "YYYY-MM-DD" format from Calendar and updates the state so the whole app is aware of the date we're looking at as opposed to the current date */
 	selectDate(date){
+		this.state.viewMode === "addTask" || document.getElementById("new-task-date") !== null ? document.getElementById("new-task-date").value = date : "";
 		this.setState({
 			selectedDate: date
 		});

@@ -557,7 +557,7 @@ html, body, #root {
 	background-color: transparent;
 	border: none;
 	padding-left: 0.25em;
-	width: 86%;
+	width: calc(100% - (0.3em + 1.5em) * 2);
 }
 
 .global-tag-wrapper {
@@ -626,7 +626,7 @@ label {
 	top: 0.2em;
 }
 .form-item > textarea {
-	width: 100%;
+    width: 99%;
 	font-size: 1em;
 	color: white;
 	background: transparent;
@@ -660,13 +660,13 @@ label {
 	font-size: inherit;
 	background-color: transparent;
 	border: none;
-	width: 80%;
+	width: 60%;
 	color: #e9e9e9;
 }
 #alarm-radio-wrapper{
 	display: inline-flex;
 	width: 100%;
-	padding: 0.5em 0.5em 0.5em 0;
+	padding: 0.5em 0;
 }
 .radio-option-wrapper{
 	display: inline-flex;
@@ -1086,6 +1086,9 @@ medium screens
 		background: #242424;
 		z-index: 8;
 		border-left: 1px solid #424242;
+	}
+	.form-item > textarea {
+	    width: 98%;
 	}
 }
 /*

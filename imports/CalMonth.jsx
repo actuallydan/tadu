@@ -19,7 +19,7 @@ const CalMonth = (props) => {
 			<div className="nav-button mdi mdi-view-dashboard" onClick={props.toggleWeekView} data-tip="Schedule"></div>
 
 		}
-		<div id="add-event-button" className="nav-button mdi mdi-plus hide-on-large" onClick={props.showAddTask} data-tip="Add Event"></div>
+		<div id="add-event-button" className="nav-button mdi mdi-plus hide-on-large" onClick={props.showAddTask} data-tip="Add Task"></div>
 		</div>
 		<div className="hide-on-small">
 		<ReactTooltip place="bottom" type="dark" effect="solid" style={{borderRadius : 0, color: '#1de9b6', opacity: 0, backgroundColor: '#000000'}}>
