@@ -56,6 +56,9 @@
 * 5.0 Tadu Concierge 
 
 #### What Needs Done
+* BUG :
+	* Firefox add task validation on all fields  (use moment().isValid() on date and time)
+	* alarm > 5 min doesn't work
 * Improvements
 	* Reduce Redundancy in MonthView where creating calObject
 ------------ For Next Version
@@ -64,11 +67,10 @@
 * Recurring Tasks
 * Add schedule and tagtypes index to user profile
 * Speed up addTag method (currently ~170ms from client)
-* Test to see if Schedule needs to subscribe --> can be stateless?
+* Test to see if Schedule can be stateless?
 * iOS 
 	* Splash screen
 * Ionicons
-* Share Tasks
 * Get NEXT best time in addTask (return whole array and not just one) 
 
 

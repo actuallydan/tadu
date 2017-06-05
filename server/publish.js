@@ -4,10 +4,12 @@ TagTypes = new Mongo.Collection("TagTypes");
 Notifications = new Mongo.Collection("Notifications");
 Schedules = new Mongo.Collection("Schedules");
 
-/* Publish data to client */
+/* Publish data as cursors (don't use .fetch() after) to client */
 /* to get a user's userId use this.userId  */
 Meteor.publish("userTasks", function(){
-	return Tasks.find({userId: this.userId});
+	/* Find all tasks create by the user OR where the user has been allowed to share the task */
+	const user = Meteor.users.findOne({_id : this.userId});
+	return Tasks.find({$or : [{userId: this.userId}, {sharingWith : {$elemMatch : {username: user.username, _id : this.userId }}}]})
 });
 Meteor.publish("tagTypes", function(){
 	return TagTypes.find({userId: this.userId});

@@ -26,12 +26,58 @@ export default class AddTask extends Component {
 			search: "",
 			hasBeenOptimized: false,
 			alarm : "5min",
-			showLoader: false
+			showLoader: false,
+			userList: [],
+			sharingWith: []
 		};
 	}
 	/* Update the parameter of our search for the perfect tag */
 	updateSearch(event){
 		this.setState({search: event.target.value});
+	}
+	/* Given the search parameters, return an array of all user objects whose username contains 'search', store it in state and generate dropdown*/
+	findUsers(){
+		let search = document.getElementById("find-user-share-text").value.trim();
+		if(search.length > 0){
+			Meteor.call("findUsers", search, (err, res)=>{
+				if(err){
+					swal("Sorry!", "There was an error commucicatring with the server: " + err, "error");
+				} else if(res !== null) {
+					this.setState({userList : res});
+				}
+			})
+		} else {
+			this.setState({userList : []});
+		}
+	}
+	addUser(e){
+		let addUser = {
+			_id: e.target.getAttribute("data-userId"),
+			username: e.target.getAttribute("data-username")
+		};
+		let newSharingWith = this.state.sharingWith;
+		newSharingWith.push(addUser);
+		this.setState({
+			sharingWith : newSharingWith,
+			userList : []
+		}, ()=>{
+			/* Clear search when done */
+			document.getElementById("find-user-share-text").value = "";
+			// console.log(addUser, this.state.sharingWith);
+
+		});
+	}
+	removeUser(e){
+		let removeUser = e.target.getAttribute("data-id");
+		let sharArr = this.state.sharingWith;
+
+		const index = sharArr.findIndex((user)=>{
+			return user._id === removeUser;
+		});
+		sharArr.splice(index, 1);
+		this.setState({
+			sharingWith : sharArr
+		});
 	}
 	clearTutStage(){
 		swal({
@@ -49,7 +95,14 @@ export default class AddTask extends Component {
 		/* Create the task object that will be sent to the server to be stored in the database
 		* As of now we need the task title (text), the date and time of the task to start, the time as UTC for the server, the user's ID, and the description
 		*/ 
-
+		// if(!moment(taskRefs.timeStart, "YYYY-MM-DD").isValid()){
+		// 	swal("Hold up!", "Please enter a valid date (e.g. 03/05/2017)", "error");
+		// 	return false;
+		// }
+		// if(!moment(taskRefs.timeStart, "HH:mm a").isValid()){
+		// 	swal("Hold up!", "Please enter a valid time (e.g. 12:00 AM or 23:45)", "error");
+		// 	return false;
+		// }
 		/* Get alarm if any */
 		let alarm = null;
 		if(taskRefs.hasAlarm.checked){
@@ -74,7 +127,8 @@ export default class AddTask extends Component {
 			desc: taskRefs.desc.value.trim(),
 			completed: false,
 			alarm: alarm,
-			timeUTC: alarm !== null ? moment(taskRefs.dateStart.value.trim() + "T" + taskRefs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16) : null
+			timeUTC: alarm !== null ? moment(taskRefs.dateStart.value.trim() + "T" + taskRefs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16) : null,
+			sharingWith: this.state.sharingWith
 		};
 
 		/* Call Meteor to abscond with our earthly woes and store it in the database if possible */
@@ -89,7 +143,9 @@ export default class AddTask extends Component {
 					toast(<Toast onClick={toast.dismiss}  iconClass={"mdi-check"} text={"Task Created"} secondary={""}/>, {autoClose: 2000});
 					this.clearTask();
 					this.setState({
-						showAlarmVisible : true
+						showAlarmVisible : true,
+						userList: [],
+			sharingWith: []
 					})
 				};
 			});
@@ -107,7 +163,6 @@ export default class AddTask extends Component {
 				} else {
 					// let daysFromToday = res.day - parseInt(moment().format('e'));
 					let daysFromToday = res.day - parseInt(moment().format('e')) >= 0 ? res.day - parseInt(moment().format('e')) : 7 + (res.day - parseInt(moment().format('e')));
-					console.log(daysFromToday, res.day);
 					let bestDate = moment(res.time, "HH:mm").add(daysFromToday, "days").format();
 					this.setState({
 						stage1 : false,
@@ -144,7 +199,9 @@ export default class AddTask extends Component {
 			stage1 : true,
 			tagType : null,
 			search: "",
-			showLoader: false
+			showLoader: false,
+			userList: [],
+			sharingWith: []
 		});
 	}
 	/* Method to create a new tag for the user if not available*/
@@ -224,6 +281,11 @@ export default class AddTask extends Component {
 			hasBeenOptimized={this.state.hasBeenOptimized}
 			showAlarmVisible={this.state.showAlarmVisible}
 			showAlarm={this.showAlarm.bind(this)}
+			userList={this.state.userList}
+			sharingWith={this.state.sharingWith}
+			findUsers={this.findUsers.bind(this)}
+			addUser={this.addUser.bind(this)}
+			removeUser={this.removeUser.bind(this)}
 			/>
 			)
 	}

@@ -6,10 +6,83 @@ export default class TaskDetail extends React.Component{
 		super();
 		this.state = {
 			showAlarmVisible: false,
+			sharingWith: [],
+			userList: [],
+			creator: null
 		}
+	}
+	componentWillReceiveProps(nextProps){
+		if(this.props.taskDetail !== nextProps.taskDetail){
+			/* If this task was not made by the current user get the creator's name and add them to state */
+			if(nextProps.taskDetail.userId !== Meteor.userId() && nextProps.taskDetail.userId !== undefined){
+				Meteor.call("findOneUser", nextProps.taskDetail.userId, (err, res)=>{
+					if(err){
+						swal("Awkward...", "There was an error getting this task: " + err, "error");
+					} else {
+						this.setState({
+							sharingWith : nextProps.taskDetail.sharingWith,
+							creator: res,
+							showAlarmVisible: nextProps.alarm !== null
+						})
+					}
+				})
+			} else {
+				this.setState({
+					sharingWith : nextProps.taskDetail.sharingWith,
+					showAlarmVisible: nextProps.alarm !== null
+				})
+			}
+		}
+	}
+	findUsers(){
+		let search = document.getElementById("find-user-share-text").value.trim();
+		if(search.length > 0){
+			Meteor.call("findUsers", search, (err, res)=>{
+				if(err){
+					swal("Sorry!", "There was an error commucicatring with the server: " + err, "error");
+				} else if(res !== null) {
+					this.setState({userList : res});
+				}
+			})
+		} else {
+			this.setState({userList : []});
+		}
+	}
+	addUser(e){
+		let addUser = {
+			_id: e.target.getAttribute("data-userId"),
+			username: e.target.getAttribute("data-username")
+		};
+		let newSharingWith = this.state.sharingWith;
+		newSharingWith.push(addUser);
+		this.setState({
+			sharingWith : newSharingWith,
+			userList : []
+		}, ()=>{
+			/* Clear search when done */
+			document.getElementById("find-user-share-text").value = "";
+			// console.log(addUser, this.state.sharingWith);
+
+		});
+	}
+	removeUser(e){
+		let removeUser = e.target.getAttribute("data-id");
+		let sharArr = this.state.sharingWith;
+
+		const index = sharArr.findIndex((user)=>{
+			return user._id === removeUser;
+		});
+		sharArr.splice(index, 1);
+		this.setState({
+			sharingWith : sharArr
+		});
 	}
 	editTask(e){
 		e.preventDefault();
+		/* Prevent the user from modifying the task if they aren't the progenitor */
+		if(this.props.taskDetail.userId !== Meteor.userId()){
+			return false;
+		}
 		const old = this.props.taskDetail;
 
 		let alarm = null;
@@ -36,6 +109,7 @@ export default class TaskDetail extends React.Component{
 			desc: this.refs.desc.value.trim(),
 			alarm: alarm,
 			timeUTC: alarm !== null ? moment(this.refs.dateStart.value.trim() + "T" + this.refs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16) : null,
+			sharingWith: this.state.sharingWith
 		};
 
 		Meteor.call("updateTask", updatedTask, (err)=>{
@@ -63,18 +137,26 @@ export default class TaskDetail extends React.Component{
 		}
 	}
 	clicker(alarm){
-		const clickThis = {
-			5 : ()=>{document.getElementById("priority-radio-low").click()},
-			30 : ()=>{document.getElementById("priority-radio-med").click()},
-			60 : ()=>{document.getElementById("priority-radio-high").click()},
-			1440 : ()=>{document.getElementById("priority-radio-critical").click()},
+		switch(alarm){
+			case 5 : 
+			document.getElementById("edit-alarm-option-low").checked = true;
+			break;
+			case 30 : 
+			document.getElementById("edit-alarm-option-med").checked = true;
+			break;
+			case 60 : 
+			document.getElementById("edit-alarm-option-high").checked = true;
+			break;
+			case 1440 : 
+			document.getElementById("edit-alarm-option-critical").checked = true;
+			break;
 		}
-		clickThis[alarm];
 	}
 	componentDidMount(){
 		if(this.props.taskDetail !== null){
 			this.setState({
-				showAlarmVisible: this.props.taskDetail.alarm !== null
+				showAlarmVisible: this.props.taskDetail.alarm !== null,
+				sharingWith : this.props.taskDetail.sharingWith !== undefined ? this.props.taskDetail.sharingWith : []
 			}, ()=>{
 				this.state.showAlarmVisible ? this.clicker(this.props.taskDetail.alarm) : "";
 			});
@@ -86,8 +168,9 @@ export default class TaskDetail extends React.Component{
 		});
 	}
 	render(){
+		
 		return(
-			<form onSubmit={this.editTask.bind(this)}>
+			<form autoComplete="off" onSubmit={this.editTask.bind(this)}>
 			<div id="update-task-header">Update Task</div>
 			<div className="edit-item">
 			<div className='text'> Title </div>
@@ -135,14 +218,33 @@ export default class TaskDetail extends React.Component{
 			</div>
 			</div>
 
-			<div className="desc">
-			<textarea type="text" ref="desc" id="edit-task-desc" placeholder="Description" maxLength="300" defaultValue={this.props.taskDetail.desc}></textarea> 
-			</div>
+		{/* If The user is the creator of this task let them search for users to add otherwise display the User who created it */}
+		{this.props.taskDetail.userId === Meteor.userId() ? 
+			<div className="form-item"><span className='form-item-label'> Share with: </span><input autoComplete="off" id="find-user-share-text" onChange={this.findUsers.bind(this)} className="typeable" type="text" maxLength="75" placeholder="Enter a username"/> </div>
+			:
+			<div className="form-item"><span className='form-item-label'> Creator: </span>{this.state.creator}</div>
+		}
+		<div style={{display: this.state.userList.length > 0 ? "block" : "none"}} id="share-with-user-list">
+		{this.state.userList.length === 0 ? "" : this.state.userList.filter((user)=>{ return this.state.sharingWith.findIndex((obj)=>{ return obj.username === user.username }) === -1 }).map((user)=>{
+			return (<div className="share-search-result" key={user._id} data-username={user.username} data-userId={user._id} onClick={this.addUser.bind(this)}>{user.username}</div>)
+		})}
+		</div>
+		<div id="sharing-with-list">
+		{this.state.sharingWith === undefined || this.state.sharingWith.length === 0 ? "" : this.state.sharingWith.map((user)=>{
+			return(
+				<div className="share-tag" key={user._id}><span className="share-tag-name">{user.username}</span><span style={{display: this.props.taskDetail.userId === Meteor.userId() ? "inherit" : "none"}} className="share-tag-remove mdi mdi-close" data-id={user._id} onClick={this.removeUser.bind(this)}></span></div>
+				)
+		})}
+		</div>
 
-			<div  className="edit-item">
-			<button type="submit" className="button">Update Task</button> 
-			</div>
-			</form>
-			);
-	}
+		<div className="desc">
+		<textarea type="text" ref="desc" id="edit-task-desc" placeholder="Description" maxLength="300" defaultValue={this.props.taskDetail.desc}></textarea> 
+		</div>
+
+		<div  className="edit-item" style={{display : this.props.taskDetail.userId === Meteor.userId() ? "inherit" : "none"}}>
+		<button type="submit" className="button">Update Task</button> 
+		</div>
+		</form>
+		);
+}
 }

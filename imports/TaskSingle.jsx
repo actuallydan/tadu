@@ -34,7 +34,12 @@ const TaskSingle = (props)=> {
 		<p className='task-info-date'>{moment(props.task.dateStart, "YYYY-MM-DD").format("M/DD/YYYY")}</p>
 		<p className='task-info-time'>{moment(props.task.timeStart, "HH:mm").format("h:mm a")}</p>
 		</div>
-		<i className="btn-cancel task-secondary mdi mdi-close-box-outline text-grey-light" onClick={deleteTask} ></i>
+		{
+			props.task.userId === Meteor.userId() ?
+				<i className="btn-cancel task-secondary mdi mdi-close-box-outline text-grey-light" onClick={deleteTask} ></i>
+			:
+				<i className="btn-cancel task-secondary mdi mdi-account-multiple text-grey-light"></i>
+		}
 
 		</li>	
 		)

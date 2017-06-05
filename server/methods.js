@@ -2,6 +2,10 @@ import moment from 'moment';
 
 /* Server methods to be called by client */
 Meteor.methods({
+	/* Find a single user by userId */
+	findOneUser(id){
+		return Meteor.users.findOne({_id : id}).username;
+	},
 	/* taskes a task object and stores it in the Tasks Collection for this user as well as increments the tag to make it more visible */
 	addTask(task){
 		/* Make sure user exists */
@@ -18,7 +22,8 @@ Meteor.methods({
 			userId : Meteor.userId(),
 			desc : task.desc,
 			alarm: task.alarm,
-			timeUTC: task.timeUTC
+			timeUTC: task.timeUTC,
+			sharingWith: task.sharingWith
 		});
 		/* Get this user's tags */
 		let user = TagTypes.findOne({"userId" : Meteor.userId()});
@@ -42,6 +47,11 @@ Meteor.methods({
 			$set: {completed: !task.completed }
 		})
 	},
+	/* Find Users to share tasks with */
+	findUsers(search){
+		let users = Meteor.users.find({username: {$regex:  search + ".*"}, _id: {$not: {$eq: Meteor.userId()}}}, {limit : 5}).fetch();
+		return users.length > 0 ? users : null;
+	},
 	/* Update an exisitng task, accepts a task object and updates the fields except for the userId, completed, createdAt */
 	updateTask(task){
 		/* Make sure user changing task is the owner */
@@ -55,7 +65,8 @@ Meteor.methods({
 				timeStart : task.timeStart,
 				desc : task.desc,
 				alarm: task.alarm,
-				timeUTC : task.timeUTC
+				timeUTC : task.timeUTC,
+				sharingWith: task.sharingWith
 			}
 		});
 	},
