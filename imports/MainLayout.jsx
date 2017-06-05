@@ -99,15 +99,6 @@ export default class MainLayout extends TrackerReact(React.Component) {
 		* This way we can store window width in one place instead on constantly having to look it up with window.innerWidth
 		* This gives responsiveness to larger organizational components */
 		window.addEventListener('resize', this.handleResize);
-
-		/* Get the user's permission for notifications early on */
-		if (Notification.permission !== "granted")
-			Notification.requestPermission();
-		if (!Notification) {
-			/* Inform the user not to use a lame browser like Firefox, IE, or Safari that ruins JavaScript Dates and has full modern API support */
-			swal('Desktop notifications not available in your browser. Please download a modern browser.'); 
-			return;
-		}
 	}
 	/* All purpose change view method
 	* TODO: This should be used in place of show/hide addtask/tasklist/calendar

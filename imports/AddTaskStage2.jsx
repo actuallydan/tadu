@@ -6,9 +6,12 @@ export default class AddTaskStage2 extends React.Component {
 		e.preventDefault();
 		this.props.addTask(this.refs);
 	}
+	findUsers(){	
+		this.props.findUsers();
+	}
 	render(){
 		return(
-			<form onSubmit={this.submit.bind(this)} className={this.props.stage1 ?  "animated slideOutRight" : "animated pulse"}>
+			<form autoComplete="off" onSubmit={this.submit.bind(this)} className={this.props.stage1 ?  "animated slideOutRight" : "animated pulse"}>
 			<div className="form-item"><span className='form-item-label'> Title </span><input className="typeable" type="text" ref="newTask" defaultValue={this.props.tagType}  required maxLength="75"/> </div>
 			<div className="form-item"><span className='form-item-label'> Date </span><input className="typeable" id="new-task-date" type="date" ref="dateStart" defaultValue={this.props.selectedDate} /> </div>
 			<div className="form-item"><span className='form-item-label'> Time </span><input className="typeable" id="new-task-time" type="time" ref="timeStart"  defaultValue={this.props.nowTime} /> </div>
@@ -49,6 +52,19 @@ export default class AddTaskStage2 extends React.Component {
 			</div>
 			</div>
 
+			<div className="form-item"><span className='form-item-label'> Share with: </span><input autoComplete="off" id="find-user-share-text" onChange={this.findUsers.bind(this)} className="typeable" type="text" maxLength="75" placeholder="Enter a username"/> </div>
+			<div style={{display: this.props.userList.length > 0 ? "block" : "none"}} id="share-with-user-list">
+			{this.props.userList.length === 0 ? "" : this.props.userList.filter((user)=>{ return this.props.sharingWith.findIndex((obj)=>{ return obj.username === user.username }) === -1 }).map((user)=>{
+				return (<div className="share-search-result" key={user._id} data-username={user.username} data-userId={user._id} onClick={this.props.addUser.bind(this)}>{user.username}</div>)
+			})}
+			</div>
+			<div id="sharing-with-list">
+			{this.props.sharingWith.length === 0 ? "" : this.props.sharingWith.map((user)=>{
+				return(
+					<div className="share-tag" key={user._id}><span className="share-tag-name">{user.username}</span><span className="share-tag-remove mdi mdi-close" data-id={user._id} onClick={this.props.removeUser.bind(this)}></span></div>
+					)
+			})}
+			</div>
 			<div className="form-item desc"><textarea type="text" ref="desc" placeholder="Description" maxLength="300"></textarea> </div>
 
 			<div  className="form-item"><button type="submit" className="button">Add Task</button> </div>

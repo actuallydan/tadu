@@ -614,6 +614,7 @@ label {
 	padding: 0.5em;
 	line-height: 2em;
 	box-shadow: none;
+	text-align: left;
 }
 .form-item .checkbox, .form-item .checkbox-alt {
 	background-color: transparent;
@@ -737,7 +738,39 @@ label {
 	margin: 0;
 	color: #616161;
 }
+#share-with-user-list {
 
+}
+.share-search-result {
+	color: #fff;
+    padding: 0.5em;
+    font-size: 0.7em;
+    border-bottom: #1de9b6 1px solid;
+    text-align: left;
+}
+.share-search-result:hover {
+	background: #1de9b6;
+	color: #242424;
+}
+#sharing-with-list{
+	text-align: left;
+}
+.share-tag {
+	color: #1de9b6;
+   font-size: 0.6em;
+    padding: 0.3em 0.3em 0.3em 0.5em;
+    border: 1px solid #1de9b6;
+    display: inline-block;
+    margin: 0.5em;
+}
+.share-tag-name{
+	margin-right: 0.3em;
+}
+.share-tag-remove{
+	text-align: right;
+    margin-left: 0.4em;
+    cursor: pointer;
+}
 /* Add tasks and quick tasks*/
 .task-single{
 	padding: 0.1em 0 0 0.2em;
@@ -1086,6 +1119,7 @@ medium screens
 		background: #242424;
 		z-index: 8;
 		border-left: 1px solid #424242;
+		overflow-y: scroll;
 	}
 	.form-item > textarea {
 	    width: 98%;
