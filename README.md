@@ -57,19 +57,22 @@
 
 #### What Needs Done
 * BUG :
+	* Can't tab sometimes on login/register
 	* Firefox add task validation on all fields  (use moment().isValid() on date and time)
 * Improvements
 	* Reduce Redundancy in MonthView where creating calObject
 ------------ For Next Version
-* Completing task early should increase AP
 * Refactor convert AddTask 1 & 2 to stateless and move refs to state in AddTask.jsx
 * Make Cron job easier on server (on task create add to notifications and have notifications only show if they are older than now)
 * Recurring Tasks
 * Add schedule and tagtypes index to user profile
 * Speed up addTag method (currently ~170ms from client)
+* Make animations faster (optimistic UI) many animations sluggish at times
 * iOS 
 	* Splash screen
 * Ionicons
 * Get NEXT best time in addTask (return whole array and not just one) 
+* Notify when a task has been shared with you only on addTask
+* scheduleBesttime() should also check for half hour increments
 
 
