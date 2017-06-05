@@ -20,7 +20,7 @@ export default class TaskDetail extends React.Component{
 						swal("Awkward...", "There was an error getting this task: " + err, "error");
 					} else {
 						this.setState({
-							sharingWith : nextProps.taskDetail.sharingWith,
+							sharingWith : nextProps.taskDetail.sharingWith !== undefined ? nextProps.taskDetail.sharingWith : [] ,
 							creator: res,
 							showAlarmVisible: nextProps.alarm !== null
 						})
@@ -28,7 +28,7 @@ export default class TaskDetail extends React.Component{
 				})
 			} else {
 				this.setState({
-					sharingWith : nextProps.taskDetail.sharingWith,
+					sharingWith : nextProps.taskDetail.sharingWith !== undefined ? nextProps.taskDetail.sharingWith : [] ,
 					showAlarmVisible: nextProps.alarm !== null
 				})
 			}
