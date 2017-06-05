@@ -950,7 +950,7 @@ label {
 	padding: 0.5em;
 }
 .task-detail .desc textarea {
-	height: 4em;
+	height: 3em;
 	resize: none;
 	border: none;
 	font-size: 1em;

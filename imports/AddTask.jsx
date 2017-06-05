@@ -130,7 +130,6 @@ export default class AddTask extends Component {
 			timeUTC: alarm !== null ? moment(taskRefs.dateStart.value.trim() + "T" + taskRefs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16) : null,
 			sharingWith: this.state.sharingWith
 		};
-		console.log("alarm:" + this.state.alarm, "task Obj val: " + task.alarm)
 		/* Call Meteor to abscond with our earthly woes and store it in the database if possible */
 		Meteor.call("addTask", task, (err, data)=>{
 			if(err){

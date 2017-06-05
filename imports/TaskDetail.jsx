@@ -22,14 +22,14 @@ export default class TaskDetail extends React.Component{
 						this.setState({
 							sharingWith : nextProps.taskDetail.sharingWith !== undefined ? nextProps.taskDetail.sharingWith : [] ,
 							creator: res,
-							showAlarmVisible: nextProps.alarm !== null
+							showAlarmVisible: nextProps.taskDetail.alarm !== null
 						})
 					}
 				})
 			} else {
 				this.setState({
 					sharingWith : nextProps.taskDetail.sharingWith !== undefined ? nextProps.taskDetail.sharingWith : [] ,
-					showAlarmVisible: nextProps.alarm !== null
+					showAlarmVisible: nextProps.taskDetail.alarm !== null
 				})
 			}
 		}
@@ -121,6 +121,9 @@ export default class TaskDetail extends React.Component{
 					text: "Task Updated", 
 					type: "success"
 				}, ()=>{
+					this.setState({
+						showAlarmVisible : false
+					})
 					this.props.closeDetail();
 				});
 			}
@@ -155,7 +158,7 @@ export default class TaskDetail extends React.Component{
 	componentDidMount(){
 		if(this.props.taskDetail !== null){
 			this.setState({
-				showAlarmVisible: this.props.taskDetail.alarm !== null,
+				showAlarmVisible: this.props.taskDetail.alarm === null ? false : true,
 				sharingWith : this.props.taskDetail.sharingWith !== undefined ? this.props.taskDetail.sharingWith : []
 			}, ()=>{
 				this.state.showAlarmVisible ? this.clicker(this.props.taskDetail.alarm) : "";
@@ -168,7 +171,6 @@ export default class TaskDetail extends React.Component{
 		});
 	}
 	render(){
-		
 		return(
 			<form autoComplete="off" onSubmit={this.editTask.bind(this)}>
 			<div id="update-task-header">Update Task</div>
@@ -185,9 +187,9 @@ export default class TaskDetail extends React.Component{
 			<input className="typeable" id="edit-task-time" type="time" ref="timeStart"  defaultValue={this.props.taskDetail.timeStart} /> 
 			</div>
 			<div className="form-item" style={{borderBottom : "1px solid #424242", padding: "0.5em", lineHeight: "2em", 'textAlign' : 'left'}}>
-			<div style={{width: '30%', display: "inline-block", fontSize: '1em'}}>Set Alarm? </div>
+			<div style={{width: window.innerWidth > 992 ? '15%' : "30%", display: "inline-block", fontSize: '1em'}}>Set Alarm? </div>
 			<div className="checkbox" >
-			<input id="has-alarm-toggle" type="checkbox" readOnly="" ref="hasAlarm" onClick={this.showAlarm.bind(this)} />
+			<input id="has-alarm-toggle" type="checkbox" ref="hasAlarm" onClick={this.showAlarm.bind(this)} />
 			<label htmlFor="has-alarm-toggle"></label>
 			</div>
 			</div>

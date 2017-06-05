@@ -298,7 +298,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
 			{newNotice !== undefined ? this.notify(newNotice) : ""}
 
 			<Menu show={this.state.taskDetail !== null} className="task-detail" toggleMenu={this.hideDetail.bind(this)}> 
-			<TaskDetail taskDetail={taskDetail} closeDetail={this.hideDetail}/>
+				<TaskDetail taskDetail={taskDetail} closeDetail={this.hideDetail}/>
 			</Menu>
 		      <ToastContainer autoClose={false} position={this.state.width > 992 ? "bottom-right" : "bottom-center"} hideProgressBar={true}/>
 

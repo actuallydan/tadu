@@ -46,6 +46,8 @@ Meteor.methods({
 		Tasks.update(task._id, {
 			$set: {completed: !task.completed }
 		})
+		Meteor.call("changeThreshold", {date: task.dateStart, time: task.timeStart, amt: task.completed ? -0.15 : 0.15});
+		console.log("All done!");
 	},
 	/* Find Users to share tasks with */
 	findUsers(search){
