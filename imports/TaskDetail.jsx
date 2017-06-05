@@ -109,7 +109,7 @@ export default class TaskDetail extends React.Component{
 			desc: this.refs.desc.value.trim(),
 			alarm: alarm,
 			timeUTC: alarm !== null ? moment(this.refs.dateStart.value.trim() + "T" + this.refs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16) : null,
-			sharingWith: this.state.sharingWith
+			sharingWith: this.state.sharingWith === undefined ? [] : this.state.sharingWith 
 		};
 
 		Meteor.call("updateTask", updatedTask, (err)=>{
