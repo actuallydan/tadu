@@ -184,7 +184,7 @@ export default class TaskDetail extends React.Component{
 			<div className='timeStart'> Time </div>
 			<input className="typeable" id="edit-task-time" type="time" ref="timeStart"  defaultValue={this.props.taskDetail.timeStart} /> 
 			</div>
-			<div className="form-item" style={{borderBottom : "1px solid #424242", padding: "0.5em", lineHeight: "2em", 'textAlign' : 'left', "paddingLeft" : '1em'}}>
+			<div className="form-item" style={{borderBottom : "1px solid #424242", padding: "0.5em", lineHeight: "2em", 'textAlign' : 'left'}}>
 			<div style={{width: '30%', display: "inline-block", fontSize: '1em'}}>Set Alarm? </div>
 			<div className="checkbox" >
 			<input id="has-alarm-toggle" type="checkbox" readOnly="" ref="hasAlarm" onClick={this.showAlarm.bind(this)} />

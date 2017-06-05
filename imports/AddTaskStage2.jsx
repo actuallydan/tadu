@@ -28,25 +28,25 @@ export default class AddTaskStage2 extends React.Component {
 			<div id="alarm-radio-wrapper" className={"form-item " + (this.props.showAlarmVisible ? "" : "hidden")}> 
 			<div className="radio-option-wrapper">
 			<label className="radio" htmlFor="alarm-option-low">
-			<input id="alarm-option-low" ref="5min" type="radio" name="alarm" value="5min" defaultChecked={true}/> 
+			<input id="alarm-option-low" ref="5min" type="radio" name="alarm" value="5min" defaultChecked={true} onChange={this.props.changeAlarm.bind(this)}/> 
 			<span className="outer"><span className="inner"></span></span><div className="radio-option-label-text">5 min</div>
 			</label>
 			</div>	
 			<div className="radio-option-wrapper">
 			<label className="radio" htmlFor="alarm-option-med">
-			<input id="alarm-option-med" ref="30min" type="radio" name="alarm" value="30min" /> <span className="outer">
+			<input id="alarm-option-med" ref="30min" type="radio" name="alarm" value="30min" onChange={this.props.changeAlarm.bind(this)}/> <span className="outer">
 			<span className="inner"></span></span><div className="radio-option-label-text">30 min</div>
 			</label>
 			</div>	
 			<div className="radio-option-wrapper">
 			<label className="radio" htmlFor="alarm-option-high">
-			<input id="alarm-option-high" ref="1hour" type="radio" name="alarm" value="1hour" /> <span className="outer">
+			<input id="alarm-option-high" ref="1hour" type="radio" name="alarm" value="1hour" onChange={this.props.changeAlarm.bind(this)}/> <span className="outer">
 			<span className="inner"></span></span><div className="radio-option-label-text">1 hour</div>
 			</label>
 			</div>	
 			<div className="radio-option-wrapper">
 			<label className="radio" htmlFor="alarm-option-critical">
-			<input id="alarm-option-critical" ref="1day" type="radio" name="alarm" value="1day" /> <span className="outer">
+			<input id="alarm-option-critical" ref="1day" type="radio" name="alarm" value="1day" onChange={this.props.changeAlarm.bind(this)}/> <span className="outer">
 			<span className="inner"></span></span><div className="radio-option-label-text"> 1 day</div>
 			</label>
 			</div>

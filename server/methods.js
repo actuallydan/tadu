@@ -49,7 +49,7 @@ Meteor.methods({
 	},
 	/* Find Users to share tasks with */
 	findUsers(search){
-		let users = Meteor.users.find({username: {$regex:  search + ".*"}, _id: {$not: {$eq: Meteor.userId()}}}, {limit : 5}).fetch();
+		let users = Meteor.users.find({username: {$regex: search + ".*", $options : "i"}, _id: {$not: {$eq: Meteor.userId()}}}, {limit : 5}).fetch();
 		return users.length > 0 ? users : null;
 	},
 	/* Update an exisitng task, accepts a task object and updates the fields except for the userId, completed, createdAt */

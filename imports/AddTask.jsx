@@ -130,7 +130,7 @@ export default class AddTask extends Component {
 			timeUTC: alarm !== null ? moment(taskRefs.dateStart.value.trim() + "T" + taskRefs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16) : null,
 			sharingWith: this.state.sharingWith
 		};
-
+		console.log("alarm:" + this.state.alarm, "task Obj val: " + task.alarm)
 		/* Call Meteor to abscond with our earthly woes and store it in the database if possible */
 		Meteor.call("addTask", task, (err, data)=>{
 			if(err){
@@ -251,8 +251,8 @@ export default class AddTask extends Component {
 	}
 	changeAlarm(e){
 		this.setState({
-			alarm: e
-		});
+			alarm: e.target.value
+		}, console.log("changed to:" + e.target.value));
 	}
 	/* Relevant parts of AddTask stage 1; this should probably be spun off into it's own component */
 	renderStage1(){
@@ -280,6 +280,7 @@ export default class AddTask extends Component {
 			tagType={this.state.tagType}
 			hasBeenOptimized={this.state.hasBeenOptimized}
 			showAlarmVisible={this.state.showAlarmVisible}
+			changeAlarm={this.changeAlarm.bind(this)}
 			showAlarm={this.showAlarm.bind(this)}
 			userList={this.state.userList}
 			sharingWith={this.state.sharingWith}

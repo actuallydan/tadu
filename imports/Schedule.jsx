@@ -3,7 +3,6 @@ import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import moment from 'moment';
 import Loader from './Loader.jsx';
 
-// Session.set('schedule_loaded', false); 
 
 export default class Schedule extends TrackerReact(React.Component) {
 	constructor(){

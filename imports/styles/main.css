@@ -904,6 +904,7 @@ label {
 	padding: 0.5em;
 	line-height: 2em;
 	box-shadow: none;
+	text-align: left;
 }
 .task-detail .edit-item input {
 	text-align: left;
