@@ -62,6 +62,7 @@
 * Improvements
 	* Reduce Redundancy in MonthView where creating calObject
 ------------ For Next Version
+* Completing task early should increase AP
 * Refactor convert AddTask 1 & 2 to stateless and move refs to state in AddTask.jsx
 * Make Cron job easier on server (on task create add to notifications and have notifications only show if they are older than now)
 * Recurring Tasks

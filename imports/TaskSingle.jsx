@@ -25,7 +25,7 @@ const TaskSingle = (props)=> {
 	};
 	return (
 		<li className="task-single animated bounceInUp" onClick={showDetail}>
-		<div className="checkbox">
+		<div className="checkbox" style={{visibility: props.task.userId === Meteor.userId() ? "visible" : "hidden"}}>
 		<input id={"task_"+props.task._id} type="checkbox" readOnly={true} checked={props.task.completed} onClick={()=>{Meteor.call('toggleTask', props.task)}} />
 		<label htmlFor={"task_"+props.task._id}></label>
 		</div>
