@@ -18,11 +18,12 @@ export default class EntryPortal extends React.Component {
 			showLogin: true,
 			showPolicy: false,
 			loginStateData: {
-				'loginEmail': "",
+				// 'loginEmail': "",
+				'loginUsername': "",
 				'loginPassword': "",
 			},
 			registerStateData : {
-				'registerEmail' : "",
+				// 'registerEmail' : "",
 				'registerPassword' : "",
 				'registerUsername' : "",
 				'registerBedHour' : "",
@@ -36,14 +37,15 @@ export default class EntryPortal extends React.Component {
 	changeLoginState(div){
 		this.setState({
 			loginStateData: {
-				'loginEmail': div.email,
+				// 'loginEmail': div.email,
+				'loginUsername': div.username,
 				'loginPassword': div.password,
 			}});
 	}
 	changeRegisterState(div){
 		this.setState({ 
 			registerStateData : {
-				'registerEmail' : div.email,
+				// 'registerEmail' : div.email,
 				'registerPassword' : div.password,
 				'registerUsername' : div.username,
 				'registerBedHour' : div.bedHour,
@@ -55,14 +57,15 @@ export default class EntryPortal extends React.Component {
 		event.preventDefault();
 		/* Because this works weird in JS, make sure it points to the current component we're in, not a meteor method or something else */
 		/* Grab, trim, and ideally sanitize user login data */
-		let email = this.state.loginStateData.loginEmail;
+		// let email = this.state.loginStateData.loginEmail;
+		let username = this.state.loginStateData.loginUsername;
 		let password = this.state.loginStateData.loginPassword;
 
 		/* Make sure both fields have data in them otherwise ignore it in case of errant enter or mouse click to prevent needless alerting of user */
-		if ( email !== "" && password !== "") {
+		if ( username !== "" && password !== "") {
 			try{
 				/* Attempt to login user with Meteor Account's method and exception will tell us what happened if thrown */
-				Meteor.loginWithPassword(email, password, (err, data)=> {
+				Meteor.loginWithPassword(username, password, (err, data)=> {
 					if(err){
 						/* Account credentials are incorrect and/or fields are not of satisfactory length */
 						swal("Oops...", err.reason, "error");
@@ -90,19 +93,20 @@ export default class EntryPortal extends React.Component {
 		const bad = "~`,<>/?'\";:]}[{\|+=)(*&^%$#!";
 
 		for(var i = 0; i < bad.length; i++){
-			if(this.state.registerStateData.registerEmail.indexOf(bad[i]) >= 0 || this.state.registerStateData.registerUsername.indexOf(bad[i]) >= 0){
+			if(this.state.registerStateData.registerUsername.indexOf(bad[i]) >= 0){
 				valid = false;
 				break;    
 			}
 		}
 
-		if (this.state.registerStateData.registerUsername !== "" && this.state.registerStateData.registerPassword !== "" && this.state.registerStateData.registerEmail !== "" && valid && this.state.registerStateData.registerBedHour !== "") {
+		if (this.state.registerStateData.registerUsername !== "" && this.state.registerStateData.registerPassword !== "" && valid && this.state.registerStateData.registerBedHour !== "") {
 			/* Get the time the user ususally goes to bed to build their social circadian rhythm around that */
 			const user = {
 				username: this.state.registerStateData.registerUsername,
 				password: this.state.registerStateData.registerPassword,
-				email: this.state.registerStateData.registerEmail,
+				// email: this.state.registerStateData.registerEmail,
 				profile: {
+					pic: null,
 					bedHour: this.state.registerStateData.registerBedHour,
 					tut : {
 						'login' : false,
@@ -119,8 +123,6 @@ export default class EntryPortal extends React.Component {
 						swal("Oops...", err.reason, "error");
 					} else {
 						/* Meteor will automagically sign in users after successful account creation so we can trigger state update in parent to escape this prison */
-								console.log(Meteor.userId())
-
 						Meteor.call("addDefaultSchedule", Meteor.userId(), (err)=>{
 							if(err){
 								swal("Awkward...", err, "error");

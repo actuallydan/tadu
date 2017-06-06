@@ -218,6 +218,7 @@ html, body, #root {
 	text-align: center;
 	font-size: 5em;
 	color: white;
+	font-family: "Anivers", sans-serif
 }
 .form-input-wrapper {
 	color: white;
@@ -1061,6 +1062,13 @@ medium screens
 		top: 0;
 		padding: 0;
 		height: 100%;
+	}
+	#fileToUploadAlert {
+		display: block !important;
+    margin: 0 !important;
+    padding: 0 50px !important;
+    border: 0;
+    box-shadow: none;
 	}
 	#cal-year{
 		position: relative;

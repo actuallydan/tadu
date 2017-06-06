@@ -59,6 +59,10 @@ export default class Calendar extends TrackerReact(Component) {
 			setTimeout(()=>{document.querySelector(".month-wrapper").classList.add("pulse")}, 100);
 		}
 	}
+	/* Show User Profile & let them edit */
+	editUser(){
+		console.log("making changes");
+	}
 	/* Do not update component if, on mobile, we're just sliding from one index to another or it will try to re-render at each frame (yikes) */
 	shouldComponentUpdate(nextProps, nextState){
 		return (nextProps.filteredTasks !== this.props.filteredTasks || nextProps.selectedDate !== this.props.selectedDate || this.state !== nextState);

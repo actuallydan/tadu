@@ -12,7 +12,7 @@ const Login = (props)=>{
 	};
 	 const changeLoginState = (e)=> {
 		let data = {
-				'email': document.getElementById('login-email').value.trim(),
+				'username': document.getElementById('login-username').value.trim(),
 				'password': document.getElementById('login-password').value.trim(),
 			};
 		props.changeLoginState(data);
@@ -22,8 +22,8 @@ const Login = (props)=>{
 				<form onSubmit={props.tryLogin} autoComplete="off">
 					<div className="logo-text">TADU</div>
 					<div className="form-input-wrapper">
-						<label htmlFor="login-email" className="mdi mdi-email-outline"></label>
-						<input className='form-input' id="login-email" type="text" value={props.loginStateData.loginEmail} placeholder="Email" autoComplete="off" onFocus={highlight} onChange={changeLoginState}/>
+						<label htmlFor="login-username" className="mdi mdi-account-circle"></label>
+						<input className='form-input' id="login-username" type="text" value={props.loginStateData.loginEmail} placeholder="Username" autoComplete="off" onFocus={highlight} onChange={changeLoginState}/>
 					</div>
 					<br/>
 					<div className="form-input-wrapper">

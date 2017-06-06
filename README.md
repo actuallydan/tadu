@@ -71,11 +71,14 @@
 	* Things to be async 
 		* changeThreshold (Mainlayout.jsx)
 		* updateSchedule (Schedule.jsx)
+		* Some Update Task calls
+		* Schedule best time filters in multi threading?
 * iOS 
 	* Splash screen
 * Ionicons
 * Get NEXT best time in addTask (return whole array and not just one) 
 * Notify when a task has been shared with you only on addTask
 * scheduleBesttime() should also check for half hour increments
+* diff colors for different types of task single
 
 

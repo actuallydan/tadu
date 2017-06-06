@@ -1,5 +1,7 @@
 import React from 'react';
 import moment from 'moment';
+import {toast} from 'react-toastify';
+import Toast from './Toast.jsx';
 
 export default class TaskDetail extends React.Component{
 	constructor(props){
@@ -116,16 +118,11 @@ export default class TaskDetail extends React.Component{
 			if(err){
 				swal("Sorry!", "There was an error updating your task, please try again later", "error");
 			} else {
-				swal({
-					title: "Success", 
-					text: "Task Updated", 
-					type: "success"
-				}, ()=>{
-					this.setState({
-						showAlarmVisible : false
-					})
-					this.props.closeDetail();
-				});
+				toast(<Toast onClick={toast.dismiss}  iconClass={"mdi-check"} text={"Task Updated"} secondary={""}/>, {autoClose: 2000});
+				this.setState({
+					showAlarmVisible : false
+				})
+				this.props.closeDetail();
 			}
 		});
 	}

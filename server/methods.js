@@ -12,6 +12,8 @@ Meteor.methods({
 		if(Meteor.userId() !== task.userId){
 			throw new Meteor.Error('Not authorized');
 		} 
+		let lastId = "";
+
 		Tasks.insert({
 			text: task.text,
 			dateStart: task.dateStart,
@@ -24,7 +26,24 @@ Meteor.methods({
 			alarm: task.alarm,
 			timeUTC: task.timeUTC,
 			sharingWith: task.sharingWith
+		}, (err, result)=>{
+			lastId = result.insertedId;
 		});
+		/* Notify other users of shared task, if any */
+		Meteor.defer(()=>{
+			let lastTask = Tasks.findOne({_id : lastId});
+
+			task.sharingWith.map((user)=>{
+				Notifications.insert({
+					userId: user._id,
+					type: "taskShare",
+					data : lastTask,
+					seen: false,
+					timestamp: new Date().getTime()
+				});
+		});
+		});
+
 		/* Get this user's tags */
 		let user = TagTypes.findOne({"userId" : Meteor.userId()});
 		/* Find tag in array  */
@@ -57,7 +76,7 @@ Meteor.methods({
 	/* Update an exisitng task, accepts a task object and updates the fields except for the userId, completed, createdAt */
 	updateTask(task){
 		/* Make sure user changing task is the owner */
-		if(Meteor.userId()){
+		if(!Meteor.userId()){
 			throw new Meteor.Error('not-authorized');
 		}
 		Tasks.update(task._id, {
@@ -109,9 +128,12 @@ Meteor.methods({
 		*  Depending on the number of custom tags, this object could get huge(r) but as long as it's indexable it should be fine 
 		*/
 		let mySched = Schedules.findOne({"userId" : Meteor.userId()});
-		daysOfWeek.map((day)=>{
-			hours.map((hour)=>{
-				mySched.thresholds[day][hour][tag] = bioCurve[hours.indexOf(hour)];
+		Meteor.defer(()=>{
+			/* The user won't create a new task of this type before we can get around to adding it so let's defer it and let them get back to making their task*/
+			daysOfWeek.map((day)=>{
+				hours.map((hour)=>{
+					mySched.thresholds[day][hour][tag] = bioCurve[hours.indexOf(hour)];
+				});
 			});
 		});
 		/* Update the schedule object */
@@ -177,6 +199,18 @@ Meteor.methods({
 			$set : {schedule : mySchedule.schedule}
 		});
 	},
+	updateProfilePic(imgAsString){
+		if(!Meteor.userId()){
+			throw new Meteor.Error('not-authorized');
+		} 
+		let userProfile = Meteor.user().profile;
+		userProfile.pic = imgAsString;
+		Meteor.users.update(Meteor.userId(), {
+			$set : {
+				profile : userProfile
+			}
+		});
+	},
 	/* Boy howdy you better sit down for this one
 	*  Method to schedule the best possible time for an incoming task
 	*  Gets the user's current date, time, and the tag they're using to find the best time for it in the coming week
@@ -229,9 +263,9 @@ Meteor.methods({
 			tempPossibilites = tempPossibilites.filter((coord)=>{
 				let daysFromToday = coord.day - offset >= 0 ? coord.day - offset : 7 + (coord.day - offset);
 				let bestDate = moment().add(daysFromToday, "days").format();	
-				// console.log("There is " + (Tasks.findOne({userId: Meteor.userId(), dateStart : bestDate.substring(0,10) , timeStart: {$regex: coord.time.substring(0,2) + ".*"}}) !== undefined ? "something" : "nothing") + " on " + bestDate.substring(0,10) + " at " + coord.time)
-				return tasks.findIndex((task)=>{ return task.dateStart === bestDate.substring(0,10) && task.timeStart === coord.time}) === - 1;
-			});
+					// console.log("There is " + (Tasks.findOne({userId: Meteor.userId(), dateStart : bestDate.substring(0,10) , timeStart: {$regex: coord.time.substring(0,2) + ".*"}}) !== undefined ? "something" : "nothing") + " on " + bestDate.substring(0,10) + " at " + coord.time)
+					return tasks.findIndex((task)=>{ return task.dateStart === bestDate.substring(0,10) && task.timeStart === coord.time}) === - 1;
+				});
 			// console.log("At " + (target * 100) + "%, there are " + tempPossibilites.length + " times available with no other tasks scheduled")
 
 			if(tempPossibilites.length > 0){

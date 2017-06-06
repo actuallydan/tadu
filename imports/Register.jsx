@@ -15,7 +15,6 @@ const Register = (props)=> {
 	}
 	const changeRegisterState = ()=>{
 		let data = {
-			'email': document.getElementById('register-email').value.trim(),
 			'password': document.getElementById('register-password').value.trim(),
 			username :document.getElementById("register-username").value.trim(),
 			bedHour: document.getElementById("register-bedHour").value.trim()
@@ -28,19 +27,13 @@ const Register = (props)=> {
 			<form onSubmit={props.tryRegister} autoComplete="off">
 			<div className="logo-text">TADU</div>
 			<div className="form-input-wrapper">
-			<label htmlFor="register-email" className="mdi mdi-email-outline"></label>
-			<input className='form-input' type="text" id="register-email" onChange={changeRegisterState} value={props.registerStateData.registerEmail} placeholder="Email" autoComplete="off" onFocus={highlight} />
+			<label htmlFor="register-username" className="mdi mdi-account-circle"></label>
+			<input className='form-input' type="text"  id="register-username" onChange={changeRegisterState} value={props.registerStateData.registerUsername} placeholder="Username"  onFocus={highlight} />
 			</div>
 			<br/>
 			<div className="form-input-wrapper">
 			<label htmlFor="register-password" className="mdi mdi-lock-outline"></label>
 			<input className='form-input' type="password"  id="register-password" onChange={changeRegisterState} value={props.registerStateData.registerPassword} placeholder="Password" autoComplete="off" onFocus={highlight}/>
-			</div>
-
-			<br/>
-			<div className="form-input-wrapper">
-			<label htmlFor="register-username" className="mdi mdi-account-circle"></label>
-			<input className='form-input' type="text"  id="register-username" onChange={changeRegisterState} value={props.registerStateData.registerUsername} placeholder="Username"  onFocus={highlight} />
 			</div>
 			<br/>
 			<div style={{textAlign: "center", color: "#FFF", margin: 0}}> What time do you usually go to bed? {'\u00A0'}<span onClick={()=>{swal("Bed Time?", "This will help Tadu optimize your schedule when you're most awake and productive.")}} style={{color: '#1de9b6'}}>Why?</span></div>

@@ -215,12 +215,12 @@ export default class MainLayout extends TrackerReact(React.Component) {
 							let newTask = {
 								_id: notice.data._id,
 								text : notice.data.text,
-								dateStart : bestDate.format("YYYY-MM-DD"),
-								timeStart : bestDate.format("HH:mm"),
+								dateStart : moment(bestDate).format("YYYY-MM-DD"),
+								timeStart : moment(bestDate).format("HH:mm"),
 								desc : notice.data.desc,
 								alarm: notice.data.alarm,
-								timeUTC : notice.data.alarm !== null ? bestDate.subtract(notice.data.alarm, "minutes").utc().format().substring(0,16) : null,
-
+								timeUTC : notice.data.alarm !== null ? moment(bestDate).subtract(notice.data.alarm, "minutes").utc().format().substring(0,16) : null,
+								sharingWith: notice.data.sharingWith !== undefined ? notice.data.sharingWith : []
 							}
 							Meteor.call("updateTask", newTask);
 						}
