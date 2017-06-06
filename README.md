@@ -68,6 +68,9 @@
 * Add schedule and tagtypes index to user profile
 * Speed up addTag method (currently ~170ms from client)
 * Make animations faster (optimistic UI) many animations sluggish at times
+	* Things to be async 
+		* changeThreshold (Mainlayout.jsx)
+		* updateSchedule (Schedule.jsx)
 * iOS 
 	* Splash screen
 * Ionicons

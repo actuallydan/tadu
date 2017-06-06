@@ -16,13 +16,20 @@ const Toast = (props) =>{
 		},
 		text : {
 			display: "inline-block",
-			width: "60%",
+			width: "55%",
 			color: "#FFF",
+			textOverflow: "ellipsis",
+		    overflow: "hidden",
+		    wordWrap: "break-word",
+		    whiteSpace: "nowrap",
+		    paddingRight: "0.2em",
+		    verticalAlign: "top"
 		},
 		time : {
 			display: "inline-block",
 			width: "25%",
 			color: "#FFF",
+			textAlign: "right"
 		}
 	}
 	return (

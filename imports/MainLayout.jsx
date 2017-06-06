@@ -156,6 +156,10 @@ export default class MainLayout extends TrackerReact(React.Component) {
 	* Accomodates for both Notifcation users and otherwise
 	*/
 	notify(notice){
+		/* if there is already a toast on screen don't rerun script as it'll get annoying */
+		if(document.querySelectorAll('.toastify-content').length > 0){
+			return false;
+		}
 		let audio = new Audio('/img/job-done.mp3');
 		audio.volume = 0.5;
 		audio.play();
@@ -197,16 +201,17 @@ export default class MainLayout extends TrackerReact(React.Component) {
 	  			} else {
 	  				swal("Rescheduling...", "Don't worry. I'll set up a different time", "success");
 	  				/* update task startTime */
-	  				Meteor.call("scheduleBestTime", {tag: notice.data.tag, today: new Date()}, (err, res)=>{
+	  				Meteor.call("scheduleBestTime", {tag: notice.data.tag, today: moment().format("YYYY-MM-DDTHH:mm:ss")}, (err, res)=>{
 	  					if(err){
 	  						swal("So..", "There was an issue rescheduling..." + "<br/>" + err, "error");
 	  					} else {
-	  						let daysFromToday = res.date - new Date().getDay();
-	  						let bestDate = moment(res.time, "HH:mm").add(daysFromToday, "days");
-							// Change threshold
+							let daysFromToday = res.day - parseInt(moment().format('e')) >= 0 ? res.day - parseInt(moment().format('e')) : 7 + (res.day - parseInt(moment().format('e')));
+							let bestDate = moment(res.time, "HH:mm").add(daysFromToday, "days").format();
+
+							/* Change threshold */
 							/* Provide tag (notice.data.tag), date and time (notice.data.dateStart, notice.data.timeStart) and signed amount to change */
 							Meteor.call("changeThreshold", {tag: notice.data.tag, date: notice.data.dateStart, time: notice.data.timeStart, amt: -0.15})
-							// Update task
+							/* Update task */
 							let newTask = {
 								_id: notice.data._id,
 								text : notice.data.text,

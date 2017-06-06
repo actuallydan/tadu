@@ -57,7 +57,7 @@ Meteor.methods({
 	/* Update an exisitng task, accepts a task object and updates the fields except for the userId, completed, createdAt */
 	updateTask(task){
 		/* Make sure user changing task is the owner */
-		if(Meteor.userId() !== task.userId){
+		if(Meteor.userId()){
 			throw new Meteor.Error('not-authorized');
 		}
 		Tasks.update(task._id, {
