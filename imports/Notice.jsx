@@ -6,6 +6,7 @@ const Notice = (props)=> {
 	const noticeType = {
 		'taskAlert' :'mdi-alarm-check',
 		'message' : 'mdi-message-outline',
+		'taskShare' : 'mdi-account-multiple'
 	};
 	const showDetail = ()=>{
 		/* If The Notice is a task alarm let the user see the task in detail */

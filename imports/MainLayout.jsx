@@ -163,6 +163,23 @@ export default class MainLayout extends TrackerReact(React.Component) {
 		let audio = new Audio('/img/job-done.mp3');
 		audio.volume = 0.5;
 		audio.play();
+		switch(notice.type){
+			case "taskShare":
+			this.displayTaskShare(notice);
+			break;
+			case "taskAlert":
+			this.displayTaskAlert(notice);
+			break;
+		}
+	}
+	displayTaskShare(notice){
+		Meteor.call("findOneUser", notice.data.userId, (err, res)=>{
+			toast.dismiss();
+			toast(<Toast autoClose={2000} iconClass={"mdi-account-multiple"} text={res + " shared a task"} secondary={""}/>);
+			Meteor.call("seeNotification", notice)
+		});
+	}
+	displayTaskAlert(notice){
 		document.title = "Task Alert!";
 		toggleTitle = setInterval(()=>{
 			switch(document.title){
@@ -176,7 +193,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
 		}, 1500);
 		toggleTitle;
 		toast.dismiss();
-		toast(<Toast onClick={()=>{this.displayNotification(notice);toast.dismiss()}}  iconClass={"mdi-alarm-check"} text={notice.data.text} secondary={moment(notice.data.timeStart, "HH:mm").format("h:mm a")}/>)
+		toast(<Toast onClick={()=>{this.displayNotification(notice);toast.dismiss();}}  iconClass={"mdi-alarm-check"} text={notice.data.text} secondary={moment(notice.data.timeStart, "HH:mm").format("h:mm a")}/>)
 	}
 	displayNotification(notice) {
 		clearInterval(toggleTitle);
@@ -205,26 +222,26 @@ export default class MainLayout extends TrackerReact(React.Component) {
 	  					if(err){
 	  						swal("So..", "There was an issue rescheduling..." + "<br/>" + err, "error");
 	  					} else {
-							let daysFromToday = res.day - parseInt(moment().format('e')) >= 0 ? res.day - parseInt(moment().format('e')) : 7 + (res.day - parseInt(moment().format('e')));
-							let bestDate = moment(res.time, "HH:mm").add(daysFromToday, "days").format();
+	  						let daysFromToday = res.day - parseInt(moment().format('e')) >= 0 ? res.day - parseInt(moment().format('e')) : 7 + (res.day - parseInt(moment().format('e')));
+	  						let bestDate = moment(res.time, "HH:mm").add(daysFromToday, "days").format();
 
-							/* Change threshold */
-							/* Provide tag (notice.data.tag), date and time (notice.data.dateStart, notice.data.timeStart) and signed amount to change */
-							Meteor.call("changeThreshold", {tag: notice.data.tag, date: notice.data.dateStart, time: notice.data.timeStart, amt: -0.15})
-							/* Update task */
-							let newTask = {
-								_id: notice.data._id,
-								text : notice.data.text,
-								dateStart : moment(bestDate).format("YYYY-MM-DD"),
-								timeStart : moment(bestDate).format("HH:mm"),
-								desc : notice.data.desc,
-								alarm: notice.data.alarm,
-								timeUTC : notice.data.alarm !== null ? moment(bestDate).subtract(notice.data.alarm, "minutes").utc().format().substring(0,16) : null,
-								sharingWith: notice.data.sharingWith !== undefined ? notice.data.sharingWith : []
-							}
-							Meteor.call("updateTask", newTask);
-						}
-					});
+	  						/* Change threshold */
+	  						/* Provide tag (notice.data.tag), date and time (notice.data.dateStart, notice.data.timeStart) and signed amount to change */
+	  						Meteor.call("changeThreshold", {tag: notice.data.tag, date: notice.data.dateStart, time: notice.data.timeStart, amt: -0.15})
+	  						/* Update task */
+	  						let newTask = {
+	  							_id: notice.data._id,
+	  							text : notice.data.text,
+	  							dateStart : moment(bestDate).format("YYYY-MM-DD"),
+	  							timeStart : moment(bestDate).format("HH:mm"),
+	  							desc : notice.data.desc,
+	  							alarm: notice.data.alarm,
+	  							timeUTC : notice.data.alarm !== null ? moment(bestDate).subtract(notice.data.alarm, "minutes").utc().format().substring(0,16) : null,
+	  							sharingWith: notice.data.sharingWith !== undefined ? notice.data.sharingWith : []
+	  						}
+	  						Meteor.call("updateTask", newTask);
+	  					}
+	  				});
 	  			}
 	  		});
 		/* Mark this notification as seen and do not re-show it */
@@ -303,9 +320,9 @@ export default class MainLayout extends TrackerReact(React.Component) {
 			{newNotice !== undefined ? this.notify(newNotice) : ""}
 
 			<Menu show={this.state.taskDetail !== null} className="task-detail" toggleMenu={this.hideDetail.bind(this)}> 
-				<TaskDetail taskDetail={taskDetail} closeDetail={this.hideDetail}/>
+			<TaskDetail taskDetail={taskDetail} closeDetail={this.hideDetail}/>
 			</Menu>
-		      <ToastContainer autoClose={false} position={this.state.width > 992 ? "bottom-right" : "bottom-center"} hideProgressBar={true}/>
+			<ToastContainer autoClose={false} position={this.state.width > 992 ? "bottom-right" : "bottom-center"} hideProgressBar={true}/>
 
 			</div>
 			)

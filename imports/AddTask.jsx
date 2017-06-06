@@ -156,7 +156,6 @@ export default class AddTask extends Component {
 		/* Setting the state to stage1 = false re-renders the component to show stage 2 */
 		if(navigator.onLine){
 			this.showLoader();
-			let t0 = performance.now();
 			Meteor.call("scheduleBestTime", {"tag": tag , "today": moment().format("YYYY-MM-DDTHH:mm:ss") }, (err, res)=>{
 				if(err){
 					swal("Oops...", err, "error");
@@ -179,7 +178,6 @@ export default class AddTask extends Component {
 					});
 					document.getElementById("new-task-date").value = bestDate.substring(0, 10);
 					document.getElementById("new-task-time").value = bestDate.substring(11, 16);
-					console.log(performance.now() - t0);
 				}
 			});
 		} else {

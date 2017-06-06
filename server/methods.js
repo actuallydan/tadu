@@ -27,21 +27,24 @@ Meteor.methods({
 			timeUTC: task.timeUTC,
 			sharingWith: task.sharingWith
 		}, (err, result)=>{
-			lastId = result.insertedId;
-		});
-		/* Notify other users of shared task, if any */
-		Meteor.defer(()=>{
-			let lastTask = Tasks.findOne({_id : lastId});
+			if(err){
+				console.log(err);
+			} else {
+				/* Notify other users of shared task, if any */
+				Meteor.defer(()=>{
+					let lastTask = Tasks.findOne({_id : result});
 
-			task.sharingWith.map((user)=>{
-				Notifications.insert({
-					userId: user._id,
-					type: "taskShare",
-					data : lastTask,
-					seen: false,
-					timestamp: new Date().getTime()
+					task.sharingWith.map((user)=>{
+						Notifications.insert({
+							userId: user._id,
+							type: "taskShare",
+							data : lastTask,
+							seen: false,
+							timestamp: new Date().getTime()
+						});
+					});
 				});
-		});
+			}
 		});
 
 		/* Get this user's tags */
