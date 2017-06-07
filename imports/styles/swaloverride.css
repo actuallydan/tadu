@@ -81,6 +81,7 @@
   border-radius: 0;
   height: 3px;
   background-color: #f44336;
+  display: none;
 }
 .toastify-content{
   background: #242424;

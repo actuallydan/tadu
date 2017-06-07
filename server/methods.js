@@ -202,6 +202,18 @@ Meteor.methods({
 			$set : {schedule : mySchedule.schedule}
 		});
 	},
+	updateUsername(username){
+		if(!Meteor.users.findOne({username: username})){
+			/* This username is available. Update this user and then return "200" success */
+			Meteor.users.update(Meteor.userId(), {
+				$set: {username: username}
+			});
+			return "200";
+		} else {
+			/* this username is not available return "403" forbidden */
+			return "403";
+		}
+	},
 	updateProfilePic(imgAsString){
 		if(!Meteor.userId()){
 			throw new Meteor.Error('not-authorized');

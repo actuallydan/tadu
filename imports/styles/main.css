@@ -376,6 +376,8 @@ html, body, #root {
 	color: #FFF;
 	cursor: pointer;
 	line-height: 1.3em;
+	    border-bottom: 1px solid #424242;
+    padding: 0.2em 0;
 }
 .menu-item:hover{
 	background-color: #1de9b6;
@@ -1063,12 +1065,24 @@ medium screens
 		padding: 0;
 		height: 100%;
 	}
-	#fileToUploadAlert {
+	#uploadPic {
 		display: block !important;
     margin: 0 !important;
     padding: 0 50px !important;
     border: 0;
     box-shadow: none;
+    visibility: hidden;
+    height: 0;
+	}
+	#labelForUploadPic {
+		font-size: 1.1em;
+		color: #1de9b6;
+		border: 1px solid #1de9b6;
+		padding: 0.5em;
+	}
+	#labelForUploadPic > span {
+		margin-left: 0.5em;
+		border-bottom: 1px solid #424242;
 	}
 	#cal-year{
 		position: relative;

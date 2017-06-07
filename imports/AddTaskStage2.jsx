@@ -55,7 +55,14 @@ export default class AddTaskStage2 extends React.Component {
 			<div className="form-item"><span className='form-item-label'> Share with: </span><input autoComplete="off" id="find-user-share-text" onChange={this.findUsers.bind(this)} className="typeable" type="text" maxLength="75" placeholder="Enter a username"/> </div>
 			<div style={{display: this.props.userList.length > 0 ? "block" : "none"}} id="share-with-user-list">
 			{this.props.userList.length === 0 ? "" : this.props.userList.filter((user)=>{ return this.props.sharingWith.findIndex((obj)=>{ return obj.username === user.username }) === -1 }).map((user)=>{
-				return (<div className="share-search-result" key={user._id} data-username={user.username} data-userId={user._id} onClick={this.props.addUser.bind(this)}>{user.username}</div>)
+				return (<div className="share-search-result" key={user._id} data-username={user.username} data-userId={user._id} onClick={this.props.addUser.bind(this)}>
+					{user.profile.pic !== undefined && user.profile.pic !== null && user.profile.pic !== "" ?
+					<div className="profilePic" style={{background: 'url(' + user.profile.pic + ') no-repeat center', marginRight: '0.5em', display: 'inline-block', backgroundSize: 'cover', width: '1em', height: '1em', borderRadius: '100%', 'cursor': 'pointer'}}></div>
+					:
+					<div className="profilePic mdi mdi-account-circle" style={{width: '1em', display: 'inline-block', fontSize : '1em' ,'cursor': 'pointer', marginRight: '0.5em'}}></div>
+					}
+					<div style={{width: '50%', display: 'inline'}}>{user.username}</div>
+					</div>)
 			})}
 			</div>
 			<div id="sharing-with-list">

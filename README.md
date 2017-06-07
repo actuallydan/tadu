@@ -61,6 +61,7 @@
 	* Firefox add task validation on all fields  (use moment().isValid() on date and time)
 * Improvements
 	* Reduce Redundancy in MonthView where creating calObject
+	* Image Upload use https://css-tricks.com/image-upload-manipulation-react/
 ------------ For Next Version
 * Refactor convert AddTask 1 & 2 to stateless and move refs to state in AddTask.jsx
 * Make Cron job easier on server (on task create add to notifications and have notifications only show if they are older than now)
@@ -77,7 +78,6 @@
 	* Splash screen
 * Ionicons
 * Get NEXT best time in addTask (return whole array and not just one) 
-* Notify when a task has been shared with you only on addTask
 * scheduleBesttime() should also check for half hour increments
 * diff colors for different types of task single
 
