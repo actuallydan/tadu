@@ -56,12 +56,15 @@
 * 5.0 Tadu Concierge 
 
 #### What Needs Done
+* URGENT:
+	* Notifications cron needs to fit new date/time start/end spec
+	* TaskAlert Toasts should have Y/N buttons instead of time
+	* Add Task2 should have open/close for end date/time
 * BUG :
 	* Can't tab sometimes on login/register
 	* Firefox add task validation on all fields  (use moment().isValid() on date and time)
 * Improvements
 	* Reduce Redundancy in MonthView where creating calObject
-	* Image Upload use https://css-tricks.com/image-upload-manipulation-react/
 ------------ For Next Version
 * Refactor convert AddTask 1 & 2 to stateless and move refs to state in AddTask.jsx
 * Make Cron job easier on server (on task create add to notifications and have notifications only show if they are older than now)

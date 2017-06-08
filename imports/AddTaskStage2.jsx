@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import moment from 'moment';
 
 export default class AddTaskStage2 extends React.Component {
 	submit(e){
@@ -9,15 +10,32 @@ export default class AddTaskStage2 extends React.Component {
 	findUsers(){	
 		this.props.findUsers();
 	}
+	// selectNextFromList(e){
+
+		// attach to id=find-user-share-text onKeyDown={this.selectNextFromList.bind(this)}
+	// 	if(e.keyCode === 40){
+	// 		// Select next user
+	// 		this.props.changeUser
+	// 	} else if(e.keyCode === 38){
+	// 		// Select previous user
+	// 	} else if(){
+	// 		// Enter, add user
+	// 	} else {
+	// 		e.preventDefault();
+	// 	}
+	// 	// let usersInList = document.getElementById('share-with-user-list').children;
+	// }
 	render(){
 		return(
 			<form autoComplete="off" onSubmit={this.submit.bind(this)} className={this.props.stage1 ?  "animated slideOutRight" : "animated pulse"}>
 			<div className="form-item"><span className='form-item-label'> Title </span><input className="typeable" type="text" ref="newTask" defaultValue={this.props.tagType}  required maxLength="75"/> </div>
+			<div className="form-item" style={{minHeight: 0,lineHeight: '0.5em'}}><div style={{textAlign: 'center', width: '100%'}}>Start</div></div>
 			<div className="form-item"><span className='form-item-label'> Date </span><input className="typeable" id="new-task-date" type="date" ref="dateStart" defaultValue={this.props.selectedDate} /> </div>
-			<div className="form-item"><span className='form-item-label'> Time </span><input className="typeable" id="new-task-time" type="time" ref="timeStart"  defaultValue={this.props.nowTime} /> </div>
-
+			<div className="form-item"><span className='form-item-label'> Time </span><input className="typeable" id="new-task-time" type="time" ref="timeStart"  defaultValue={this.props.now} /> </div>
 			{this.props.hasBeenOptimized ? <div className="form-item" style={{"color": "#1de9b6", "fontSize" : "0.6em", "textAlign" : "center"}}><span className='form-item-label mdi mdi-alert-circle'></span><span> {'\u00A0'} This date and time has been optimized for you!</span> </div> : ""}
-
+			<div className="form-item" style={{minHeight: 0,lineHeight: '0.5em'}}><div style={{textAlign: 'center', width: '100%'}}>End</div></div>
+			<div className="form-item"><span className='form-item-label'> Date </span><input className="typeable" id="new-task-end-date" type="date" ref="dateEnd" defaultValue={this.props.selectedDate} /> </div>
+			<div className="form-item"><span className='form-item-label'> Time </span><input className="typeable" id="new-task-end-time" type="time" ref="timeEnd"  defaultValue={moment(this.props.now, "HH:mm").add(1, "hours").format("HH:mm")} /> </div>
 
 			<div className="form-item"> Set Alarm? 
 			<div className="checkbox">

@@ -101,16 +101,85 @@ export default class TaskDetail extends React.Component{
 				alarm = 5;
 			}
 		}
+		let UTCAlarmTime = null;
+
+		if(alarm !== null){
+			if(this.refs.dateStart.value !== ""){
+				/* has start date */
+				if(this.refs.timeStart.value !== ""){
+					if(this.refs.dateEnd.value !== ""){
+						if(this.refs.timeEnd.value !== ""){
+							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+						} else {
+							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + this.refs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+						}
+					} else {
+						if(this.refs.timeEnd.value !== ""){
+							UTCAlarmTime = moment(this.refs.dateStart.value.trim() + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+						} else {
+							UTCAlarmTime = moment(this.refs.dateStart.value.trim() + "T" + this.refs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+						}
+					}
+				} else {
+					if(this.refs.dateEnd.value !== ""){
+						if(this.refs.timeEnd.value !== ""){
+							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+						} else {
+							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + "00:00", "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+						}
+					} else {
+						if(this.refs.timeEnd.value !== ""){
+							UTCAlarmTime = moment(this.refs.dateStart.value.trim() + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+						} else {
+							UTCAlarmTime = moment(this.refs.dateStart.value.trim() + "T" + "00:00", "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+						}
+					}
+				}
+			} else {
+				/* does not have start date */
+				if(this.refs.timeStart.value !== ""){
+					if(this.refs.dateEnd.value !== ""){
+						if(this.refs.timeEnd.value !== ""){
+							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+						} else {
+							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + this.refs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+						}
+					} else {
+						if(this.refs.timeEnd.value !== ""){
+							UTCAlarmTime = moment(moment().format("YYYY-MM-DD") + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+						} else {
+							UTCAlarmTime = moment(moment().format("YYYY-MM-DD") + "T" + this.refs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+						}
+					}
+				} else {
+					if(this.refs.dateEnd.value !== ""){
+						if(this.refs.timeEnd.value !== ""){
+							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+						} else {
+							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + "00:00", "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+						}
+					} else {
+						if(this.refs.timeEnd.value !== ""){
+							UTCAlarmTime = moment(moment().format("YYYY-MM-DD") + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+						} else {
+							swal("Invalid Time", "Please supply at least one date or time", "error");
+							return false;						}
+						}
+					}
+				}
+			}		
 		const updatedTask = {
 			_id: old._id,
 			text: this.refs.title.value.trim(),
 			dateStart:this.refs.dateStart.value.trim(),
 			timeStart:this.refs.timeStart.value.trim(), 
+			dateEnd:this.refs.dateEnd.value.trim(),
+			timeEnd:this.refs.timeEnd.value.trim(), 
 			tag:  old.tag,
 			userId:  old.userId,
 			desc: this.refs.desc.value.trim(),
 			alarm: alarm,
-			timeUTC: alarm !== null ? moment(this.refs.dateStart.value.trim() + "T" + this.refs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16) : null,
+			timeUTC: UTCAlarmTime,
 			sharingWith: this.state.sharingWith === undefined ? [] : this.state.sharingWith 
 		};
 
@@ -131,6 +200,8 @@ export default class TaskDetail extends React.Component{
 			document.getElementById("edit-task-title").value = this.props.taskDetail.text;
 			document.getElementById("edit-task-date").value = this.props.taskDetail.dateStart;
 			document.getElementById("edit-task-time").value = this.props.taskDetail.timeStart;
+			document.getElementById("edit-task-end-date").value = this.props.taskDetail.dateEnd;
+			document.getElementById("edit-task-end-time").value = this.props.taskDetail.timeEnd;
 			document.getElementById("edit-task-desc").value = this.props.taskDetail.desc !== null ? this.props.taskDetail.desc : "";
 			document.getElementById("has-alarm-toggle").checked = this.state.showAlarmVisible;
 			this.state.showAlarmVisible ? this.clicker(this.props.taskDetail.alarm) : "";
@@ -175,13 +246,31 @@ export default class TaskDetail extends React.Component{
 			<div className='text'> Title </div>
 			<input className="" id="edit-task-title" type="text" ref="title" defaultValue={this.props.taskDetail.text}  required maxLength="75"/>
 			</div>
+
+			<div className="edit-item" style={{height: '1em', lineHeight: '100%'}}>
+			<div style={{textAlign: 'center', width: '100%', lineHeight: '100%'}}> Start </div>
+			</div>
+
 			<div className="edit-item">
 			<div className='dateStart'> Date </div>
-			<input className="typeable" id="edit-task-date" type="date" ref="dateStart" defaultValue={this.props.taskDetail.dateStart} /> 
+			<input className="typeable" id="edit-task-date" type="date" ref="dateStart" /> 
 			</div>
 			<div className="edit-item">
 			<div className='timeStart'> Time </div>
-			<input className="typeable" id="edit-task-time" type="time" ref="timeStart"  defaultValue={this.props.taskDetail.timeStart} /> 
+			<input className="typeable" id="edit-task-time" type="time" ref="timeStart"  /> 
+
+			</div>
+			<div className="edit-item" style={{height: '1em', lineHeight: '100%'}}>
+			<div style={{textAlign: 'center', width: '100%', lineHeight: '100%'}}> End </div>
+			</div>
+
+			<div className="edit-item">
+			<div className='dateStart'> Date </div>
+			<input className="typeable" id="edit-task-end-date" type="date" ref="dateEnd" /> 
+			</div>
+			<div className="edit-item">
+			<div className='timeStart'> Time </div>
+			<input className="typeable" id="edit-task-end-time" type="time" ref="timeEnd"  /> 
 			</div>
 			<div className="form-item" style={{borderBottom : "1px solid #424242", padding: "0.5em", lineHeight: "2em", 'textAlign' : 'left'}}>
 			<div style={{width: window.innerWidth > 992 ? '15%' : "30%", display: "inline-block", fontSize: '1em'}}>Set Alarm? </div>
