@@ -11,6 +11,7 @@ const DesktopLayout = (props)=>{
 		return(
 			<div className="wrapper animated fadeIn">
 			<Tasks 
+				showTasks={props.showTasks}
 				filteredTasks={props.filteredTasks} 
 				show={props.viewTaskList} 
 				showDetail={props.showDetail} 

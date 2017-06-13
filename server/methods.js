@@ -18,6 +18,8 @@ Meteor.methods({
 			text: task.text,
 			dateStart: task.dateStart,
 			timeStart: task.timeStart,
+			dateEnd: task.dateEnd,
+			timeEnd: task.timeEnd,
 			tag: task.tagType,
 			completed: false,
 			createdAt: new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000)).getTime(),
@@ -87,6 +89,8 @@ Meteor.methods({
 				text : task.text,
 				dateStart : task.dateStart,
 				timeStart : task.timeStart,
+				dateEnd: task.dateEnd,
+				timeEnd: task.timeEnd,
 				desc : task.desc,
 				alarm: task.alarm,
 				timeUTC : task.timeUTC,
@@ -202,6 +206,18 @@ Meteor.methods({
 			$set : {schedule : mySchedule.schedule}
 		});
 	},
+	updateUsername(username){
+		if(!Meteor.users.findOne({username: username})){
+			/* This username is available. Update this user and then return "200" success */
+			Meteor.users.update(Meteor.userId(), {
+				$set: {username: username}
+			});
+			return "200";
+		} else {
+			/* this username is not available return "403" forbidden */
+			return "403";
+		}
+	},
 	updateProfilePic(imgAsString){
 		if(!Meteor.userId()){
 			throw new Meteor.Error('not-authorized');
@@ -283,7 +299,7 @@ Meteor.methods({
 		// console.log(possibleTimes[0], possibleTimes.length)
 		/* For now, return the first best time */
 		// console.log(new Date().getTime() - t0)
-		return possibleTimes[0];
+		return possibleTimes;
 
 	},
 	/* I hope you're still sitting because this is gross */

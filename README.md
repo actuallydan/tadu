@@ -56,6 +56,13 @@
 * 5.0 Tadu Concierge 
 
 #### What Needs Done
+* URGENT:
+	* Notifications cron needs to fit new date/time start/end spec
+		* Alerts go off on task start, if alarm is set
+		* Fixed notification (as-is) goes off on task end
+	* TaskAlert Toasts should have Y/N buttons instead of time
+	* Add new type of notification : taskCheckup
+	* In MainLayout render, search for notifications that are seen and have data.UTCtime < now (tasks whose alarm should have gone off and have not been checked)
 * BUG :
 	* Can't tab sometimes on login/register
 	* Firefox add task validation on all fields  (use moment().isValid() on date and time)
@@ -76,9 +83,8 @@
 * iOS 
 	* Splash screen
 * Ionicons
-* Get NEXT best time in addTask (return whole array and not just one) 
-* Notify when a task has been shared with you only on addTask
 * scheduleBesttime() should also check for half hour increments
+	* Requires schedule objects to be in half hour increments to add to possibleTimesBlock
 * diff colors for different types of task single
 
 

@@ -52,20 +52,8 @@ export default class AddTaskStage1 extends Component {
 					}).sort((a, b)=> {return a.uses < b.uses; })
 					.map((tag)=>{
 						n++;
-						let colorClass = "green";
-						switch(Math.floor(Math.random() * 3)){
-							case 0:
-							colorClass = "green";
-							break;
-							case 1:
-							colorClass = "dark-green";
-							break;
-							case 2:
-							colorClass = "light-green";
-							break;
-						}
 						return (
-							<div className={"event-tag-tile " + colorClass} key={tag.type} data-uses={tag.uses} data-id={tag._id} data-tag={tag.type} onClick={this.props.taskStage2.bind(this)}>
+							<div className={"event-tag-tile"} key={tag.type} data-uses={tag.uses} data-id={tag._id} data-tag={tag.type} onClick={this.props.taskStage2.bind(this)}>
 							{tag.type}
 							</div>
 							)

@@ -10,8 +10,21 @@ export default class TaskDetail extends React.Component{
 			showAlarmVisible: false,
 			sharingWith: [],
 			userList: [],
-			creator: null
+			userListIndex: 0,
+			creator: null,
+			showStart: true,
+			showEnd: false,
 		}
+	}
+	showStart(){
+		this.setState({
+			showStart: !this.state.showStart
+		})
+	}
+	showEnd(){
+		this.setState({
+			showEnd: !this.state.showEnd
+		})
 	}
 	componentWillReceiveProps(nextProps){
 		if(this.props.taskDetail !== nextProps.taskDetail){
@@ -43,6 +56,9 @@ export default class TaskDetail extends React.Component{
 				if(err){
 					swal("Sorry!", "There was an error commucicatring with the server: " + err, "error");
 				} else if(res !== null) {
+					res = res.filter((user)=>{
+						return this.state.sharingWith.findIndex((existingUser)=>{ return existingUser._id === user._id}) === -1
+					});
 					this.setState({userList : res});
 				}
 			})
@@ -56,16 +72,19 @@ export default class TaskDetail extends React.Component{
 			username: e.target.getAttribute("data-username")
 		};
 		let newSharingWith = this.state.sharingWith;
-		newSharingWith.push(addUser);
-		this.setState({
-			sharingWith : newSharingWith,
-			userList : []
-		}, ()=>{
-			/* Clear search when done */
-			document.getElementById("find-user-share-text").value = "";
+		if(newSharingWith.findIndex((existingUser)=>{ return existingUser._id === addUser._id}) === -1){
+			let newSharingWith = this.state.sharingWith;
+			newSharingWith.push(addUser);
+			this.setState({
+				sharingWith : newSharingWith,
+				userList : []
+			}, ()=>{
+				/* Clear search when done */
+				document.getElementById("find-user-share-text").value = "";
 			// console.log(addUser, this.state.sharingWith);
 
 		});
+		}
 	}
 	removeUser(e){
 		let removeUser = e.target.getAttribute("data-id");
@@ -77,6 +96,50 @@ export default class TaskDetail extends React.Component{
 		sharArr.splice(index, 1);
 		this.setState({
 			sharingWith : sharArr
+		});
+	}
+	changeUser(amt){
+		this.setState({
+			userListIndex : this.state.userListIndex + amt
+		});
+	}
+	selectNextFromList(e){
+		// attach to id=find-user-share-text onKeyDown={this.selectNextFromList.bind(this)}
+		if(e.keyCode === 40){
+			// Select next user
+			if(this.state.userList.length > 0 && this.state.userListIndex < this.state.userList.length - 1){
+				this.changeUser(1);
+			}
+			e.preventDefault();
+		} else if(e.keyCode === 38){
+			// Select previous user
+			if(this.state.userList.length > 0 && this.state.userListIndex > 0){
+				this.changeUser(-1);
+			}
+			e.preventDefault();
+
+		} else if(e.keyCode === 13){
+			// Enter, add user
+			if(this.state.userList.length > 0){
+				const firstUser = {
+					_id: this.state.userList[this.state.userListIndex]._id,
+					username: this.state.userList[this.state.userListIndex].username
+				};
+				this.addUserWithEnter(firstUser);
+			}
+			e.preventDefault();
+		}
+	}
+	addUserWithEnter(user){
+		let newSharingWith = this.state.sharingWith;
+		newSharingWith.push(user);
+		this.setState({
+			sharingWith : newSharingWith,
+			userList : [],
+			userListIndex: 0
+		}, ()=>{
+			/* Clear search when done */
+			document.getElementById("find-user-share-text").value = "";
 		});
 	}
 	editTask(e){
@@ -101,16 +164,86 @@ export default class TaskDetail extends React.Component{
 				alarm = 5;
 			}
 		}
+		let UTCAlarmTime = null;
+
+		if(alarm !== null){
+			if(this.refs.dateStart.value !== ""){
+				/* has start date */
+				if(this.refs.timeStart.value !== ""){
+					if(this.refs.dateEnd.value !== ""){
+						if(this.refs.timeEnd.value !== ""){
+							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+						} else {
+							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + this.refs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+						}
+					} else {
+						if(this.refs.timeEnd.value !== ""){
+							UTCAlarmTime = moment(this.refs.dateStart.value.trim() + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+						} else {
+							UTCAlarmTime = moment(this.refs.dateStart.value.trim() + "T" + this.refs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+						}
+					}
+				} else {
+					if(this.refs.dateEnd.value !== ""){
+						if(this.refs.timeEnd.value !== ""){
+							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+						} else {
+							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + "00:00", "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+						}
+					} else {
+						if(this.refs.timeEnd.value !== ""){
+							UTCAlarmTime = moment(this.refs.dateStart.value.trim() + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+						} else {
+							UTCAlarmTime = moment(this.refs.dateStart.value.trim() + "T" + "00:00", "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+						}
+					}
+				}
+			} else {
+				/* does not have start date */
+				if(this.refs.timeStart.value !== ""){
+					if(this.refs.dateEnd.value !== ""){
+						if(this.refs.timeEnd.value !== ""){
+							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+						} else {
+							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + this.refs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+						}
+					} else {
+						if(this.refs.timeEnd.value !== ""){
+							UTCAlarmTime = moment(moment().format("YYYY-MM-DD") + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+						} else {
+							UTCAlarmTime = moment(moment().format("YYYY-MM-DD") + "T" + this.refs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+						}
+					}
+				} else {
+					if(this.refs.dateEnd.value !== ""){
+						if(this.refs.timeEnd.value !== ""){
+							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+						} else {
+							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + "00:00", "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+						}
+					} else {
+						if(this.refs.timeEnd.value !== ""){
+							UTCAlarmTime = moment(moment().format("YYYY-MM-DD") + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+						} else {
+							swal("Invalid Time", "Please supply at least one date or time", "error");
+							return false;		
+						}
+					}
+				}
+			}
+		}		
 		const updatedTask = {
 			_id: old._id,
 			text: this.refs.title.value.trim(),
-			dateStart:this.refs.dateStart.value.trim(),
-			timeStart:this.refs.timeStart.value.trim(), 
+			dateStart : this.refs.dateStart.value.trim() !== "" ? this.refs.dateStart.value.trim() : this.refs.dateEnd.value.trim() !== null ? this.refs.dateEnd.value.trim() : moment().format("YYYY-MM-DD"),
+			timeStart : this.refs.timeStart.value.trim() !== "" ? this.refs.timeStart.value.trim() : this.refs.timeEnd.value.trim() !== null ? moment(this.refs.timeEnd.value.trim(), "HH:mm").subtract(1, 'hours').format("HH:mm") : moment().format("HH:mm"),
+			dateEnd: this.refs.dateEnd.value.trim() !== "" ? this.refs.dateEnd.value.trim() : this.refs.dateStart.value.trim() !== null ? this.refs.dateStart.value.trim() : moment().format("YYYY-MM-DD"),
+			timeEnd: this.refs.timeEnd.value.trim() !== "" ? this.refs.timeEnd.value.trim() : this.refs.timeStart.value.trim() !== null ? moment(this.refs.timeStart.value.trim(), "HH:mm").add(1, 'hours').format("HH:mm") : moment().add(1, 'hours').format("HH:mm"),
 			tag:  old.tag,
 			userId:  old.userId,
 			desc: this.refs.desc.value.trim(),
 			alarm: alarm,
-			timeUTC: alarm !== null ? moment(this.refs.dateStart.value.trim() + "T" + this.refs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16) : null,
+			timeUTC: UTCAlarmTime,
 			sharingWith: this.state.sharingWith === undefined ? [] : this.state.sharingWith 
 		};
 
@@ -127,10 +260,12 @@ export default class TaskDetail extends React.Component{
 		});
 	}
 	componentDidUpdate(){
-		if(this.props.taskDetail !== null){
+		if(this.props.taskDetail !== null && this.props.taskDetail !== undefined ){
 			document.getElementById("edit-task-title").value = this.props.taskDetail.text;
 			document.getElementById("edit-task-date").value = this.props.taskDetail.dateStart;
 			document.getElementById("edit-task-time").value = this.props.taskDetail.timeStart;
+			document.getElementById("edit-task-end-date").value = this.props.taskDetail.dateEnd;
+			document.getElementById("edit-task-end-time").value = this.props.taskDetail.timeEnd;
 			document.getElementById("edit-task-desc").value = this.props.taskDetail.desc !== null ? this.props.taskDetail.desc : "";
 			document.getElementById("has-alarm-toggle").checked = this.state.showAlarmVisible;
 			this.state.showAlarmVisible ? this.clicker(this.props.taskDetail.alarm) : "";
@@ -175,13 +310,33 @@ export default class TaskDetail extends React.Component{
 			<div className='text'> Title </div>
 			<input className="" id="edit-task-title" type="text" ref="title" defaultValue={this.props.taskDetail.text}  required maxLength="75"/>
 			</div>
-			<div className="edit-item">
-			<div className='dateStart'> Date </div>
-			<input className="typeable" id="edit-task-date" type="date" ref="dateStart" defaultValue={this.props.taskDetail.dateStart} /> 
+
+			<div className="edit-item" style={{height: '1em', minHeight: 0,lineHeight: '0.5em',backgroundColor: '#1de9b6',color: '#242424'}}>
+			<div style={{textAlign: 'center', width: '100%', lineHeight: '100%'}}> Start </div>
+			<div id="edit-task-show-start" onClick={this.showStart.bind(this)} className={this.state.showStart ? "mdi mdi-chevron-up" : "mdi mdi-chevron-down"}></div>
 			</div>
-			<div className="edit-item">
+
+			<div className={this.state.showStart ? "edit-item" : "edit-item hidden"}>
+			<div className='dateStart'> Date </div>
+			<input className="typeable" id="edit-task-date" type="date" ref="dateStart" /> 
+			</div>
+			<div className={this.state.showStart ? "edit-item" : "edit-item hidden"}>
 			<div className='timeStart'> Time </div>
-			<input className="typeable" id="edit-task-time" type="time" ref="timeStart"  defaultValue={this.props.taskDetail.timeStart} /> 
+			<input className="typeable" id="edit-task-time" type="time" ref="timeStart"  /> 
+
+			</div>
+			<div className="edit-item" style={{height: '1em', minHeight: 0,lineHeight: '0.5em',backgroundColor: '#1de9b6',color: '#242424'}}>
+			<div style={{textAlign: 'center', width: '100%', lineHeight: '100%'}}> End </div>
+			<div id="edit-task-show-end" onClick={this.showEnd.bind(this)} className={this.state.showEnd ? "mdi mdi-chevron-up" : "mdi mdi-chevron-down"}></div>
+			</div>
+
+			<div className={this.state.showEnd ? "edit-item" : "edit-item hidden"}>
+			<div className='dateStart'> Date </div>
+			<input className="typeable" id="edit-task-end-date" type="date" ref="dateEnd" /> 
+			</div>
+			<div className={this.state.showEnd ? "edit-item" : "edit-item hidden"}>
+			<div className='timeStart'> Time </div>
+			<input className="typeable" id="edit-task-end-time" type="time" ref="timeEnd"  /> 
 			</div>
 			<div className="form-item" style={{borderBottom : "1px solid #424242", padding: "0.5em", lineHeight: "2em", 'textAlign' : 'left'}}>
 			<div style={{width: window.innerWidth > 992 ? '15%' : "30%", display: "inline-block", fontSize: '1em'}}>Set Alarm? </div>
@@ -219,13 +374,13 @@ export default class TaskDetail extends React.Component{
 
 		{/* If The user is the creator of this task let them search for users to add otherwise display the User who created it */}
 		{this.props.taskDetail.userId === Meteor.userId() ? 
-			<div className="form-item"><span className='form-item-label'> Share with: </span><input autoComplete="off" id="find-user-share-text" onChange={this.findUsers.bind(this)} className="typeable" type="text" maxLength="75" placeholder="Enter a username"/> </div>
+			<div className="form-item"><span className='form-item-label'> Share with: </span><input autoComplete="off" id="find-user-share-text" onChange={this.findUsers.bind(this)} onKeyDown={this.selectNextFromList.bind(this)}  className="typeable" type="text" maxLength="75" placeholder="Enter a username"/> </div>
 			:
 			<div className="form-item"><span className='form-item-label'> Creator: </span>{this.state.creator}</div>
 		}
-		<div style={{display: this.state.userList.length > 0 ? "block" : "none"}} id="share-with-user-list">
+		<div style={{display: this.state.userList.length > 0 ? "block" : "none"}} id="share-with-user-list" >
 		{this.state.userList.length === 0 ? "" : this.state.userList.filter((user)=>{ return this.state.sharingWith.findIndex((obj)=>{ return obj.username === user.username }) === -1 }).map((user)=>{
-			return (<div className="share-search-result" key={user._id} data-username={user.username} data-userId={user._id} onClick={this.addUser.bind(this)}>{user.username}</div>)
+			return (<div className="share-search-result" key={user._id} data-username={user.username} data-userId={user._id} onClick={this.addUser.bind(this)} style={this.state.userList[this.state.userListIndex]._id === user._id ? {backgroundColor: '#1de9b6', 'color': '#242424'} : {display: 'normal'}}>{user.username}</div>)
 		})}
 		</div>
 		<div id="sharing-with-list">
