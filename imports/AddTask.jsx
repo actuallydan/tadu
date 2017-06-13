@@ -30,6 +30,7 @@ export default class AddTask extends Component {
 			alarm : "5min",
 			showLoader: false,
 			userList: [],
+			userListIndex: 0,
 			sharingWith: [],
 			showStart: true,
 			showEnd: false,
@@ -50,6 +51,11 @@ export default class AddTask extends Component {
 	updateSearch(event){
 		this.setState({search: event.target.value});
 	}
+	changeUser(amt){
+		this.setState({
+			userListIndex : this.state.userListIndex + amt
+		});
+	}
 	/* Given the search parameters, return an array of all user objects whose username contains 'search', store it in state and generate dropdown*/
 	findUsers(){
 		let search = document.getElementById("find-user-share-text").value.trim();
@@ -58,6 +64,10 @@ export default class AddTask extends Component {
 				if(err){
 					swal("Sorry!", "There was an error commucicatring with the server: " + err, "error");
 				} else if(res !== null) {
+					/* Remove from this list all users we're already sharing with */
+					res = res.filter((user)=>{
+						return this.state.sharingWith.findIndex((existingUser)=>{ return existingUser._id === user._id}) === -1
+					});
 					this.setState({userList : res});
 				}
 			})
@@ -71,15 +81,30 @@ export default class AddTask extends Component {
 			username: e.target.getAttribute("data-username")
 		};
 		let newSharingWith = this.state.sharingWith;
-		newSharingWith.push(addUser);
+		if(newSharingWith.findIndex((existingUser)=>{ return existingUser._id === addUser._id}) === -1){
+			newSharingWith.push(addUser);
+			this.setState({
+				sharingWith : newSharingWith,
+				userList : [],
+				userListIndex: 0
+			}, ()=>{
+				/* Clear search when done */
+				document.getElementById("find-user-share-text").value = "";
+			// console.log(addUser, this.state.sharingWith);
+
+		});
+		}
+	}
+	addUserWithEnter(user){
+		let newSharingWith = this.state.sharingWith;
+		newSharingWith.push(user);
 		this.setState({
 			sharingWith : newSharingWith,
-			userList : []
+			userList : [],
+			userListIndex: 0
 		}, ()=>{
 			/* Clear search when done */
 			document.getElementById("find-user-share-text").value = "";
-			// console.log(addUser, this.state.sharingWith);
-
 		});
 	}
 	removeUser(e){
@@ -203,10 +228,10 @@ export default class AddTask extends Component {
 
 			let task = {
 				text : taskRefs.newTask.value.trim(),
-				dateStart : taskRefs.dateStart.value.trim() !== "" ? taskRefs.dateStart.value.trim() : null,
-				timeStart : taskRefs.timeStart.value.trim() !== "" ? taskRefs.timeStart.value.trim() : null,
-				dateEnd: taskRefs.dateEnd.value.trim() !== "" ? taskRefs.dateEnd.value.trim() : null,
-				timeEnd: taskRefs.timeEnd.value.trim() !== "" ? taskRefs.timeEnd.value.trim() : null,
+				dateStart : taskRefs.dateStart.value.trim() !== "" ? taskRefs.dateStart.value.trim() : taskRefs.dateEnd.value.trim() !== null ? taskRefs.dateEnd.value.trim() : moment().format("YYYY-MM-DD"),
+				timeStart : taskRefs.timeStart.value.trim() !== "" ? taskRefs.timeStart.value.trim() : taskRefs.timeEnd.value.trim() !== null ? moment(taskRefs.timeEnd.value.trim(), "HH:mm").subtract(1, 'hours').format("HH:mm") : moment().format("HH:mm"),
+				dateEnd: taskRefs.dateEnd.value.trim() !== "" ? taskRefs.dateEnd.value.trim() : taskRefs.dateStart.value.trim() !== null ? taskRefs.dateStart.value.trim() : moment().format("YYYY-MM-DD"),
+				timeEnd: taskRefs.timeEnd.value.trim() !== "" ? taskRefs.timeEnd.value.trim() : taskRefs.timeStart.value.trim() !== null ? moment(taskRefs.timeStart.value.trim(), "HH:mm").add(1, 'hours').format("HH:mm") : moment().add(1, 'hours').format("HH:mm"),
 				tagType : this.state.tagType,
 				userId: Meteor.userId(),
 				desc: taskRefs.desc.value.trim() !== null ? taskRefs.desc.value.trim() : null,
@@ -256,22 +281,22 @@ export default class AddTask extends Component {
 						});
 					} else {
 						/* retrieved all the best times, but just in case, set the start date and time for whenever is selected */
-					this.setState({
-						stage1 : false,
-						tagType : tag,
-						bestTimes : res,
-						hasBeenOptimized: true
-					}, ()=>{
+						this.setState({
+							stage1 : false,
+							tagType : tag,
+							bestTimes : res,
+							hasBeenOptimized: true
+						}, ()=>{
 
-						let bestDate = moment(this.props.selectedDate + "T" + moment().format("HH:mm"), "YYYY-MM-DDTHH:mm").format("YYYY-MM-DDTHH:mm");
-						document.getElementById("new-task-date").value = bestDate.substring(0, 10);
-						document.getElementById("new-task-time").value = moment(bestDate).add(1, 'hour').format("HH:mm");
-						document.getElementById("new-task-end-date").value = bestDate.substring(0, 10);
-						document.getElementById("new-task-end-time").value = moment(bestDate).add(2, 'hour').format("HH:mm");
-					});
-					
-				}
-			});
+							let bestDate = moment(this.props.selectedDate + "T" + moment().format("HH:mm"), "YYYY-MM-DDTHH:mm").format("YYYY-MM-DDTHH:mm");
+							document.getElementById("new-task-date").value = bestDate.substring(0, 10);
+							document.getElementById("new-task-time").value = moment(bestDate).add(1, 'hour').format("HH:mm");
+							document.getElementById("new-task-end-date").value = bestDate.substring(0, 10);
+							document.getElementById("new-task-end-time").value = moment(bestDate).add(2, 'hour').format("HH:mm");
+						});
+
+					}
+				});
 			} else {
 				/* when there are network issues we can skip the automation bits */
 				let bestDate = moment().format();
@@ -318,6 +343,7 @@ export default class AddTask extends Component {
 				search: "",
 				showLoader: false,
 				userList: [],
+				userListIndex: 0,
 				sharingWith: [],
 				showStart : true,
 				showEnd: false,
@@ -405,9 +431,12 @@ export default class AddTask extends Component {
 				changeAlarm={this.changeAlarm.bind(this)}
 				showAlarm={this.showAlarm.bind(this)}
 				userList={this.state.userList}
+				userListIndex={this.state.userListIndex}
 				sharingWith={this.state.sharingWith}
 				findUsers={this.findUsers.bind(this)}
+				changeUser={this.changeUser.bind(this)}
 				addUser={this.addUser.bind(this)}
+				addUserWithEnter={this.addUserWithEnter.bind(this)}
 				removeUser={this.removeUser.bind(this)}
 				toggleShowStart={this.toggleShowStart.bind(this)}
 				toggleShowEnd={this.toggleShowEnd.bind(this)}

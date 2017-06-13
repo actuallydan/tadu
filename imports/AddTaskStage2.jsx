@@ -20,21 +20,33 @@ export default class AddTaskStage2 extends React.Component {
 		this.props.changeBestTime(num);
 	}
 
-	// selectNextFromList(e){
-
+	selectNextFromList(e){
 		// attach to id=find-user-share-text onKeyDown={this.selectNextFromList.bind(this)}
-	// 	if(e.keyCode === 40){
-	// 		// Select next user
-	// 		this.props.changeUser
-	// 	} else if(e.keyCode === 38){
-	// 		// Select previous user
-	// 	} else if(){
-	// 		// Enter, add user
-	// 	} else {
-	// 		e.preventDefault();
-	// 	}
-	// 	// let usersInList = document.getElementById('share-with-user-list').children;
-	// }
+		if(e.keyCode === 40){
+			// Select next user
+			if(this.props.userList.length > 0 && this.props.userListIndex < this.props.userList.length - 1){
+				this.props.changeUser(1);
+			}
+			e.preventDefault();
+		} else if(e.keyCode === 38){
+			// Select previous user
+			if(this.props.userList.length > 0 && this.props.userListIndex > 0){
+				this.props.changeUser(-1);
+			}
+			e.preventDefault();
+
+		} else if(e.keyCode === 13){
+			// Enter, add user
+			if(this.props.userList.length > 0){
+				const firstUser = {
+					_id: this.props.userList[this.props.userListIndex]._id,
+					username: this.props.userList[this.props.userListIndex].username
+				};
+				this.props.addUserWithEnter(firstUser);
+			}
+			e.preventDefault();
+		}
+	}
 	render(){
 		let bestDate = moment(this.props.selectedDate, "YYYY-MM-DD").format("YYYY-MM-DDTHH:mm")
 		if(this.props.hasBeenOptimized){
@@ -48,6 +60,7 @@ export default class AddTaskStage2 extends React.Component {
 			let bestEndDateFormatted = bestDate.substring(0, 10);
 			let bestEndTimeFormatted = moment(bestDate, "YYYY-MM-DDTHH:mm").add(1, 'hour').format("HH:mm");
 		}
+
 		return(
 			<form autoComplete="off" onSubmit={this.submit.bind(this)} className={this.props.stage1 ?  "animated slideOutRight" : "animated pulse"}>
 			<div className="form-item"><span className='form-item-label'> Title </span><input className="typeable" type="text" ref="newTask" defaultValue={this.props.tagType}  required maxLength="75"/> </div>
@@ -103,12 +116,12 @@ export default class AddTaskStage2 extends React.Component {
 				</div>
 				</div>
 
-				<div className="form-item"><span className='form-item-label'> Share with: </span><input autoComplete="off" id="find-user-share-text" onChange={this.findUsers.bind(this)} className="typeable" type="text" maxLength="75" placeholder="Enter a username"/> </div>
+				<div className="form-item"><span className='form-item-label'> Share with: </span><input autoComplete="off" id="find-user-share-text" onChange={this.findUsers.bind(this)} onKeyDown={this.selectNextFromList.bind(this)} className="typeable" type="text" maxLength="75" placeholder="Enter a username"/> </div>
 				<div style={{display: this.props.userList.length > 0 ? "block" : "none"}} id="share-with-user-list">
 				{this.props.userList.length === 0 ? "" : this.props.userList.filter((user)=>{ return this.props.sharingWith.findIndex((obj)=>{ return obj.username === user.username }) === -1 }).map((user)=>{
-					return (<div className="share-search-result" key={user._id} data-username={user.username} data-userId={user._id} onClick={this.props.addUser.bind(this)}>
+					return (<div className="share-search-result" key={user._id} data-username={user.username} data-userId={user._id} onClick={this.props.addUser.bind(this)} style={this.props.userList[this.props.userListIndex]._id === user._id ? {backgroundColor: '#1de9b6', 'color': '#242424'} : {display: 'normal'}}>
 						{user.profile.pic !== undefined && user.profile.pic !== null && user.profile.pic !== "" ?
-						<div className="profilePic" style={{background: 'url(' + user.profile.pic + ') no-repeat center', marginRight: '0.5em', display: 'inline-block', backgroundSize: 'cover', width: '1em', height: '1em', borderRadius: '100%', 'cursor': 'pointer'}}></div>
+						<div className="profilePic" style={{background: 'url(' + user.profile.pic + ') no-repeat center', marginRight: '0.5em', display: 'inline-block', backgroundSize: 'cover', width: '1.5em', height: '1.5em', verticalAlign: 'middle', borderRadius: '100%', 'cursor': 'pointer'}}></div>
 						:
 						<div className="profilePic mdi mdi-account-circle" style={{width: '1em', display: 'inline-block', fontSize : '1em' ,'cursor': 'pointer', marginRight: '0.5em'}}></div>
 					}

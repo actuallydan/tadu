@@ -33,7 +33,7 @@ export default class FileUpload extends Component{
 		return (
 			<div>
 			<div style={{fontSize: '1.1em'}}>Upload Photo</div>
-			<div style={{color: '#424242', fontSize: '0.8em'}}>Your photo will be centered.<br/> Square images work best.</div>
+			<div style={{color: '#616161', fontSize: '0.8em'}}>Your photo will be centered.<br/> Square images work best.</div>
 			<br/>
 			<div style={{height: 'auto'}}>
 			<label id='labelForUploadPic' htmlFor='uploadPic' style={{display: 'inline-block', verticalAlign: 'middle', marginRight: '1em'}}>Choose Image</label>

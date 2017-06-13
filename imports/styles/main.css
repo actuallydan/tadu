@@ -136,7 +136,7 @@ html, body, #root {
 	z-index: 100;
 }
 .user-menu{
-	width: 80%;
+	width: 90%;
 	margin: 1em auto;
 	height: auto;
 	background: #242424;
@@ -412,6 +412,15 @@ html, body, #root {
 	line-height: 1.6em;
 	display: inline-block;
 }
+#labelForUploadPic:hover ,
+.submit-button:hover {
+	background-color: #1de9b6;
+	color: #242424;
+}
+.cancel-button:hover {
+	background-color: #f44336;
+	color: #242424;
+}
 .menu-item{
 	width: 100%;
 	background-color: transparent;
@@ -578,15 +587,7 @@ html, body, #root {
 	width: 76%;
 	text-align: center;
 }
-#add-task-show-start {
-	cursor: pointer;
-	float: right;
-	position: absolute;
-	right: 0.5em;
-	margin-top: -0.75em;
-	color: #242424;
-}
-#add-task-show-end {
+#add-task-show-start, #add-task-show-end {
 	cursor: pointer;
 	float: right;
 	position: absolute;
@@ -1050,6 +1051,17 @@ label {
 	width: 100%;
 	color: #FFF;
 }
+#edit-task-show-start, #edit-task-show-end {
+	cursor: pointer;
+	float: right;
+	position: absolute;
+	color: #242424;
+	right: 0%;
+	margin-top: 0;
+	text-align: center;
+	line-height: 100%;
+    vertical-align: middle;
+}
 /* Weird ipad fixes */
 @media screen and (min-width: 768px){
 	html, body, #root {
@@ -1164,6 +1176,7 @@ medium screens
 	#labelForUploadPic {
 		font-size: 1em;
 		width: 30%;
+		cursor: pointer;
 	}
 	#cal-year{
 		position: relative;
