@@ -578,6 +578,39 @@ html, body, #root {
 	width: 76%;
 	text-align: center;
 }
+#add-task-show-start {
+cursor: pointer;
+    float: right;
+    position: absolute;
+    right: 0.5em;
+    margin-top: -0.75em;
+    color: #FFF;
+}
+#add-task-show-end {
+	cursor: pointer;
+    float: right;
+    position: absolute;
+    right: 0.5em;
+    margin-top: -0.75em;
+    color: #FFF;
+}
+#get-next-best-time {
+	cursor: pointer;
+}
+#get-next-best-time:hover {
+	background: #1de9b6;
+	color: #242424;
+}
+#get-next-best-time-buttons {
+	cursor: pointer;
+	 width: 15%;
+	 display: inline-block;
+	 margin: 0;
+    padding: 0;
+    border: none;
+    vertical-align: middle;
+	}
+}
 #search-wrapper{
 	background-color: transparent;
 	color: white;
@@ -647,8 +680,15 @@ label {
 	text-overflow: ellipsis;
 	vertical-align: middle;
 }
-.event-tag-tile:hover {
-	filter: drop-shadow(0 0 20px rgba(0,0,0,0.5));
+.event-tag-tile:nth-of-type(3n+1) {
+	background-color: #1de9b6;
+}
+.event-tag-tile:nth-of-type(3n+2) {
+	background-color: #18f7bf;
+
+}
+.event-tag-tile:nth-of-type(3n+3) {
+	background-color: #13af88;
 }
 .form-item{
 	min-height: 2em;
@@ -1264,6 +1304,9 @@ large screens
 }
 .hidden {
 	display: none !important;
+}
+.invisible {
+	visibility: hidden;
 }
 .normalFont {
 	font-size: 1em;

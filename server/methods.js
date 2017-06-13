@@ -299,7 +299,7 @@ Meteor.methods({
 		// console.log(possibleTimes[0], possibleTimes.length)
 		/* For now, return the first best time */
 		// console.log(new Date().getTime() - t0)
-		return possibleTimes[0];
+		return possibleTimes;
 
 	},
 	/* I hope you're still sitting because this is gross */

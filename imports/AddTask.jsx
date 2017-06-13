@@ -25,12 +25,26 @@ export default class AddTask extends Component {
 				tagTypes: Meteor.subscribe("tagTypes")
 			},
 			search: "",
-			hasBeenOptimized: false,
+			bestTimes: [],
+			bestTimeIndex: 0,
 			alarm : "5min",
 			showLoader: false,
 			userList: [],
-			sharingWith: []
+			sharingWith: [],
+			showStart: true,
+			showEnd: false,
+			hasBeenOptimized: false
 		};
+	}
+	toggleShowStart(){
+		this.setState({
+			showStart : !this.state.showStart
+		});
+	}
+	toggleShowEnd(){
+		this.setState({
+			showEnd : !this.state.showEnd
+		});
 	}
 	/* Update the parameter of our search for the perfect tag */
 	updateSearch(event){
@@ -227,8 +241,10 @@ export default class AddTask extends Component {
 			/* Setting the state to stage1 = false re-renders the component to show stage 2 */
 			if(navigator.onLine){
 				this.showLoader();
+				/* Get All of the best times to do this task */
 				Meteor.call("scheduleBestTime", {"tag": tag , "today": moment().format("YYYY-MM-DDTHH:mm:ss") }, (err, res)=>{
 					if(err){
+						/* There was a server error */
 						swal("Oops...", err, "error");
 						this.setState({
 							stage1 : true,
@@ -236,21 +252,24 @@ export default class AddTask extends Component {
 							search: "",
 							showLoader: false,
 							userList: [],
-							sharingWith: []
+							sharingWith: [],
 						});
 					} else {
-					// let daysFromToday = res.day - parseInt(moment().format('e'));
-					let daysFromToday = res.day - parseInt(moment().format('e')) >= 0 ? res.day - parseInt(moment().format('e')) : 7 + (res.day - parseInt(moment().format('e')));
-					let bestDate = moment(res.time, "HH:mm").add(daysFromToday, "days").format();
+						/* retrieved all the best times, but just in case, set the start date and time for whenever is selected */
 					this.setState({
 						stage1 : false,
 						tagType : tag,
-						hasBeenOptimized : true
+						bestTimes : res,
+						hasBeenOptimized: true
+					}, ()=>{
+
+						let bestDate = moment(this.props.selectedDate + "T" + moment().format("HH:mm"), "YYYY-MM-DDTHH:mm").format("YYYY-MM-DDTHH:mm");
+						document.getElementById("new-task-date").value = bestDate.substring(0, 10);
+						document.getElementById("new-task-time").value = moment(bestDate).add(1, 'hour').format("HH:mm");
+						document.getElementById("new-task-end-date").value = bestDate.substring(0, 10);
+						document.getElementById("new-task-end-time").value = moment(bestDate).add(2, 'hour').format("HH:mm");
 					});
-					document.getElementById("new-task-date").value = bestDate.substring(0, 10);
-					document.getElementById("new-task-time").value = bestDate.substring(11, 16);
-					document.getElementById("new-task-end-date").value = bestDate.substring(0, 10);
-					document.getElementById("new-task-end-time").value = moment(bestDate, "HH:mm").add(1, 'hour').format("HH:mm");
+					
 				}
 			});
 			} else {
@@ -263,7 +282,7 @@ export default class AddTask extends Component {
 					document.getElementById("new-task-date").value = bestDate.substring(0, 10);
 					document.getElementById("new-task-time").value = bestDate.substring(11, 16);
 					document.getElementById("new-task-end-date").value = bestDate.substring(0, 10);
-					document.getElementById("new-task-end-time").value = moment(bestDate, "HH:mm").add(1, 'hour').format("HH:mm");
+					document.getElementById("new-task-end-time").value = moment(bestDate).add(1, 'hour').format("HH:mm");
 				});
 
 			}
@@ -272,6 +291,23 @@ export default class AddTask extends Component {
 			this.setState({
 				showAlarmVisible: !this.state.showAlarmVisible
 			});
+		}
+		changeBestTime(amt){
+			/* If the user clicks forward or backward we want to update the suggested time to schedule */
+			this.setState({
+				bestTimeIndex : this.state.bestTimeIndex += amt
+			}, ()=>{
+				/* If the amt === 0, we want to set the exisitng fields to the shown best date and time */
+				if(amt === 0){
+					let currBestTime = this.state.bestTimes[this.state.bestTimeIndex];
+					let daysFromToday = currBestTime.day - parseInt(moment().format('e')) >= 0 ? currBestTime.day - parseInt(moment().format('e')) : 7 + (currBestTime.day - parseInt(moment().format('e')));
+					let bestDate = moment(this.props.selectedDate + "T" + currBestTime.time, "YYYY-MM-DDTHH:mm").add(daysFromToday, "days").format("YYYY-MM-DDTHH:mm");
+					document.getElementById("new-task-date").value = bestDate.substring(0, 10);
+					document.getElementById("new-task-time").value = bestDate.substring(11, 16);
+					document.getElementById("new-task-end-date").value = bestDate.substring(0, 10);
+					document.getElementById("new-task-end-time").value = moment(bestDate).add(1, 'hour').format("HH:mm");
+				}
+			})			
 		}
 		/* Trigger method in parent to hide AddTask Component if necessary and clear state to reset form */
 		clearTask(){
@@ -282,7 +318,12 @@ export default class AddTask extends Component {
 				search: "",
 				showLoader: false,
 				userList: [],
-				sharingWith: []
+				sharingWith: [],
+				showStart : true,
+				showEnd: false,
+				bestTimes: [],
+				bestTimeIndex: 0,
+				hasBeenOptimized: false
 			});
 		}
 		/* Method to create a new tag for the user if not available*/
@@ -333,7 +374,7 @@ export default class AddTask extends Component {
 		changeAlarm(e){
 			this.setState({
 				alarm: e.target.value
-			}, console.log("changed to:" + e.target.value));
+			});
 		}
 		/* Relevant parts of AddTask stage 1; this should probably be spun off into it's own component */
 		renderStage1(){
@@ -368,6 +409,13 @@ export default class AddTask extends Component {
 				findUsers={this.findUsers.bind(this)}
 				addUser={this.addUser.bind(this)}
 				removeUser={this.removeUser.bind(this)}
+				toggleShowStart={this.toggleShowStart.bind(this)}
+				toggleShowEnd={this.toggleShowEnd.bind(this)}
+				showStart={this.state.showStart} 
+				showEnd={this.state.showEnd}
+				changeBestTime={this.changeBestTime.bind(this)}
+				bestTimeIndex={this.state.bestTimeIndex}
+				bestTimes={this.state.bestTimes}
 				/>
 				)
 		}

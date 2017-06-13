@@ -17,7 +17,6 @@ export default class FileUpload extends Component{
 			swal("File Error", "Please upload a valid picture file. We accept .jpg, .png, and .gif", "error");
 			return false;
 		}
-		console.log("changing preview");
 		let preview = document.getElementById('editPicPreview');
 		let file    = document.getElementById('uploadPic').files[0];
 		let reader  = new FileReader();

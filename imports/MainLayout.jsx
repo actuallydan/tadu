@@ -143,7 +143,10 @@ export default class MainLayout extends TrackerReact(React.Component) {
 	}
 	/* Gets a date string in "YYYY-MM-DD" format from Calendar and updates the state so the whole app is aware of the date we're looking at as opposed to the current date */
 	selectDate(date){
-		this.state.viewMode === "addTask" || document.getElementById("new-task-date") !== null ? document.getElementById("new-task-date").value = date : "";
+		if(document.getElementById("new-task-date") !== null){
+			document.getElementById("new-task-date").value = date;
+			document.getElementById("new-task-end-date").value = moment(date, "YYYY-MM-DD").add(1, 'hour').format("YYYY-MM-DD");
+		} 
 		this.setState({
 			selectedDate: date
 		});
