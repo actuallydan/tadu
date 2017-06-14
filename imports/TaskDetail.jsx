@@ -12,8 +12,8 @@ export default class TaskDetail extends React.Component{
 			userList: [],
 			userListIndex: 0,
 			creator: null,
-			showStart: true,
-			showEnd: false,
+			showStart: false,
+			showEnd: true,
 		}
 	}
 	showStart(){

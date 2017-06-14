@@ -32,8 +32,8 @@ export default class AddTask extends Component {
 			userList: [],
 			userListIndex: 0,
 			sharingWith: [],
-			showStart: true,
-			showEnd: false,
+			showStart: false,
+			showEnd: true,
 			hasBeenOptimized: false
 		};
 	}
