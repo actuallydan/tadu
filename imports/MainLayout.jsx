@@ -173,7 +173,26 @@ export default class MainLayout extends TrackerReact(React.Component) {
 			case "taskAlert":
 			this.displayTaskAlert(notice);
 			break;
+			case "taskCheckup":
+			this.displayTaskCheckup(notice);
+			break;
 		}
+	}
+	displayTaskCheckup(notice){
+		document.title = "Task Check!";
+		toggleTitle = setInterval(()=>{
+			switch(document.title){
+				case notice.data.text:
+				document.title = "Task Check!";
+				break;
+				case "Task Check!":
+				document.title = notice.data.text;
+				break;
+			}
+		}, 1500);
+		toggleTitle;
+		toast.dismiss();
+		toast(<Toast onClick={()=>{this.displayNotification(notice);toast.dismiss();}}  iconClass={"mdi-alarm-check"} text={notice.data.text} secondary={moment(notice.data.timeEnd, "HH:mm").format("h:mm a")}/>)
 	}
 	displayTaskShare(notice){
 		Meteor.call("findOneUser", notice.data.userId, (err, res)=>{
@@ -225,9 +244,12 @@ export default class MainLayout extends TrackerReact(React.Component) {
 	  					if(err){
 	  						swal("So..", "There was an issue rescheduling..." + "<br/>" + err, "error");
 	  					} else {
-	  						let daysFromToday = res.day - parseInt(moment().format('e')) >= 0 ? res.day - parseInt(moment().format('e')) : 7 + (res.day - parseInt(moment().format('e')));
-	  						let bestDate = moment(res.time, "HH:mm").add(daysFromToday, "days").format();
+	  						/* Only get the first time */
+	  						res = res[0];
 
+	  						let daysFromToday = res.day - parseInt(moment().format('e')) >= 0 ? res.day - parseInt(moment().format('e')) : 7 + (res.day - parseInt(moment().format('e')));
+	  						let bestDate = moment(res.time, "HH:mm").add(daysFromToday, "days").format("YYYY-MM-DDTHH:mm");
+	  						console.log(bestDate)
 	  						/* Change threshold */
 	  						/* Provide tag (notice.data.tag), date and time (notice.data.dateStart, notice.data.timeStart) and signed amount to change */
 	  						Meteor.call("changeThreshold", {tag: notice.data.tag, date: notice.data.dateStart, time: notice.data.timeStart, amt: -0.15})
@@ -235,11 +257,13 @@ export default class MainLayout extends TrackerReact(React.Component) {
 	  						let newTask = {
 	  							_id: notice.data._id,
 	  							text : notice.data.text,
-	  							dateStart : moment(bestDate).format("YYYY-MM-DD"),
-	  							timeStart : moment(bestDate).format("HH:mm"),
+	  							dateStart : moment(bestDate, "YYYY-MM-DDTHH:mm").format("YYYY-MM-DD"),
+	  							timeStart : moment(bestDate, "YYYY-MM-DDTHH:mm").format("HH:mm"),
+	  							dateEnd: moment(bestDate, "YYYY-MM-DDTHH:mm").add(1, 'hours').format("YYYY-MM-DD"),
+  								timeEnd: moment(bestDate, "YYYY-MM-DDTHH:mm").add(1, 'hours').format("HH:mm"),
 	  							desc : notice.data.desc,
 	  							alarm: notice.data.alarm,
-	  							timeUTC : notice.data.alarm !== null ? moment(bestDate).subtract(notice.data.alarm, "minutes").utc().format().substring(0,16) : null,
+	  							timeUTC : notice.data.alarm !== null ? moment(bestDate, "YYYY-MM-DDTHH:mm").subtract(notice.data.alarm, "minutes").add(1, 'hours').utc().format("YYYY-MM-DDTHH:mm") : null,
 	  							sharingWith: notice.data.sharingWith !== undefined ? notice.data.sharingWith : []
 	  						}
 	  						Meteor.call("updateTask", newTask);

@@ -51,6 +51,25 @@ Meteor.startup(() => {
       });
   }
 });
+  // SyncedCron.add({
+  //   name: 'Send Out Checkups',
+  //   schedule: (parser)=>{return parser.text('every 5 min')},
+  //   job: ()=>{
+  //     let allTasks = Tasks.find({data : {
+  //         dateEnd: {$eq : moment().utc().format("YYYY-MM-DD")},
+  //          timeEnd: {$eq: moment().utc().format("HH:mm")}
+  //         }})
+  //     allTasks.map((task)=>{
+  //       Notifications.insert({
+  //         userId: Meteor.userId(),
+  //         type: "taskCheckup",
+  //         data : task,
+  //         seen: false,
+  //         timestamp: new Date().getTime()
+  //       });
+  //     })
+  //   }
+  // })
   /* Cron to remove old cron entries to save space on server */
   SyncedCron.add({
     name: 'Clear Old Cron History',
