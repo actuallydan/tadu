@@ -192,7 +192,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
 		}, 1500);
 		toggleTitle;
 		toast.dismiss();
-		toast(<Toast onClick={()=>{this.displayNotification(notice);toast.dismiss();}}  iconClass={"mdi-alarm-check"} text={notice.data.text} secondary={moment(notice.data.timeEnd, "HH:mm").format("h:mm a")}/>)
+		toast(<Toast onClick={()=>{this.displayNotification(notice);toast.dismiss();}}  iconClass={"mdi-alert-circle-outline"} text={<div>{notice.data.text}<span className="mdi mdi-alarm-snooze"></span></div>} secondary={moment(notice.data.timeEnd, "HH:mm").format("h:mm a")}/>)
 	}
 	displayTaskShare(notice){
 		Meteor.call("findOneUser", notice.data.userId, (err, res)=>{
@@ -215,7 +215,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
 		}, 1500);
 		toggleTitle;
 		toast.dismiss();
-		toast(<Toast onClick={()=>{this.displayNotification(notice);toast.dismiss();}}  iconClass={"mdi-alarm-check"} text={notice.data.text} secondary={moment(notice.data.timeStart, "HH:mm").format("h:mm a")}/>)
+		toast(<Toast onClick={()=>{clearInterval(toggleTitle); document.title = "Tadu | The Sensible Scheduler" ;toast.dismiss();Meteor.call("seeNotification", notice)}}  iconClass={"mdi-alarm-check"} text={notice.data.text} secondary={moment(notice.data.timeStart, "HH:mm").format("h:mm a")}/>)
 	}
 	displayNotification(notice) {
 		clearInterval(toggleTitle);
@@ -246,7 +246,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
 	  					} else {
 	  						/* Only get the first time */
 	  						res = res[0];
-
+	  						console.log(res);
 	  						let daysFromToday = res.day - parseInt(moment().format('e')) >= 0 ? res.day - parseInt(moment().format('e')) : 7 + (res.day - parseInt(moment().format('e')));
 	  						let bestDate = moment(res.time, "HH:mm").add(daysFromToday, "days").format("YYYY-MM-DDTHH:mm");
 	  						console.log(bestDate)
@@ -263,9 +263,11 @@ export default class MainLayout extends TrackerReact(React.Component) {
   								timeEnd: moment(bestDate, "YYYY-MM-DDTHH:mm").add(1, 'hours').format("HH:mm"),
 	  							desc : notice.data.desc,
 	  							alarm: notice.data.alarm,
-	  							timeUTC : notice.data.alarm !== null ? moment(bestDate, "YYYY-MM-DDTHH:mm").subtract(notice.data.alarm, "minutes").add(1, 'hours').utc().format("YYYY-MM-DDTHH:mm") : null,
 	  							sharingWith: notice.data.sharingWith !== undefined ? notice.data.sharingWith : []
 	  						}
+	  						let endFull = moment(newTask.dateEnd + "T" + newTask.timeEnd).utc().format().substring(0, 16);
+	  						newTask.timeUTC = notice.data.alarm !== null ? moment(bestDate, "YYYY-MM-DDTHH:mm").subtract(notice.data.alarm, "minutes").utc().format("YYYY-MM-DDTHH:mm") : null,
+							newTask.timeUTCEnd = endFull;
 	  						Meteor.call("updateTask", newTask);
 	  					}
 	  				});

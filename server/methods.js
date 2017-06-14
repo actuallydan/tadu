@@ -27,6 +27,7 @@ Meteor.methods({
 			desc : task.desc,
 			alarm: task.alarm,
 			timeUTC: task.timeUTC,
+			timeUTCEnd: task.timeUTCEnd,
 			sharingWith: task.sharingWith
 		}, (err, result)=>{
 			if(err){
@@ -35,12 +36,6 @@ Meteor.methods({
 				/* Notify other users of shared task, if any */
 				Meteor.defer(()=>{
 					let lastTask = Tasks.findOne({_id : result});
-					// /* Add alarm if set */
-					// if(task.alarm !== null){
-					// 	Meteor.call("addAlarmNotice", lastTask);
-					// }
-					// /* Add Checkup to see if user has completed task */
-					// Meteor.call("addCheckupNotice", lastTask);
 
 					task.sharingWith.map((user)=>{
 						Notifications.insert({
@@ -67,24 +62,6 @@ Meteor.methods({
 		});
 
 	},
-	// addAlarmNotice(task){
-	// 	Notifications.insert({
-	// 		userId: Meteor.userId(),
-	// 		type: "taskAlert",
-	// 		data : task,
-	// 		seen: false,
-	// 		timestamp: new Date().getTime()
-	// 	});
-	// },
-	// addCheckupNotice(task){
-	// 	Notifications.insert({
-	// 		userId: Meteor.userId(),
-	// 		type: "taskCheckup",
-	// 		data : task,
-	// 		seen: false,
-	// 		timestamp: new Date().getTime()
-	// 	});
-	// },
 	/* toggle the completion status of a task. This is reflected in the user's task list as being checked off or not */
 	toggleTask(task){
 		/* Make sure user exists */
@@ -118,6 +95,7 @@ Meteor.methods({
 				desc : task.desc,
 				alarm: task.alarm,
 				timeUTC : task.timeUTC,
+				timeUTCEnd: task.timeUTCEnd,
 				sharingWith: task.sharingWith
 			}
 		});

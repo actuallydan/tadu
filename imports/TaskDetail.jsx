@@ -172,29 +172,29 @@ export default class TaskDetail extends React.Component{
 				if(this.refs.timeStart.value !== ""){
 					if(this.refs.dateEnd.value !== ""){
 						if(this.refs.timeEnd.value !== ""){
-							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
 						} else {
-							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + this.refs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + this.refs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
 						}
 					} else {
 						if(this.refs.timeEnd.value !== ""){
-							UTCAlarmTime = moment(this.refs.dateStart.value.trim() + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+							UTCAlarmTime = moment(this.refs.dateStart.value.trim() + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
 						} else {
-							UTCAlarmTime = moment(this.refs.dateStart.value.trim() + "T" + this.refs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+							UTCAlarmTime = moment(this.refs.dateStart.value.trim() + "T" + this.refs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
 						}
 					}
 				} else {
 					if(this.refs.dateEnd.value !== ""){
 						if(this.refs.timeEnd.value !== ""){
-							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
 						} else {
-							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + "00:00", "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + "00:00", "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
 						}
 					} else {
 						if(this.refs.timeEnd.value !== ""){
-							UTCAlarmTime = moment(this.refs.dateStart.value.trim() + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+							UTCAlarmTime = moment(this.refs.dateStart.value.trim() + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
 						} else {
-							UTCAlarmTime = moment(this.refs.dateStart.value.trim() + "T" + "00:00", "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+							UTCAlarmTime = moment(this.refs.dateStart.value.trim() + "T" + "00:00", "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
 						}
 					}
 				}
@@ -203,27 +203,27 @@ export default class TaskDetail extends React.Component{
 				if(this.refs.timeStart.value !== ""){
 					if(this.refs.dateEnd.value !== ""){
 						if(this.refs.timeEnd.value !== ""){
-							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
 						} else {
-							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + this.refs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + this.refs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
 						}
 					} else {
 						if(this.refs.timeEnd.value !== ""){
-							UTCAlarmTime = moment(moment().format("YYYY-MM-DD") + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+							UTCAlarmTime = moment(moment().format("YYYY-MM-DD") + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
 						} else {
-							UTCAlarmTime = moment(moment().format("YYYY-MM-DD") + "T" + this.refs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+							UTCAlarmTime = moment(moment().format("YYYY-MM-DD") + "T" + this.refs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
 						}
 					}
 				} else {
 					if(this.refs.dateEnd.value !== ""){
 						if(this.refs.timeEnd.value !== ""){
-							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
 						} else {
-							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + "00:00", "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + "00:00", "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
 						}
 					} else {
 						if(this.refs.timeEnd.value !== ""){
-							UTCAlarmTime = moment(moment().format("YYYY-MM-DD") + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").subtract(alarm, "minutes").utc().format().substring(0,16);
+							UTCAlarmTime = moment(moment().format("YYYY-MM-DD") + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
 						} else {
 							swal("Invalid Time", "Please supply at least one date or time", "error");
 							return false;		
@@ -246,6 +246,8 @@ export default class TaskDetail extends React.Component{
 			timeUTC: UTCAlarmTime,
 			sharingWith: this.state.sharingWith === undefined ? [] : this.state.sharingWith 
 		};
+		updatedTask.timeUTC = alarm !== null ? moment(updatedTask.dateStart + "T" + updatedTask.timeStart).utc().subtract(alarm, 'minutes').format().substring(0, 16) : null;
+		updatedTask.timeUTCEnd = moment(updatedTask.dateEnd + "T" + updatedTask.timeEnd).utc().format().substring(0, 16);;
 
 		Meteor.call("updateTask", updatedTask, (err)=>{
 			if(err){
