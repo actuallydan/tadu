@@ -192,12 +192,24 @@ export default class MainLayout extends TrackerReact(React.Component) {
 		}, 1500);
 		toggleTitle;
 		toast.dismiss();
-		toast(<Toast onClick={()=>{this.displayNotification(notice);toast.dismiss();}}  iconClass={"mdi-alert-circle-outline"} text={<div>{notice.data.text}<span className="mdi mdi-alarm-snooze"></span></div>} secondary={moment(notice.data.timeEnd, "HH:mm").format("h:mm a")}/>)
+		toast(<Toast onClick={(e)=>{if(e.target.className !== "taskCheckupSecondary"){this.displayNotification(notice);toast.dismiss();}}}  iconClass={"mdi-alert-circle"} text={notice.data.text} secondary={<div className="taskCheckupSecondary" onClick={()=>{this.updateEndTime(notice)}}>SNOOZE</div>}/>)
+	}
+
+	updateEndTime(notice){
+		toast.dismiss();
+		clearInterval(toggleTitle);
+		document.title = "Tadu | The Sensible Scheduler";
+
+		notice.data.timeUTCEnd = moment(notice.data.timeUTCEnd, "YYYY-MM-DDTHH:mm").add(30, "minutes").format("YYYY-MM-DDTHH:mm");
+		Meteor.call("updateTask", notice.data, (err, res)=>{
+			toast(<Toast onClick={()=>{toast.dismiss();}}  autoClose={2500} iconClass={"mdi-check"} text={"Keep it up!"} secondary={""}/>);
+		});
+		Meteor.call("seeNotification", notice);
 	}
 	displayTaskShare(notice){
 		Meteor.call("findOneUser", notice.data.userId, (err, res)=>{
 			toast.dismiss();
-			toast(<Toast autoClose={2000} iconClass={"mdi-account-multiple"} text={res + " shared a task"} secondary={""}/>);
+			toast(<Toast onClick={()=>{toast.dismiss();}} autoClose={2500} iconClass={"mdi-account-multiple"} text={res + " shared a task"} secondary={""}/>);
 			Meteor.call("seeNotification", notice)
 		});
 	}

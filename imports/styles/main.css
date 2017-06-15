@@ -316,6 +316,14 @@ html, body, #root {
 	vertical-align: middle;
 	line-height: 130%;
 }
+.taskCheckupSecondary{
+	text-align: center;
+}
+.taskCheckupSecondary:hover {
+	cursor: pointer;
+	background: #FFF;
+	color: #242424;
+}
 #action-bar{
 	position: absolute;
 	right: 0;
@@ -1054,10 +1062,10 @@ label {
 #edit-task-show-start, #edit-task-show-end {
 	cursor: pointer;
 	float: right;
-	position: absolute;
+	// position: absolute;
 	color: #242424;
 	right: 0%;
-	margin-top: 0;
+	margin-top: -1em;
 	text-align: center;
 	line-height: 100%;
     vertical-align: middle;
