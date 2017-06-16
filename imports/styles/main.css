@@ -1310,6 +1310,13 @@ large screens
 	}
 }
 
+/* 4K screens */
+@media screen and (min-width: 3840px){
+	html, body, #root {
+		font-size: 1.4em;
+	}
+}
+
 /* Helper Styles */
 .animated {
 	-webkit-animation-duration:0.25s !important;

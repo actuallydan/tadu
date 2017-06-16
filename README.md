@@ -56,10 +56,6 @@
 * 5.0 Tadu Concierge 
 
 #### What Needs Done
-* URGENT:
-	* Styles for notifications 
-		* TaskAlert Toasts should have Y/N buttons instead of time
-	* make drawer butons not absolutely positioned (inline block)
 * BUG :
 	* Can't tab sometimes on login/register
 	* Firefox add task validation on all fields  (use moment().isValid() on date and time)
