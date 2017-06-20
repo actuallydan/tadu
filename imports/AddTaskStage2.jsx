@@ -53,6 +53,7 @@ export default class AddTaskStage2 extends React.Component {
 			/* If we're allowing the user to optimize this task, get the first best day/time object, 
 			figure out the date from props.selectedDate, then create a moment around that object in best date */
 			let currBestTime = this.props.bestTimes[this.props.bestTimeIndex];
+			console.log(this.props.bestTimes, this.props.bestTimeIndex)
 			let daysFromToday = currBestTime.day - parseInt(moment().format('e')) >= 0 ? currBestTime.day - parseInt(moment().format('e')) : 7 + (currBestTime.day - parseInt(moment().format('e')));
 			bestDate = moment(this.props.selectedDate + "T" + currBestTime.time, "YYYY-MM-DDTHH:mm").add(daysFromToday, "days").format("YYYY-MM-DDTHH:mm");
 			let bestStartDateFormatted = bestDate.substring(0, 10);
@@ -71,7 +72,7 @@ export default class AddTaskStage2 extends React.Component {
 			<div className={this.props.showStart ? "form-item" : "form-item hidden"}><span className='form-item-label'> Time </span><input className="typeable" id="new-task-time" type="time" ref="timeStart"  defaultValue={this.props.now} /> </div>
 
 			{this.props.hasBeenOptimized ? 
-				<div className="form-item" style={{"color": "#1de9b6", "fontSize" : "0.6em", "textAlign" : "center"}}>
+				<div className="form-item" style={{"color": "#33FFCC", "fontSize" : "0.6em", "textAlign" : "center"}}>
 				<button onClick={(e)=>{e.preventDefault(); this.getNextBestTime(-1)}} id="get-next-best-time-buttons" className={this.props.bestTimeIndex > 0 ? 'form-item-label mdi mdi-chevron-left' : 'invisible'}></button>
 				<div onClick={(e)=>{e.preventDefault(); this.getNextBestTime(0)}} id="get-next-best-time" style={{width: "70%", display: "inline-block"}}> Best Time: {moment(bestDate, "YYYY-MM-DDTHH:mm").format("M/DD/YY h:mm a")}</div> 
 				<button onClick={(e)=>{e.preventDefault(); this.getNextBestTime(1)}} id="get-next-best-time-buttons" className={this.props.bestTimeIndex < this.props.bestTimes.length - 1 ? 'form-item-label mdi mdi-chevron-right' : 'invisible'}></button>
@@ -119,7 +120,7 @@ export default class AddTaskStage2 extends React.Component {
 				<div className="form-item"><span className='form-item-label'> Share with: </span><input autoComplete="off" id="find-user-share-text" onChange={this.findUsers.bind(this)} onKeyDown={this.selectNextFromList.bind(this)} className="typeable" type="text" maxLength="75" placeholder="Enter a username"/> </div>
 				<div style={{display: this.props.userList.length > 0 ? "block" : "none"}} id="share-with-user-list">
 				{this.props.userList.length === 0 ? "" : this.props.userList.filter((user)=>{ return this.props.sharingWith.findIndex((obj)=>{ return obj.username === user.username }) === -1 }).map((user)=>{
-					return (<div className="share-search-result" key={user._id} data-username={user.username} data-userId={user._id} onClick={this.props.addUser.bind(this)} style={this.props.userList[this.props.userListIndex]._id === user._id ? {backgroundColor: '#1de9b6', 'color': '#242424'} : {display: 'normal'}}>
+					return (<div className="share-search-result" key={user._id} data-username={user.username} data-userId={user._id} onClick={this.props.addUser.bind(this)} style={this.props.userList[this.props.userListIndex]._id === user._id ? {backgroundColor: '#33FFCC', 'color': '#242424'} : {display: 'normal'}}>
 						{user.profile.pic !== undefined && user.profile.pic !== null && user.profile.pic !== "" ?
 						<div className="profilePic" style={{background: 'url(' + user.profile.pic + ') no-repeat center', marginRight: '0.5em', display: 'inline-block', backgroundSize: 'cover', width: '1.5em', height: '1.5em', verticalAlign: 'middle', borderRadius: '100%', 'cursor': 'pointer'}}></div>
 						:

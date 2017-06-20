@@ -37,7 +37,7 @@ export default class FileUpload extends Component{
 			<br/>
 			<div style={{height: 'auto'}}>
 			<label id='labelForUploadPic' htmlFor='uploadPic' style={{display: 'inline-block', verticalAlign: 'middle', marginRight: '1em'}}>Choose Image</label>
-			<div id="editPicPreview" className="profilePic" style={{display: 'inline-block', verticalAlign: 'middle', background: 'url(' + Meteor.user().profile.pic + ') no-repeat center', margin: '0 auto', backgroundSize: 'cover', width: '6em', height: '6em', borderRadius: '100%', border: '3px solid #1de9b6', 'cursor': 'pointer'}}></div>
+			<div id="editPicPreview" className="profilePic" style={{display: 'inline-block', verticalAlign: 'middle', background: 'url(' + Meteor.user().profile.pic + ') no-repeat center', margin: '0 auto', backgroundSize: 'cover', width: '6em', height: '6em', borderRadius: '100%', border: '3px solid #33FFCC', 'cursor': 'pointer'}}></div>
 			</div>
 			<input onChange={this.changePreview.bind(this)} id='uploadPic' type='file' accept='image/*' />
 			<button className="cancel-button" onClick={this.props.toggleMenu.bind(this)}>Cancel</button> 

@@ -137,14 +137,11 @@ Meteor.methods({
 		*  Depending on the number of custom tags, this object could get huge(r) but as long as it's indexable it should be fine 
 		*/
 		let mySched = Schedules.findOne({"userId" : Meteor.userId()});
-		Meteor.defer(()=>{
-			/* The user won't create a new task of this type before we can get around to adding it so let's defer it and let them get back to making their task*/
 			daysOfWeek.map((day)=>{
 				hours.map((hour)=>{
 					mySched.thresholds[day][hour][tag] = bioCurve[hours.indexOf(hour)];
 				});
 			});
-		});
 		/* Update the schedule object */
 		Schedules.update(mySched._id, {
 			$set: {thresholds: mySched.thresholds}
@@ -245,6 +242,21 @@ Meteor.methods({
 		const offset = parseInt(moment(data.today, "YYYY-MM-DDTHH:mm:ss").format('e')) ;
 		const thisHour = moment(data.today, "YYYY-MM-DDTHH:mm:ss").format('HH:00');
 		const todayFormatted = moment(data.today, "YYYY-MM-DDTHH:mm:ss").format('YYYY-MM-DD');
+
+		/* Make sure tag type exists in thresholds */
+		if(!mySched.thresholds["Sun"]["00:00"].hasOwnProperty(data.tag)){
+			daysOfWeek.map((day)=>{
+				hours.map((hour)=>{
+					mySched.thresholds[day][hour][data.tag] = bioCurve[hours.indexOf(hour)];
+				});
+			});
+			/* update user's schedule */
+			Schedules.update({userId: user._id}, {
+				$set : {
+					thresholds : mySched.thresholds
+				}
+			})
+		}
 
 		/* Get this upcoming week's tasks to match against */
 		let tasks = Tasks.find({userId: Meteor.userId(), dateStart: {gte: todayFormatted, lte: moment(todayFormatted, "YYYY-MM-DD").add(7, 'days').format("YYYY-MM-DD")}}).fetch();

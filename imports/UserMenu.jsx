@@ -78,9 +78,9 @@ export default class UserMenu  extends Component {
 		{/* Menu Items go here */}
 		{Meteor.user().profile.pic === undefined || Meteor.user().profile.pic === null || Meteor.user().profile.pic === "" 
 		?
-		<div className="mdi mdi-account-circle" onClick={this.toggleShowPicEditor.bind(this)}></div>
+		<div className="mdi mdi-account-circle" onClick={this.toggleShowPicEditor.bind(this)} style={{fontSize: '4em', borderRadius: '100%', border: '3px solid #1de9b6', 'cursor': 'pointer', filter: "drop-shadow(0 6px 10px rgba(0,0,0,0.5))"}}></div>
 		:
-		<div className="profilePic" onClick={this.toggleShowPicEditor.bind(this)} style={{background: 'url(' + Meteor.user().profile.pic + ') no-repeat center', margin: '0 auto', backgroundSize: 'cover', width: '4em', height: '4em', borderRadius: '100%', border: '3px solid #1de9b6', 'cursor': 'pointer'}}></div>
+		<div className="profilePic" onClick={this.toggleShowPicEditor.bind(this)} style={{background: 'url(' + Meteor.user().profile.pic + ') no-repeat center', margin: '0 auto', backgroundSize: 'cover', width: '4em', height: '4em', borderRadius: '100%', border: '3px solid #1de9b6', 'cursor': 'pointer', filter: "drop-shadow(0 6px 10px rgba(0,0,0,0.5))"}}></div>
 	}
 	<div className="menu-item" onClick={this.props.loggedInChange} style={{marginTop: '0.5em'}}>
 	<div className="menu-icon mdi mdi-exit-to-app"></div>

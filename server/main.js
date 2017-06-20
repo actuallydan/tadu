@@ -3,25 +3,56 @@ import moment from 'moment';
 
 Meteor.startup(() => {
   /* Prevent cordova images from being saved to app cache */
-  Meteor.AppCache.config({
-  onlineOnly: [
-    '/img/Android/',
-    '/img/iOS/',
-    '/img/untitled.png',
-    '/img/untitled.svg',
-    '/img/readme.txt',
-    '/img/TaduLaunch.png',
-    '/img/Underground-Traffic.mp4',
-    '/packages/',
-    '/docs/',
-    '/fonts/licenses',
-    '/img/call-to-action.jpg',
-    '/fonts/Licenses/',
-    '/img/tadu_logo_bg.png',
-    '/node_modules/',
-    '/fonts/'
-  ]
-});
+  // Meteor.AppCache.config({
+  //   onlineOnly: [
+  //   '/img/Android/',
+  //   '/img/iOS/',
+  //   '/img/untitled.png',
+  //   '/img/untitled.svg',
+  //   '/img/readme.txt',
+  //   '/img/TaduLaunch.png',
+  //   '/img/Underground-Traffic.mp4',
+  //   '/packages/',
+  //   '/docs/',
+  //   '/fonts/licenses',
+  //   '/img/call-to-action.jpg',
+  //   '/fonts/Licenses/',
+  //   '/img/tadu_logo_bg.png',
+  //   '/node_modules/',
+  //   '/fonts/',
+  //   '/img/app-icon/',
+  //   '/img/launch-screens/'
+  //   ]
+  // });
+
+  /* Temp user fix */
+  let users = Meteor.users.find().fetch();
+
+  users.map((user)=>{
+   /* for each user make sure tags are intact */
+   let mySched = Schedules.findOne({userId : user._id});
+   let myTags = TagTypes.findOne({userId : user._id});
+   myTags.tags.map((tagObj)=>{
+    if(!mySched.thresholds["Sun"]["00:00"].hasOwnProperty(tagObj.type)){
+      console.log("repairing");
+
+      daysOfWeek.map((day)=>{
+        hours.map((hour)=>{
+          mySched.thresholds[day][hour][tagObj.type] = bioCurve[hours.indexOf(hour)];
+
+        });
+      });
+
+      /* update user's schedule */
+      Schedules.update({userId: user._id}, {
+        $set : {
+          thresholds : mySched.thresholds
+        }
+      })
+
+    }
+  })
+ });
 
   /* Not super funcitonal SyncedCron setup */
   SyncedCron.config({
@@ -40,43 +71,45 @@ Meteor.startup(() => {
     let nowUTC = moment().utc().format().substring(0,16);
     /* send out alerts for task start times */
     let allAlerts = Tasks.find({timeUTC: {$eq : nowUTC}, "completed" : false}).fetch();
-      allAlerts.map((task)=>{
-        Notifications.insert({
-          userId: task.userId,
-          type: "taskAlert",
-          data : task,
-          seen: false,
-          timestamp: new Date().getTime()
-        });
+    allAlerts.map((task)=>{
+      Notifications.insert({
+        userId: task.userId,
+        type: "taskAlert",
+        data : task,
+        seen: false,
+        timestamp: new Date().getTime()
       });
-      /* Send out task completion alerts */
-      let allCheckups = Tasks.find({timeUTCEnd: {$eq : nowUTC}, "completed" : false}).fetch();
-      allCheckups.map((task)=>{
-        Notifications.insert({
-          userId: task.userId,
-          type: "taskCheckup",
-          data : task,
-          seen: false,
-          timestamp: new Date().getTime()
-        });
+    });
+    /* Send out task completion alerts */
+    let allCheckups = Tasks.find({timeUTCEnd: {$eq : nowUTC}, "completed" : false}).fetch();
+    allCheckups.map((task)=>{
+      Notifications.insert({
+        userId: task.userId,
+        type: "taskCheckup",
+        data : task,
+        seen: false,
+        timestamp: new Date().getTime()
       });
+    });
   }
 });
   /* Cron to remove old cron entries to save space on server */
   SyncedCron.add({
     name: 'Clear Old Cron History',
     schedule: function(parser) {
-    return parser.text('every 1 hour');
-  },
-  job: function() {
-    let nowUTC = moment().subtract(1, "h").utc().format();
-    SyncedCron._collection.remove({});
-  }
-});
+      return parser.text('every 1 hour');
+    },
+    job: function() {
+      let nowUTC = moment().subtract(1, "h").utc().format();
+      SyncedCron._collection.remove({});
+    }
+  });
   SyncedCron.start();
-
-
 });
 
+const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
+const hours = ["00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"];
+
+const bioCurve = [0.38, 0.41, 0.42, 0.45, 0.49, 0.54, 0.61, 0.68, 0.76, 0.83, 0.87, 0.76, 0.63, 0.61, 0.54, 0.61, 0.63, 0.76, 0.7, 0.67, 0.65, 0.6, 0.55, 0.5];
 

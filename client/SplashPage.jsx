@@ -9,14 +9,17 @@ export default class SplashPage extends Component {
 			<div className="wrapper">
 			<div id="first-container" className="container">
 			<div id="nav">
-			<img src="../img/untitled.png" id="nav-logo" />
+			<img src="../img/tadu-icon-master.png" id="nav-logo" style={{height: "80%"}}/>
+			<div style={{flex: 1}}></div>
 			<button id="to-login" onClick={this.props.showLogin.bind(this)}>LOGIN</button>
 			</div>
 			<video loop muted autoPlay poster="../img/Underground-Traffic.jpg" preload="true">
 			<source src="../img/Underground-Traffic.mp4" type="video/mp4" />
 			</video>
 			<canvas id="splashCanvas"></canvas>
-			<div id="splash">TADU</div>
+			<div id="splash">
+			<img src="../img/tadu-brand-white-large.png" style={{height: "100%"}}/>
+			</div>
 			<div id="by-line">
 			Spend less time scheduling. More time on yourself.
 			<br/>

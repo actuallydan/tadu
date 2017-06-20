@@ -8,7 +8,7 @@ const Login = (props)=>{
 				elements[i].style.borderBottom  = '1px solid #FFF';
 			}
 		} 
-		e.target.parentElement.style.borderBottom = "1px solid #1de9b6";
+		e.target.parentElement.style.borderBottom = "1px solid #33FFCC";
 	};
 	 const changeLoginState = (e)=> {
 		let data = {
@@ -20,7 +20,9 @@ const Login = (props)=>{
 		return (
 			<div className={props.showLogin ? 'container animated fadeIn' : 'container animated fadeOut'} id="login-form">
 				<form onSubmit={props.tryLogin} autoComplete="off">
-					<div className="logo-text">TADU</div>
+					<div className="logo-text">
+						<img src="../img/tadu-brand-white-large.png" style={{height: "100%"}}/>
+					</div>
 					<div className="form-input-wrapper">
 						<label htmlFor="login-username" className="mdi mdi-account-circle"></label>
 						<input className='form-input' id="login-username" type="text" value={props.loginStateData.loginEmail} placeholder="Username" autoComplete="off" onFocus={highlight} onChange={changeLoginState}/>

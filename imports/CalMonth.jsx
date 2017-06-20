@@ -10,7 +10,7 @@ const CalMonth = (props) => {
 		<div id="action-bar">
 		<div className="nav-button mdi mdi-menu" onClick={props.toggleMenu} data-tip="Menu"></div>
 
-		<div className="nav-button mdi mdi-alarm" onClick={props.toggleNotices} data-tip="Notifications"></div>
+		{/*<div className="nav-button mdi mdi-alarm" onClick={props.toggleNotices} data-tip="Notifications"></div> */}
 		{
 			props.weekView ?  
 			<div className="nav-button mdi mdi-calendar" onClick={props.toggleWeekView} data-tip="Calendar"></div>
@@ -22,7 +22,7 @@ const CalMonth = (props) => {
 		<div id="add-event-button" className="nav-button mdi mdi-plus hide-on-large" onClick={props.showAddTask} data-tip="Add Task"></div>
 		</div>
 		<div className="hide-on-small">
-		<ReactTooltip place="bottom" type="dark" effect="solid" effect="float" style={{borderRadius : 0, color: '#1de9b6', opacity: 0, backgroundColor: '#000000'}}>
+		<ReactTooltip place="bottom" type="dark" effect="solid" effect="float" style={{borderRadius : 0, color: '#33FFCC', opacity: 0, backgroundColor: '#000000'}}>
 		</ReactTooltip>
 		</div>
 		</div>
