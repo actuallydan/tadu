@@ -18,9 +18,7 @@ Meteor.publish("notifications", function(){
 	return Notifications.find({userId: this.userId});
 });
 Meteor.publish("schedules", function(){
-	// return Schedules.find({userId: this.userId}, {fields: {"thresholds" : 0}} );
-		return Schedules.find({userId: this.userId});
-
+	return Schedules.find({userId: this.userId}, {fields: {"thresholds" : 0}} );
 });
 Meteor.publish("allUsers", function () {
 	return Meteor.users.find({_id: this.userId},

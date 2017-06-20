@@ -381,6 +381,8 @@ export default class AddTask extends Component {
 						swal("Uh Oh!", err, "error");
 					} else if(res === "exists"){
 						swal("Awkward...", "This tag already exists", "warning");
+					} else if(res === "503"){
+						swal("This is embarassing", "Tags cannot contain a '.'", "warning");
 					} else {
 						swal("Tag Created!", "We'll pick up where you left off", "success");
 						context.setState({

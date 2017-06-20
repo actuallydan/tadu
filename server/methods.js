@@ -119,7 +119,9 @@ Meteor.methods({
 			throw new Meteor.Error('not-authorized');
 		} 
 		let user = TagTypes.findOne({"userId" : Meteor.userId()});
-
+		if(tag.includes(".")){
+			return "503";
+		}
 		/* Make sure tag isn't already in DB */
 		if(user.tags.findIndex((thisTag)=>{ return thisTag.type.toLowerCase() === tag.toLowerCase()}) !== -1){
 			return "exists";
