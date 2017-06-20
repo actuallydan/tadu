@@ -3,27 +3,28 @@ import moment from 'moment';
 
 Meteor.startup(() => {
   /* Prevent cordova images from being saved to app cache */
-  // Meteor.AppCache.config({
-  //   onlineOnly: [
-  //   '/img/Android/',
-  //   '/img/iOS/',
-  //   '/img/untitled.png',
-  //   '/img/untitled.svg',
-  //   '/img/readme.txt',
-  //   '/img/TaduLaunch.png',
-  //   '/img/Underground-Traffic.mp4',
-  //   '/packages/',
-  //   '/docs/',
-  //   '/fonts/licenses',
-  //   '/img/call-to-action.jpg',
-  //   '/fonts/Licenses/',
-  //   '/img/tadu_logo_bg.png',
-  //   '/node_modules/',
-  //   '/fonts/',
-  //   '/img/app-icon/',
-  //   '/img/launch-screens/'
-  //   ]
-  // });
+  Meteor.AppCache.config({
+    onlineOnly: [
+    '/img/Android/',
+    '/img/iOS/',
+    '/img/untitled.png',
+    '/img/untitled.svg',
+    '/img/readme.txt',
+    '/img/TaduLaunch.png',
+    '/img/Underground-Traffic.mp4',
+    '/packages/',
+    '/docs/',
+    '/fonts/licenses',
+    '/img/call-to-action.jpg',
+    '/fonts/Licenses/',
+    '/img/tadu_logo_bg.png',
+    '/node_modules/',
+    '/fonts/',
+    '/img/app-icon/',
+    '/img/launch-screens/',
+    '/img/favicons/'
+    ]
+  });
 
   /* Temp user fix */
   let users = Meteor.users.find().fetch();
