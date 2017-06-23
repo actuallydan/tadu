@@ -12,8 +12,8 @@ export default class TaskDetail extends React.Component{
 			userList: [],
 			userListIndex: 0,
 			creator: null,
-			showStart: false,
-			showEnd: true,
+			showStart: true,
+			showEnd: false,
 		}
 	}
 	showStart(){
@@ -164,74 +164,6 @@ export default class TaskDetail extends React.Component{
 				alarm = 5;
 			}
 		}
-		let UTCAlarmTime = null;
-
-		if(alarm !== null){
-			if(this.refs.dateStart.value !== ""){
-				/* has start date */
-				if(this.refs.timeStart.value !== ""){
-					if(this.refs.dateEnd.value !== ""){
-						if(this.refs.timeEnd.value !== ""){
-							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
-						} else {
-							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + this.refs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
-						}
-					} else {
-						if(this.refs.timeEnd.value !== ""){
-							UTCAlarmTime = moment(this.refs.dateStart.value.trim() + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
-						} else {
-							UTCAlarmTime = moment(this.refs.dateStart.value.trim() + "T" + this.refs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
-						}
-					}
-				} else {
-					if(this.refs.dateEnd.value !== ""){
-						if(this.refs.timeEnd.value !== ""){
-							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
-						} else {
-							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + "00:00", "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
-						}
-					} else {
-						if(this.refs.timeEnd.value !== ""){
-							UTCAlarmTime = moment(this.refs.dateStart.value.trim() + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
-						} else {
-							UTCAlarmTime = moment(this.refs.dateStart.value.trim() + "T" + "00:00", "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
-						}
-					}
-				}
-			} else {
-				/* does not have start date */
-				if(this.refs.timeStart.value !== ""){
-					if(this.refs.dateEnd.value !== ""){
-						if(this.refs.timeEnd.value !== ""){
-							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
-						} else {
-							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + this.refs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
-						}
-					} else {
-						if(this.refs.timeEnd.value !== ""){
-							UTCAlarmTime = moment(moment().format("YYYY-MM-DD") + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
-						} else {
-							UTCAlarmTime = moment(moment().format("YYYY-MM-DD") + "T" + this.refs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
-						}
-					}
-				} else {
-					if(this.refs.dateEnd.value !== ""){
-						if(this.refs.timeEnd.value !== ""){
-							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
-						} else {
-							UTCAlarmTime = moment(this.refs.dateEnd.value.trim() + "T" + "00:00", "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
-						}
-					} else {
-						if(this.refs.timeEnd.value !== ""){
-							UTCAlarmTime = moment(moment().format("YYYY-MM-DD") + "T" + this.refs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
-						} else {
-							swal("Invalid Time", "Please supply at least one date or time", "error");
-							return false;		
-						}
-					}
-				}
-			}
-		}		
 		const updatedTask = {
 			_id: old._id,
 			text: this.refs.title.value.trim(),
@@ -243,7 +175,6 @@ export default class TaskDetail extends React.Component{
 			userId:  old.userId,
 			desc: this.refs.desc.value.trim(),
 			alarm: alarm,
-			timeUTC: UTCAlarmTime,
 			sharingWith: this.state.sharingWith === undefined ? [] : this.state.sharingWith 
 		};
 		updatedTask.timeUTC = alarm !== null ? moment(updatedTask.dateStart + "T" + updatedTask.timeStart).utc().subtract(alarm, 'minutes').format().substring(0, 16) : null;
@@ -313,9 +244,9 @@ export default class TaskDetail extends React.Component{
 			<input className="" id="edit-task-title" type="text" ref="title" defaultValue={this.props.taskDetail.text}  required maxLength="75"/>
 			</div>
 
-			<div className="edit-item" style={{height: '1em', minHeight: 0,lineHeight: '0.5em',backgroundColor: '#1de9b6',color: '#242424'}}>
-			<div style={{textAlign: 'center', width: '100%', lineHeight: '100%'}}> Start </div>
-			<div id="edit-task-show-start" onClick={this.showStart.bind(this)} className={this.state.showStart ? "mdi mdi-chevron-up" : "mdi mdi-chevron-down"}></div>
+			<div className="edit-item" onClick={this.showStart.bind(this)} style={{height: '1em', minHeight: 0,lineHeight: '0.5em',backgroundColor: '#1de9b6',color: '#242424', cursor: "pointer"}}>
+			<div style={{textAlign: 'center', width: '100%', lineHeight: '100%', color: "#242424"}}> Start </div>
+			<div id="edit-task-show-start" className={this.state.showStart ? "mdi mdi-chevron-up" : "mdi mdi-chevron-down"}></div>
 			</div>
 
 			<div className={this.state.showStart ? "edit-item" : "edit-item hidden"}>
@@ -327,9 +258,9 @@ export default class TaskDetail extends React.Component{
 			<input className="typeable" id="edit-task-time" type="time" ref="timeStart"  /> 
 
 			</div>
-			<div className="edit-item" style={{height: '1em', minHeight: 0,lineHeight: '0.5em',backgroundColor: '#1de9b6',color: '#242424'}}>
-			<div style={{textAlign: 'center', width: '100%', lineHeight: '100%'}}> End </div>
-			<div id="edit-task-show-end" onClick={this.showEnd.bind(this)} className={this.state.showEnd ? "mdi mdi-chevron-up" : "mdi mdi-chevron-down"}></div>
+			<div className="edit-item" onClick={this.showEnd.bind(this)} style={{height: '1em', minHeight: 0,lineHeight: '0.5em',backgroundColor: '#1de9b6',color: '#242424', cursor: "pointer"}}>
+			<div style={{textAlign: 'center', width: '100%', lineHeight: '100%', color: "#242424"}}> End </div>
+			<div id="edit-task-show-end" className={this.state.showEnd ? "mdi mdi-chevron-up" : "mdi mdi-chevron-down"}></div>
 			</div>
 
 			<div className={this.state.showEnd ? "edit-item" : "edit-item hidden"}>

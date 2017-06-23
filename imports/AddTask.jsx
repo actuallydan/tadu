@@ -32,8 +32,8 @@ export default class AddTask extends Component {
 			userList: [],
 			userListIndex: 0,
 			sharingWith: [],
-			showStart: false,
-			showEnd: true,
+			showStart: true,
+			showEnd: false,
 			hasBeenOptimized: false
 		};
 	}
@@ -159,71 +159,6 @@ export default class AddTask extends Component {
 			}
 		}
 
-		// if(alarm !== null){
-		// 	if(taskRefs.dateStart.value !== ""){
-		// 		/* has start date */
-		// 		if(taskRefs.timeStart.value !== ""){
-		// 			if(taskRefs.dateEnd.value !== ""){
-		// 				if(taskRefs.timeEnd.value !== ""){
-		// 					UTCAlarmTime = moment(taskRefs.dateEnd.value.trim() + "T" + taskRefs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
-		// 				} else {
-		// 					UTCAlarmTime = moment(taskRefs.dateEnd.value.trim() + "T" + taskRefs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
-		// 				}
-		// 			} else {
-		// 				if(taskRefs.timeEnd.value !== ""){
-		// 					UTCAlarmTime = moment(taskRefs.dateStart.value.trim() + "T" + taskRefs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
-		// 				} else {
-		// 					UTCAlarmTime = moment(taskRefs.dateStart.value.trim() + "T" + taskRefs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
-		// 				}
-		// 			}
-		// 		} else {
-		// 			if(taskRefs.dateEnd.value !== ""){
-		// 				if(taskRefs.timeEnd.value !== ""){
-		// 					UTCAlarmTime = moment(taskRefs.dateEnd.value.trim() + "T" + taskRefs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
-		// 				} else {
-		// 					UTCAlarmTime = moment(taskRefs.dateEnd.value.trim() + "T" + "00:00", "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
-		// 				}
-		// 			} else {
-		// 				if(taskRefs.timeEnd.value !== ""){
-		// 					UTCAlarmTime = moment(taskRefs.dateStart.value.trim() + "T" + taskRefs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
-		// 				} else {
-		// 					UTCAlarmTime = moment(taskRefs.dateStart.value.trim() + "T" + "00:00", "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
-		// 				}
-		// 			}
-		// 		}
-		// 	} else {
-		// 		/* does not have start date */
-		// 		if(taskRefs.timeStart.value !== ""){
-		// 			if(taskRefs.dateEnd.value !== ""){
-		// 				if(taskRefs.timeEnd.value !== ""){
-		// 					UTCAlarmTime = moment(taskRefs.dateEnd.value.trim() + "T" + taskRefs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
-		// 				} else {
-		// 					UTCAlarmTime = moment(taskRefs.dateEnd.value.trim() + "T" + taskRefs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
-		// 				}
-		// 			} else {
-		// 				if(taskRefs.timeEnd.value !== ""){
-		// 					UTCAlarmTime = moment(moment().format("YYYY-MM-DD") + "T" + taskRefs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
-		// 				} else {
-		// 					UTCAlarmTime = moment(moment().format("YYYY-MM-DD") + "T" + taskRefs.timeStart.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
-		// 				}
-		// 			}
-		// 		} else {
-		// 			if(taskRefs.dateEnd.value !== ""){
-		// 				if(taskRefs.timeEnd.value !== ""){
-		// 					UTCAlarmTime = moment(taskRefs.dateEnd.value.trim() + "T" + taskRefs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
-		// 				} else {
-		// 					UTCAlarmTime = moment(taskRefs.dateEnd.value.trim() + "T" + "00:00", "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
-		// 				}
-		// 			} else {
-		// 				if(taskRefs.timeEnd.value !== ""){
-		// 					UTCAlarmTime = moment(moment().format("YYYY-MM-DD") + "T" + taskRefs.timeEnd.value.trim(), "YYYY-MM-DDTHH:mm").utc().subtract(alarm, "minutes").format().substring(0,16);
-		// 				} else {
-		// 					swal("Invalid Time", "Please supply at least one date or time", "error");
-		// 					return false;						}
-		// 				}
-		// 			}
-		// 		}
-		// 	}		
 			let task = {
 				text : taskRefs.newTask.value.trim(),
 				dateStart : taskRefs.dateStart.value.trim() !== "" ? taskRefs.dateStart.value.trim() : taskRefs.dateEnd.value.trim() !== null ? taskRefs.dateEnd.value.trim() : moment().format("YYYY-MM-DD"),

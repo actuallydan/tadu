@@ -742,6 +742,7 @@ label {
 	line-height: 0.5em;
 	background: #33FFCC;
 	color: #242424;
+	cursor: pointer;
 }
 .form-item .checkbox, .form-item .checkbox-alt {
 	background-color: transparent;

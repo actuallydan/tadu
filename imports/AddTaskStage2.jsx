@@ -53,7 +53,6 @@ export default class AddTaskStage2 extends React.Component {
 			/* If we're allowing the user to optimize this task, get the first best day/time object, 
 			figure out the date from props.selectedDate, then create a moment around that object in best date */
 			let currBestTime = this.props.bestTimes[this.props.bestTimeIndex];
-			console.log(this.props.bestTimes, this.props.bestTimeIndex)
 			let daysFromToday = currBestTime.day - parseInt(moment().format('e')) >= 0 ? currBestTime.day - parseInt(moment().format('e')) : 7 + (currBestTime.day - parseInt(moment().format('e')));
 			bestDate = moment(this.props.selectedDate + "T" + currBestTime.time, "YYYY-MM-DDTHH:mm").add(daysFromToday, "days").format("YYYY-MM-DDTHH:mm");
 			let bestStartDateFormatted = bestDate.substring(0, 10);
@@ -65,7 +64,7 @@ export default class AddTaskStage2 extends React.Component {
 		return(
 			<form autoComplete="off" onSubmit={this.submit.bind(this)} className={this.props.stage1 ?  "animated slideOutRight" : "animated pulse"}>
 			<div className="form-item"><span className='form-item-label'> Title </span><input className="typeable" type="text" ref="newTask" defaultValue={this.props.tagType}  required maxLength="75"/> </div>
-			<div className="form-item form-header"><div style={{textAlign: 'center', width: '100%'}}>Start</div><div id="add-task-show-start" onClick={this.showStart.bind(this)} className={this.props.showStart ? "mdi mdi-chevron-up" : "mdi mdi-chevron-down"}></div></div>
+			<div className="form-item form-header" onClick={this.showStart.bind(this)}><div style={{textAlign: 'center', width: '100%'}}>Start</div><div id="add-task-show-start" className={this.props.showStart ? "mdi mdi-chevron-up" : "mdi mdi-chevron-down"}></div></div>
 			
 			
 			<div className={this.props.showStart ? "form-item" : "form-item hidden"}><span className='form-item-label'> Date </span><input className="typeable" id="new-task-date" type="date" ref="dateStart" defaultValue={this.props.selectedDate} /> </div>
@@ -79,7 +78,7 @@ export default class AddTaskStage2 extends React.Component {
 
 				</div> 
 				: ""}
-				<div className="form-item form-header"><div style={{textAlign: 'center', width: '100%'}}>End</div><div id="add-task-show-end" onClick={this.showEnd.bind(this)} className={this.props.showEnd ? "mdi mdi-chevron-up" : "mdi mdi-chevron-down"}></div></div>
+				<div className="form-item form-header" onClick={this.showEnd.bind(this)} ><div style={{textAlign: 'center', width: '100%'}}>End</div><div id="add-task-show-end" className={this.props.showEnd ? "mdi mdi-chevron-up" : "mdi mdi-chevron-down"}></div></div>
 
 				<div className={this.props.showEnd ? "form-item" : "form-item hidden"}><span className='form-item-label'> Date </span><input className="typeable" id="new-task-end-date" type="date" ref="dateEnd" defaultValue={this.props.selectedDate} /> </div>
 				<div className={this.props.showEnd ? "form-item" : "form-item hidden"}><span className='form-item-label'> Time </span><input className="typeable" id="new-task-end-time" type="time" ref="timeEnd"  defaultValue={moment(this.props.now, "HH:mm").add(1, "hours").format("HH:mm")} /> </div>

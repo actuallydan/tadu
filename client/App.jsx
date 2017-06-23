@@ -41,6 +41,11 @@ export default class App extends Component {
 			showLogin: !this.state.showLogin
 		});
 	}
+	componentDidMount(){
+		if(Meteor.isCordova){
+			navigator.splashscreen.hide();
+		}
+	}
 	/* Render method should only switch our logged in state */
 	render(){
 		document.getElementsByTagName("body")[0].style.overflow = !Meteor.isCordova && !this.state.showLogin && !this.state.loggedIn ? "visible" : "hidden";

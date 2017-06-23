@@ -6,6 +6,9 @@ Meteor.methods({
 	findOneUser(id){
 		return Meteor.users.findOne({_id : id}).username;
 	},
+	getUserByName(username){
+		return Meteor.users.findOne({username: username});
+	},
 	/* taskes a task object and stores it in the Tasks Collection for this user as well as increments the tag to make it more visible */
 	addTask(task){
 		/* Make sure user exists */
