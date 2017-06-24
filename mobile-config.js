@@ -8,21 +8,21 @@ App.info({
 });
 
 App.icons({
-	'iphone_2x' : 'public/img/app-icon/tadu_logo-120.jpg',
-	'iphone_3x' : 'public/img/app-icon/tadu_logo-180.jpg',
-	'ipad' : 'public/img/app-icon/tadu_logo-76.jpg',
-	'ipad_2x' : 'public/img/app-icon/tadu_logo-152.jpg',
-	'ipad_pro' : 'public/img/app-icon/tadu_logo-167.jpg',
-	'ios_settings' : 'public/img/app-icon/tadu_logo-29.jpg',
-	'ios_settings_2x' : 'public/img/app-icon/tadu_logo-58.jpg',
-	'ios_settings_3x' : 'public/img/app-icon/tadu_logo-87.jpg',
-	'ios_spotlight' : 'public/img/app-icon/tadu_logo-40.jpg',
-	'ios_spotlight_2x' : 'public/img/app-icon/tadu_logo-80.jpg',
-	'android_mdpi' : 'public/img/app-icon/tadu_logo-48.jpg',
-	'android_hdpi' : 'public/img/app-icon/tadu_logo-72.jpg',
-	'android_xhdpi' : 'public/img/app-icon/tadu_logo-96.jpg',
-	'android_xxhdpi' : 'public/img/app-icon/tadu_logo-144.jpg',
-	'android_xxxhdpi' : 'public/img/app-icon/tadu_logo-192.jpg',
+	'iphone_2x' : 'public/img/app-icon/ios/Icon-120.png',
+	'iphone_3x' : 'public/img/app-icon/ios/Icon-180.png',
+	'ipad' : 'public/img/app-icon/ios/Icon-76.png',
+	'ipad_2x' : 'public/img/app-icon/ios/Icon-152.png',
+	'ipad_pro' : 'public/img/app-icon/ios/Icon-167.png',
+	'ios_settings' : 'public/img/app-icon/ios/Icon-29.png',
+	'ios_settings_2x' : 'public/img/app-icon/ios/Icon-58.png',
+	'ios_settings_3x' : 'public/img/app-icon/ios/Icon-87.png',
+	'ios_spotlight' : 'public/img/app-icon/ios/Icon-40.png',
+	'ios_spotlight_2x' : 'public/img/app-icon/ios/Icon-80.png',
+	'android_mdpi' : 'public/img/app-icon/android/Icon-48.png',
+	'android_hdpi' : 'public/img/app-icon/android/Icon-72.png',
+	'android_xhdpi' : 'public/img/app-icon/android/Icon-96.png',
+	'android_xxhdpi' : 'public/img/app-icon/android/Icon-144.png',
+	'android_xxxhdpi' : 'public/img/app-icon/android/Icon-192.png',
 });
 App.launchScreens({
 	'iphone_2x' : 'public/img/launch-screens/tadu-launch-640x960.jpg',
@@ -45,5 +45,5 @@ App.launchScreens({
 });
 
 App.setPreference('StatusBarOverlaysWebView', 'false');
-App.setPreference('StatusBarBackgroundColor', '#242424');
+App.setPreference('StatusBarBackgroundColor', '#24242466');
 App.setPreference("StatusBarStyle", "lightcontent");

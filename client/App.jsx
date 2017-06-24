@@ -3,8 +3,6 @@ import MainLayout from '../imports/MainLayout.jsx';
 import EntryPortal from '../imports/EntryPortal.jsx';
 import SplashPage from './SplashPage.jsx';
 
-Ground.Collection(Meteor.users);
-
 /* CSS Standardization */
 import 'normalize-css';
 

@@ -9,7 +9,7 @@ Meteor.methods({
 	getUserByName(username){
 		return Meteor.users.findOne({username: username});
 	},
-	/* taskes a task object and stores it in the Tasks Collection for this user as well as increments the tag to make it more visible */
+	/* takes a task object and stores it in the Tasks Collection for this user as well as increments the tag to make it more visible */
 	addTask(task){
 		/* Make sure user exists */
 		if(Meteor.userId() !== task.userId){
@@ -142,11 +142,11 @@ Meteor.methods({
 		*  Depending on the number of custom tags, this object could get huge(r) but as long as it's indexable it should be fine 
 		*/
 		let mySched = Schedules.findOne({"userId" : Meteor.userId()});
-			daysOfWeek.map((day)=>{
-				hours.map((hour)=>{
-					mySched.thresholds[day][hour][tag] = bioCurve[hours.indexOf(hour)];
-				});
+		daysOfWeek.map((day)=>{
+			hours.map((hour)=>{
+				mySched.thresholds[day][hour][tag] = bioCurve[hours.indexOf(hour)];
 			});
+		});
 		/* Update the schedule object */
 		Schedules.update(mySched._id, {
 			$set: {thresholds: mySched.thresholds}
@@ -165,6 +165,69 @@ Meteor.methods({
 		tags.map((tag)=>{ myTags.tags.push({"type" : tag, "uses" : 0})  });
 
 		TagTypes.insert(myTags);
+	},
+	registerRemote(user){
+		try {
+			let result = Accounts.createUser({
+				username: user.username,
+				password: user.password,
+				profile: {
+					pic: null,
+					bedHour: user.bedHour,
+					tut : {
+						'login' : false,
+						'schedule' : false,
+						'addTasks': false,
+					}
+				}
+			});
+			if(result){
+				console.log(result);
+
+				Meteor.call("addDefaultTagsRemote", result);
+				Meteor.call("addDefaultScheduleRemote", {id: result, hour: user.profile.bedHour});
+				console.log("finishing", result)
+				return result;
+			} else {
+				console.log(result, "something wrong")
+			}
+		} catch(err){
+			console.log(err)
+			return err;
+		}
+	},
+	addDefaultTagsRemote(id){
+		let myTags = {
+			userId: id,
+			tags: []
+		};
+		tags.map((tag)=>{ myTags.tags.push({"type" : tag, "uses" : 0})  });
+
+		TagTypes.insert(myTags);
+	},
+	addDefaultScheduleRemote(data){
+		 /* From the user's profile, get their bedtime and use that as an offset for their actual bioCurve. Then pass their bioCurve into the Thresholds Object parameters */
+		let myBioCurve = offsetBioCurve(parseInt(data.hour.substring(0,2)));
+		let schedule = {
+			userId : data.id,
+			schedule : Schedule(),
+			thresholds: Thresholds(myBioCurve)
+		};
+		Schedules.insert(schedule);
+	},
+	addDefaultSchedule(){
+		/* Make sure user is the owner */
+		if(!Meteor.userId()){
+			throw new Meteor.Error('not-authorized');
+		} 
+		/* From the user's profile, get their bedtime and use that as an offset for their actual bioCurve. Then pass their bioCurve into the Thresholds Object parameters */
+		let myBioCurve = offsetBioCurve(parseInt(Meteor.user().profile.bedHour.substring(0,2)))
+		let schedule = {
+			userId : Meteor.userId(),
+			schedule : Schedule(),
+			thresholds: Thresholds(myBioCurve)
+		};
+		Schedules.insert(schedule);
 	},
 	/* After triggering a notification and clicking on the alert, change the notice object so that we don't see the same thing twice */
 	seeNotification(notice){

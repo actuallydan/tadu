@@ -58,12 +58,18 @@
 #### What Needs Done
 * BUG :
 	* Can't tab sometimes on login/register
-	* Firefox add task validation on all fields  (use moment().isValid() on date and time)
+	* iOS 
+		* Splash screen & icons
+		* Alarm radio buttons don't always work (remove hover on mobile)
+		* Go to loader on "login/register" immediately
+		* Start/End Date/Times should be max 50% of div 
+		* Bump up font for usermenu.js
+		* Add permissions for images (from library worked once)
+
 * Improvements
 	* Reduce Redundancy in MonthView where creating calObject
 ------------ For Next Version
 * Refactor convert AddTask 1 & 2 to stateless and move refs to state in AddTask.jsx
-* Make Cron job easier on server (on task create add to notifications and have notifications only show if they are older than now)
 * Recurring Tasks
 * Add schedule and tagtypes index to user profile
 * Speed up addTag method (currently ~170ms from client)
@@ -73,8 +79,6 @@
 		* updateSchedule (Schedule.jsx)
 		* Some Update Task calls
 		* Schedule best time filters in multi threading?
-* iOS 
-	* Splash screen
 * Ionicons
 * scheduleBesttime() should also check for half hour increments
 	* Requires schedule objects to be in half hour increments to add to possibleTimesBlock
