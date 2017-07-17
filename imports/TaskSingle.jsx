@@ -11,7 +11,7 @@ const TaskSingle = (props)=> {
 			type: "warning",
 			showCancelButton: true
 		}, function(){
-			Meteor.call('deleteTask', props.task._id);
+			Meteor.apply('deleteTask', [props.task._id, Meteor.user()]);
 		});
 	};
 	const showDetail = (event)=>{
@@ -26,7 +26,7 @@ const TaskSingle = (props)=> {
 	return (
 		<li className="task-single animated bounceInUp" onClick={showDetail}>
 		<div className="checkbox" style={{visibility: props.task.userId === Meteor.userId() ? "visible" : "hidden"}}>
-		<input id={"task_"+props.task._id} type="checkbox" readOnly={true} checked={props.task.completed} onClick={()=>{Meteor.call('toggleTask', props.task)}} />
+		<input id={"task_"+props.task._id} type="checkbox" readOnly={true} checked={props.task.completed} onClick={()=>{Meteor.apply('toggleTask', [props.task, Meteor.user()])}} />
 		<label htmlFor={"task_"+props.task._id}></label>
 		</div>
 		<div>

@@ -52,7 +52,7 @@ export default class TaskDetail extends React.Component{
 	findUsers(){
 		let search = document.getElementById("find-user-share-text").value.trim();
 		if(search.length > 0){
-			Meteor.call("findUsers", search, (err, res)=>{
+			Meteor.apply("findUsers", [search, Meteor.user()], (err, res)=>{
 				if(err){
 					swal("Sorry!", "There was an error commucicatring with the server: " + err, "error");
 				} else if(res !== null) {
@@ -180,7 +180,7 @@ export default class TaskDetail extends React.Component{
 		updatedTask.timeUTC = alarm !== null ? moment(updatedTask.dateStart + "T" + updatedTask.timeStart).utc().subtract(alarm, 'minutes').format().substring(0, 16) : null;
 		updatedTask.timeUTCEnd = moment(updatedTask.dateEnd + "T" + updatedTask.timeEnd).utc().format().substring(0, 16);;
 
-		Meteor.call("updateTask", updatedTask, (err)=>{
+		Meteor.apply("updateTask", [updatedTask, Meteor.user()], (err)=>{
 			if(err){
 				swal("Sorry!", "There was an error updating your task, please try again later", "error");
 			} else {

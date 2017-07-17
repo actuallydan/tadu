@@ -25,7 +25,7 @@ export default class UserMenu  extends Component {
 		let reader  = new FileReader();
 		reader.addEventListener("load", ()=>{
 			let imgString = reader.result;
-			Meteor.call("updateProfilePic", imgString, (err, res)=>{
+			Meteor.apply("updateProfilePic", [imgString, Meteor.user()], (err, res)=>{
 				if(err){
 					swal("Sorry", "There was an error updating your profile, please try again later.", "error");
 				} else {
@@ -57,7 +57,7 @@ export default class UserMenu  extends Component {
 				swal.showInputError("Please limit username length to 20 characters");
 				return false;
 			} else {
-				Meteor.call("updateUsername", inputValue, (err, res)=>{
+				Meteor.apply("updateUsername", [inputValue, Meteor.user()], (err, res)=>{
 					if(err){
 						swal("Error", "There was an error updating your username", "error");
 					} else if(res === "403"){

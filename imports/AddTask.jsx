@@ -60,7 +60,7 @@ export default class AddTask extends Component {
 	findUsers(){
 		let search = document.getElementById("find-user-share-text").value.trim();
 		if(search.length > 0){
-			Meteor.call("findUsers", search, (err, res)=>{
+			Meteor.apply("findUsers", [search, Meteor.user()], (err, res)=>{
 				if(err){
 					swal("Sorry!", "There was an error commucicatring with the server: " + err, "error");
 				} else if(res !== null) {
@@ -127,7 +127,7 @@ export default class AddTask extends Component {
 			closeOnConfirm: true, 
 		},
 		()=>{
-			Meteor.call("toggleCompleteTour", "addTasks");
+			Meteor.apply("toggleCompleteTour", ["addTasks", Meteor.user()]);
 		});
 	}
 	/* Once we've found the ideal tag and added any additional details to our task we try to add it to the database */
@@ -176,7 +176,7 @@ export default class AddTask extends Component {
 			task.timeUTCEnd = moment(task.dateEnd + "T" + task.timeEnd).utc().format().substring(0, 16);;
 
 			/* Call Meteor to abscond with our earthly woes and store it in the database if possible */
-			Meteor.call("addTask", task, (err, data)=>{
+			Meteor.apply("addTask", [task, Meteor.user()], (err, data)=>{
 				if(err){
 					/* There was some sort of error on the server 
 					* Because of MiniMongo this should be rare and ussually points to bad server code or poor life choices */
@@ -202,7 +202,7 @@ export default class AddTask extends Component {
 			if(navigator.onLine){
 				this.showLoader();
 				/* Get All of the best times to do this task */
-				Meteor.call("scheduleBestTime", {"tag": tag , "today": moment().format("YYYY-MM-DDTHH:mm:ss") }, (err, res)=>{
+				Meteor.apply("scheduleBestTime", [{"tag": tag , "today": moment().format("YYYY-MM-DDTHH:mm:ss") }, Meteor.user()], (err, res)=>{
 					if(err){
 						/* There was a server error */
 						swal("Oops...", err, "error");
@@ -311,7 +311,7 @@ export default class AddTask extends Component {
 					swal.showInputError("Please give your tag a name!");
 					return false
 				}
-				Meteor.call("addTag", inputValue.trim(), (err, res)=>{
+				Meteor.apply("addTag", [inputValue.trim(), Meteor.user()], (err, res)=>{
 					if(err){
 						swal("Uh Oh!", err, "error");
 					} else if(res === "exists"){

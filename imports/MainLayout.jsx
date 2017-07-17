@@ -201,16 +201,16 @@ export default class MainLayout extends TrackerReact(React.Component) {
 		document.title = "Tadu | The Sensible Scheduler";
 
 		notice.data.timeUTCEnd = moment(notice.data.timeUTCEnd, "YYYY-MM-DDTHH:mm").add(30, "minutes").format("YYYY-MM-DDTHH:mm");
-		Meteor.call("updateTask", notice.data, (err, res)=>{
+		Meteor.apply("updateTask", [notice.data, Meteor.user()], (err, res)=>{
 			toast(<Toast onClick={()=>{toast.dismiss();}}  autoClose={2500} iconClass={"mdi-check"} text={"Keep it up!"} secondary={""}/>);
 		});
-		Meteor.call("seeNotification", notice);
+		Meteor.apply("seeNotification", [notice, Meteor.user()]);
 	}
 	displayTaskShare(notice){
-		Meteor.call("findOneUser", notice.data.userId, (err, res)=>{
+		Meteor.apply("findOneUser", [notice.data.userId, Meteor.user()], (err, res)=>{
 			toast.dismiss();
 			toast(<Toast onClick={()=>{toast.dismiss();}} autoClose={2500} iconClass={"mdi-account-multiple"} text={res + " shared a task"} secondary={""}/>);
-			Meteor.call("seeNotification", notice)
+			Meteor.apply("seeNotification", [notice, Meteor.user()])
 		});
 	}
 	displayTaskAlert(notice){
@@ -227,7 +227,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
 		}, 1500);
 		toggleTitle;
 		toast.dismiss();
-		toast(<Toast onClick={()=>{clearInterval(toggleTitle); document.title = "Tadu | The Sensible Scheduler" ;toast.dismiss();Meteor.call("seeNotification", notice)}}  iconClass={"mdi-alarm-check"} text={notice.data.text} secondary={moment(notice.data.timeStart, "HH:mm").format("h:mm a")}/>)
+		toast(<Toast onClick={()=>{clearInterval(toggleTitle); document.title = "Tadu | The Sensible Scheduler" ;toast.dismiss();Meteor.apply("seeNotification", [notice, Meteor.user()])}}  iconClass={"mdi-alarm-check"} text={notice.data.text} secondary={moment(notice.data.timeStart, "HH:mm").format("h:mm a")}/>)
 	}
 	displayNotification(notice) {
 		clearInterval(toggleTitle);
@@ -247,12 +247,12 @@ export default class MainLayout extends TrackerReact(React.Component) {
 			if (isConfirm) {
 				swal("Good job!", "I'm so proud of you", "success");
 	  				// Update task completion status to true
-	  				Meteor.call('toggleTask', notice.data);
-	  				Meteor.call("changeThreshold", {tag: notice.data.tag, date: notice.data.dateStart, time: notice.data.timeStart, amt: 0.15})
+	  				Meteor.apply('toggleTask', [notice.data, Meteor.user()]);
+	  				Meteor.apply("changeThreshold", [{tag: notice.data.tag, date: notice.data.dateStart, time: notice.data.timeStart, amt: 0.15}, Meteor.user()])
 	  			} else {
 	  				swal("Rescheduling...", "Don't worry. I'll set up a different time", "success");
 	  				/* update task startTime */
-	  				Meteor.call("scheduleBestTime", {tag: notice.data.tag, today: moment().format("YYYY-MM-DDTHH:mm:ss")}, (err, res)=>{
+	  				Meteor.apply("scheduleBestTime", [{tag: notice.data.tag, today: moment().format("YYYY-MM-DDTHH:mm:ss")}, Meteor.user()], (err, res)=>{
 	  					if(err){
 	  						swal("So..", "There was an issue rescheduling..." + "<br/>" + err, "error");
 	  					} else {
@@ -264,7 +264,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
 	  						console.log(bestDate)
 	  						/* Change threshold */
 	  						/* Provide tag (notice.data.tag), date and time (notice.data.dateStart, notice.data.timeStart) and signed amount to change */
-	  						Meteor.call("changeThreshold", {tag: notice.data.tag, date: notice.data.dateStart, time: notice.data.timeStart, amt: -0.15})
+	  						Meteor.apply("changeThreshold", [{tag: notice.data.tag, date: notice.data.dateStart, time: notice.data.timeStart, amt: -0.15}, Meteor.user()])
 	  						/* Update task */
 	  						let newTask = {
 	  							_id: notice.data._id,
@@ -280,13 +280,13 @@ export default class MainLayout extends TrackerReact(React.Component) {
 	  						let endFull = moment(newTask.dateEnd + "T" + newTask.timeEnd).utc().format().substring(0, 16);
 	  						newTask.timeUTC = notice.data.alarm !== null ? moment(bestDate, "YYYY-MM-DDTHH:mm").subtract(notice.data.alarm, "minutes").utc().format("YYYY-MM-DDTHH:mm") : null,
 							newTask.timeUTCEnd = endFull;
-	  						Meteor.call("updateTask", newTask);
+	  						Meteor.apply("updateTask", [newTask, Meteor.user()]);
 	  					}
 	  				});
 	  			}
 	  		});
 		/* Mark this notification as seen and do not re-show it */
-		Meteor.call("seeNotification", notice);
+		Meteor.apply("seeNotification", [notice, Meteor.user()]);
 	}
 	render(){
 		/* Based on screen size and current state, determine which windows should be open */
@@ -337,7 +337,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
 					title:"Welcome!",
 					text: "Thanks for using Tadu! Get Started by entering your weekly schedule or creating a new task using the icons at the top.",
 					type: "success", 
-					closeOnConfirm: true, }, ()=>{Meteor.call("toggleCompleteTour", "login")}) : ""}
+					closeOnConfirm: true, }, ()=>{Meteor.apply("toggleCompleteTour", ["login", Meteor.user()])}) : ""}
 				</div>
 				: 
 				<div className="wrapper">
@@ -355,7 +355,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
 					title:"Welcome!",
 					text: "Thanks for using Tadu! Get Started by entering your weekly schedule or creating a new task using the icons at the top.",
 					type: "success", 
-					closeOnConfirm: true, }, ()=>{Meteor.call("toggleCompleteTour", "login")}) : ""}
+					closeOnConfirm: true, }, ()=>{Meteor.apply("toggleCompleteTour", ["login", Meteor.user()])}) : ""}
 				</div>
 			} 
 			{newNotice !== undefined ? this.notify(newNotice) : ""}

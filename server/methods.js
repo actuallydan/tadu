@@ -10,9 +10,9 @@ Meteor.methods({
 		return Meteor.users.findOne({username: username});
 	},
 	/* takes a task object and stores it in the Tasks Collection for this user as well as increments the tag to make it more visible */
-	addTask(task){
+	addTask(task, user){
 		/* Make sure user exists */
-		if(Meteor.userId() !== task.userId){
+		if(user._id === null || user._id === undefined){
 			throw new Meteor.Error('Not authorized');
 		} 
 		let lastId = "";
@@ -26,7 +26,7 @@ Meteor.methods({
 			tag: task.tagType,
 			completed: false,
 			createdAt: new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000)).getTime(),
-			userId : Meteor.userId(),
+			userId : user._id,
 			desc : task.desc,
 			alarm: task.alarm,
 			timeUTC: task.timeUTC,
@@ -40,9 +40,9 @@ Meteor.methods({
 				Meteor.defer(()=>{
 					let lastTask = Tasks.findOne({_id : result});
 
-					task.sharingWith.map((user)=>{
+					task.sharingWith.map((sharedUser)=>{
 						Notifications.insert({
-							userId: user._id,
+							userId: sharedUser._id,
 							type: "taskShare",
 							data : lastTask,
 							seen: false,
@@ -54,38 +54,37 @@ Meteor.methods({
 		});
 
 		/* Get this user's tags */
-		let user = TagTypes.findOne({"userId" : Meteor.userId()});
+		let userTags = TagTypes.findOne({"userId" : user._id});
 		/* Find tag in array  */
-		let index = user.tags.findIndex((tag)=>{return tag.type === task.tagType});
+		let index = userTags.tags.findIndex((tag)=>{return tag.type === task.tagType});
 		/* Increment */
-		user.tags[index].uses++;
+		userTags.tags[index].uses++;
 		/* Update user's tags */
-		TagTypes.update(user._id, {
-			$set: {tags: user.tags }
+		TagTypes.update(userTags._id, {
+			$set: {tags: userTags.tags }
 		});
 
 	},
 	/* toggle the completion status of a task. This is reflected in the user's task list as being checked off or not */
-	toggleTask(task){
+	toggleTask(task, thisUser){
 		/* Make sure user exists */
-		if(Meteor.userId() !== task.userId){
+		if(thisUser._id !== task.userId){
 			throw new Meteor.Error('not-authorized');
 		}
 		Tasks.update(task._id, {
 			$set: {completed: !task.completed }
 		})
-		Meteor.call("changeThreshold", {date: task.dateStart, time: task.timeStart, amt: task.completed ? -0.15 : 0.15});
-		console.log("All done!");
+		Meteor.apply("changeThreshold", [{date: task.dateStart, time: task.timeStart, amt: task.completed ? -0.15 : 0.15}, thisUser]);
 	},
 	/* Find Users to share tasks with */
-	findUsers(search){
-		let users = Meteor.users.find({username: {$regex: search + ".*", $options : "i"}, _id: {$not: {$eq: Meteor.userId()}}}, {limit : 5}).fetch();
+	findUsers(search, thisUser){
+		let users = Meteor.users.find({username: {$regex: search + ".*", $options : "i"}, _id: {$not: {$eq: thisUser._id}}}, {limit : 5}).fetch();
 		return users.length > 0 ? users : null;
 	},
 	/* Update an exisitng task, accepts a task object and updates the fields except for the userId, completed, createdAt */
-	updateTask(task){
+	updateTask(task, thisUser){
 		/* Make sure user changing task is the owner */
-		if(!Meteor.userId()){
+		if(!thisUser._id){
 			throw new Meteor.Error('not-authorized');
 		}
 		Tasks.update(task._id, {
@@ -104,24 +103,24 @@ Meteor.methods({
 		});
 	},
 	/* Takes a task object, but we only need to send the id, consider only sending the id over the wire */
-	deleteTask(taskId){
+	deleteTask(taskId, thisUser){
 		/* Make sure user changing task is the owner */
-		if(!Meteor.userId()){
+		if(!thisUser._id){
 			throw new Meteor.Error('Not authorized');
 		}
 		Tasks.remove(taskId);
 	}, 
-	/* Not used in production but useful for tests; Much slower than client implementation */
-	getTasks(){
-		return Tasks.find().fetch();
+	/* Mostly used for remote DDP call, should later include filter for only tasks this month */
+	getTasks(thisUser){
+		return Tasks.find(thisUser._id).fetch();
 	},
 	/* Create a new tag for that user, takes a string for the tag  and adds it to the Tag types object and adds it to the thresholds object */
-	addTag(tag){
+	addTag(tag, thisUser){
 		/* Make sure user is the owner */
-		if(!Meteor.userId()){
+		if(!thisUser._id){
 			throw new Meteor.Error('not-authorized');
 		} 
-		let user = TagTypes.findOne({"userId" : Meteor.userId()});
+		let user = TagTypes.findOne({"userId" : thisUser._id});
 		if(tag.includes(".")){
 			return "503";
 		}
@@ -141,7 +140,7 @@ Meteor.methods({
 		* For Each day of the week, for each hour we want to add the threshold of completing this tag
 		*  Depending on the number of custom tags, this object could get huge(r) but as long as it's indexable it should be fine 
 		*/
-		let mySched = Schedules.findOne({"userId" : Meteor.userId()});
+		let mySched = Schedules.findOne({"userId" : thisUser._id});
 		daysOfWeek.map((day)=>{
 			hours.map((hour)=>{
 				mySched.thresholds[day][hour][tag] = bioCurve[hours.indexOf(hour)];
@@ -153,13 +152,13 @@ Meteor.methods({
 		});
 	},
 	/* On Setup add the nine initial tags to the user's tagTypes object */
-	addDefaultTags(){
+	addDefaultTags(thisUser){
 		/* Make sure user is the owner */
-		if(!Meteor.userId()){
+		if(!thisUser._id){
 			throw new Meteor.Error('not-authorized');
 		} 
 		let myTags = {
-			userId: Meteor.userId(),
+			userId: thisUser._id,
 			tags: []
 		};
 		tags.map((tag)=>{ myTags.tags.push({"type" : tag, "uses" : 0})  });
@@ -215,15 +214,15 @@ Meteor.methods({
 		};
 		Schedules.insert(schedule);
 	},
-	addDefaultSchedule(){
+	addDefaultSchedule(thisUser){
 		/* Make sure user is the owner */
-		if(!Meteor.userId()){
+		if(!thisUser._id){
 			throw new Meteor.Error('not-authorized');
 		} 
 		/* From the user's profile, get their bedtime and use that as an offset for their actual bioCurve. Then pass their bioCurve into the Thresholds Object parameters */
-		let myBioCurve = offsetBioCurve(parseInt(Meteor.user().profile.bedHour.substring(0,2)))
+		let myBioCurve = offsetBioCurve(parseInt(thisUser.profile.bedHour.substring(0,2)))
 		let schedule = {
-			userId : Meteor.userId(),
+			userId : thisUser._id,
 			schedule : Schedule(),
 			thresholds: Thresholds(myBioCurve)
 		};
@@ -232,7 +231,7 @@ Meteor.methods({
 	/* After triggering a notification and clicking on the alert, change the notice object so that we don't see the same thing twice */
 	seeNotification(notice){
 		/* Make sure user is the owner */
-		if(Meteor.userId() !== notice.userId){
+		if(thisUser._id !== notice.userId){
 			throw new Meteor.Error('not-authorized');
 		}
 		Notifications.update(notice._id, {
@@ -242,25 +241,25 @@ Meteor.methods({
 	/* On Setup add initial schedule object for the user */
 	addDefaultSchedule(){
 		/* Make sure user is the owner */
-		if(!Meteor.userId()){
+		if(!thisUser._id){
 			throw new Meteor.Error('not-authorized');
 		} 
 		/* From the user's profile, get their bedtime and use that as an offset for their actual bioCurve. Then pass their bioCurve into the Thresholds Object parameters */
-		let myBioCurve = offsetBioCurve(parseInt(Meteor.user().profile.bedHour.substring(0,2)))
+		let myBioCurve = offsetBioCurve(parseInt(thisUser.profile.bedHour.substring(0,2)))
 		let schedule = {
-			userId : Meteor.userId(),
+			userId : thisUser._id,
 			schedule : Schedule(),
 			thresholds: Thresholds(myBioCurve)
 		};
 		Schedules.insert(schedule);
 	},
 	/* User is trying to make a change to one cell of their schedule, takes in a coordinate string (e.g. Sun-03:00 === Sunday @ 3AM) to tell us where on the schedule grid they're changing the data*/
-	modifySchedule(coords){
+	modifySchedule(coords, thisUser){
 		/* Make sure user is the owner */
-		if(!Meteor.userId()){
+		if(!thisUser._id){
 			throw new Meteor.Error('not-authorized');
 		} 
-		let mySchedule = Schedules.findOne({userId : Meteor.userId()});
+		let mySchedule = Schedules.findOne({userId : thisUser._id});
 
 		day = coords.substring(0, 3);
 		hour = coords.substring(4, 9);
@@ -273,10 +272,10 @@ Meteor.methods({
 			$set : {schedule : mySchedule.schedule}
 		});
 	},
-	updateUsername(username){
+	updateUsername(username, thisUser){
 		if(!Meteor.users.findOne({username: username})){
 			/* This username is available. Update this user and then return "200" success */
-			Meteor.users.update(Meteor.userId(), {
+			Meteor.users.update(thisUser._id, {
 				$set: {username: username}
 			});
 			return "200";
@@ -285,13 +284,13 @@ Meteor.methods({
 			return "403";
 		}
 	},
-	updateProfilePic(imgAsString){
-		if(!Meteor.userId()){
+	updateProfilePic(imgAsString, thisUser){
+		if(!thisUser._id){
 			throw new Meteor.Error('not-authorized');
 		} 
-		let userProfile = Meteor.user().profile;
+		let userProfile = thisUser.profile;
 		userProfile.pic = imgAsString;
-		Meteor.users.update(Meteor.userId(), {
+		Meteor.users.update(thisUser._id, {
 			$set : {
 				profile : userProfile
 			}
@@ -302,10 +301,10 @@ Meteor.methods({
 	*  Gets the user's current date, time, and the tag they're using to find the best time for it in the coming week
 	*  given their liklihood to complete it.
 	*/
-	scheduleBestTime(data){
+	scheduleBestTime(data, thisUser){
 		// const t0 = new Date().getTime();
 		// console.log("Attempting to find the best time");
-		let mySched = Schedules.findOne({userId : Meteor.userId()});
+		let mySched = Schedules.findOne({userId : thisUser._id});
 		let possibleTimes = [];
 		const offset = parseInt(moment(data.today, "YYYY-MM-DDTHH:mm:ss").format('e')) ;
 		const thisHour = moment(data.today, "YYYY-MM-DDTHH:mm:ss").format('HH:00');
@@ -327,7 +326,7 @@ Meteor.methods({
 		}
 
 		/* Get this upcoming week's tasks to match against */
-		let tasks = Tasks.find({userId: Meteor.userId(), dateStart: {gte: todayFormatted, lte: moment(todayFormatted, "YYYY-MM-DD").add(7, 'days').format("YYYY-MM-DD")}}).fetch();
+		let tasks = Tasks.find({userId: thisUser._id, dateStart: {gte: todayFormatted, lte: moment(todayFormatted, "YYYY-MM-DD").add(7, 'days').format("YYYY-MM-DD")}}).fetch();
 		/* Populate array of all possible times */
 		for( let i = 0; i < daysOfWeek.length; i++) {
 			let pointer = (i + offset) % daysOfWeek.length; 
@@ -364,7 +363,7 @@ Meteor.methods({
 			tempPossibilites = tempPossibilites.filter((coord)=>{
 				let daysFromToday = coord.day - offset >= 0 ? coord.day - offset : 7 + (coord.day - offset);
 				let bestDate = moment().add(daysFromToday, "days").format();	
-					// console.log("There is " + (Tasks.findOne({userId: Meteor.userId(), dateStart : bestDate.substring(0,10) , timeStart: {$regex: coord.time.substring(0,2) + ".*"}}) !== undefined ? "something" : "nothing") + " on " + bestDate.substring(0,10) + " at " + coord.time)
+					// console.log("There is " + (Tasks.findOne({userId: thisUser._id, dateStart : bestDate.substring(0,10) , timeStart: {$regex: coord.time.substring(0,2) + ".*"}}) !== undefined ? "something" : "nothing") + " on " + bestDate.substring(0,10) + " at " + coord.time)
 					return tasks.findIndex((task)=>{ return task.dateStart === bestDate.substring(0,10) && task.timeStart === coord.time}) === - 1;
 				});
 			// console.log("At " + (target * 100) + "%, there are " + tempPossibilites.length + " times available with no other tasks scheduled")
@@ -388,8 +387,8 @@ Meteor.methods({
 	/* This method adjusts the probability that a user will complete an action on a given day at a given time after either failure or success 
 	* Accepts a data object containing a date, time, and tag
 	*/
-	changeThreshold(data){
-		let mySched = Schedules.findOne({userId : Meteor.userId()});
+	changeThreshold(data, thisUser){
+		let mySched = Schedules.findOne({userId : thisUser._id});
 		let weekDay = moment(data.date, "YYYY-MM-DD").format("E");
 		let hour = data.time.substring(0,2) + ":00";
 		// console.log("old threshold:" + mySched.thresholds[daysOfWeek[weekDay]][hour][data.tag] + " data amt to change by: " + data.amt);
@@ -411,14 +410,14 @@ Meteor.methods({
 		});
 	},
 	/* Takes a string indicating which step of the 'tutorial' has been completed */
-	toggleCompleteTour(step){
-		if(!Meteor.userId()){
+	toggleCompleteTour(step, thisUser){
+		if(!thisUser._id){
 			throw new Meteor.Error('not-authorized');
 		} 
-		let usertut = Meteor.user().profile.tut;
+		let usertut = thisUser.profile.tut;
 		usertut[step] = true;
 
-		Meteor.users.update(Meteor.userId(), {
+		Meteor.users.update(thisUser._id, {
 			$set: { 
 				profile: { 
 					tut: usertut

@@ -18,14 +18,14 @@ export default class Schedule extends TrackerReact(React.Component) {
 				closeOnConfirm: true, 
 			},
 			()=>{
-				Meteor.call("toggleCompleteTour", "schedule")
+				Meteor.apply("toggleCompleteTour", ["schedule", Meteor.user()], {wait: false});
 			}) 
 		}
 		}
 		modifySchedule(e){
 			e.target.parentElement.style.backgroundColor = "transparent" ? "#1de9b6" : "transparent";
 			let coords = e.target.getAttribute("data-coords");
-			Meteor.call("modifySchedule", coords, (err, res)=>{
+			Meteor.apply("modifySchedule", [coords, Meteor.user()], {wait: false}, (err, res)=>{
 				if(err){
 					swal("Whoops!", err, "error");
 				} 
