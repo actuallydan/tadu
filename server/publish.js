@@ -27,9 +27,12 @@ Meteor.publish("allUsers", function () {
      '_id' : 1,
      'username': 1,
      'createdAt': 1,
-     'profile': 1,
+     'profile': {
+     	'tut' : 1,
+     	'phone': 1,
+     	'pic': 1,
+     }
 	}})
-}
- );
+});
 //, {fields: {'everythingButThisField':0}}
 	// return Schedules.find({userId: this.userId}, {fields: {"thresholds" : 0}} );

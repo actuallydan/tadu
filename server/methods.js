@@ -1,4 +1,9 @@
 import moment from 'moment';
+const twilioClient = new Twilio({
+	from: Meteor.settings.TWILIO.FROM,
+	sid: Meteor.settings.TWILIO.SID,
+	token: Meteor.settings.TWILIO.TOKEN
+});
 
 /* Server methods to be called by client */
 Meteor.methods({
@@ -8,6 +13,17 @@ Meteor.methods({
 	},
 	getUserByName(username){
 		return Meteor.users.findOne({username: username});
+	},
+	sendSMS(to, message){
+		try {
+			var result = twilioClient.sendSMS({
+				to: to,
+				body: message
+			});
+		} catch (err) {
+			throw new Meteor.Error(err);     
+		}
+		return result;
 	},
 	/* takes a task object and stores it in the Tasks Collection for this user as well as increments the tag to make it more visible */
 	addTask(task, user){
@@ -205,7 +221,7 @@ Meteor.methods({
 		TagTypes.insert(myTags);
 	},
 	addDefaultScheduleRemote(data){
-		 /* From the user's profile, get their bedtime and use that as an offset for their actual bioCurve. Then pass their bioCurve into the Thresholds Object parameters */
+		/* From the user's profile, get their bedtime and use that as an offset for their actual bioCurve. Then pass their bioCurve into the Thresholds Object parameters */
 		let myBioCurve = offsetBioCurve(parseInt(data.hour.substring(0,2)));
 		let schedule = {
 			userId : data.id,
@@ -214,6 +230,7 @@ Meteor.methods({
 		};
 		Schedules.insert(schedule);
 	},
+	/* On Setup add initial schedule object for the user */
 	addDefaultSchedule(thisUser){
 		/* Make sure user is the owner */
 		if(!thisUser._id){
@@ -237,21 +254,6 @@ Meteor.methods({
 		Notifications.update(notice._id, {
 			$set: {seen: true }
 		})
-	},
-	/* On Setup add initial schedule object for the user */
-	addDefaultSchedule(){
-		/* Make sure user is the owner */
-		if(!thisUser._id){
-			throw new Meteor.Error('not-authorized');
-		} 
-		/* From the user's profile, get their bedtime and use that as an offset for their actual bioCurve. Then pass their bioCurve into the Thresholds Object parameters */
-		let myBioCurve = offsetBioCurve(parseInt(thisUser.profile.bedHour.substring(0,2)))
-		let schedule = {
-			userId : thisUser._id,
-			schedule : Schedule(),
-			thresholds: Thresholds(myBioCurve)
-		};
-		Schedules.insert(schedule);
 	},
 	/* User is trying to make a change to one cell of their schedule, takes in a coordinate string (e.g. Sun-03:00 === Sunday @ 3AM) to tell us where on the schedule grid they're changing the data*/
 	modifySchedule(coords, thisUser){

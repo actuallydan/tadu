@@ -27,6 +27,7 @@ export default class EntryPortal extends React.Component {
 				'registerPassword' : "",
 				'registerUsername' : "",
 				'registerBedHour' : "",
+				'registerPhone' : ""
 			}
 		};
 	}
@@ -49,6 +50,7 @@ export default class EntryPortal extends React.Component {
 				'registerPassword' : div.password,
 				'registerUsername' : div.username,
 				'registerBedHour' : div.bedHour,
+				'registerPhone' : div.phone
 			}});
 	}
 	/* After user submit's login form we attempt to sign them in */
@@ -101,47 +103,80 @@ export default class EntryPortal extends React.Component {
 
 		if (this.state.registerStateData.registerUsername !== "" && this.state.registerStateData.registerPassword !== "" && valid && this.state.registerStateData.registerBedHour !== "") {
 			/* Get the time the user ususally goes to bed to build their social circadian rhythm around that */
-			const user = {
-				username: this.state.registerStateData.registerUsername,
-				password: this.state.registerStateData.registerPassword,
-				// email: this.state.registerStateData.registerEmail,
-				profile: {
-					pic: null,
-					bedHour: this.state.registerStateData.registerBedHour,
-					tut : {
-						'login' : false,
-						'schedule' : false,
-						'addTasks': false,
+
+			let authCode = Math.round(Math.random() * 10000);
+
+			Meteor.apply("sendSMS", [this.state.registerStateData.registerPhone, "Your verification code is " + authCode]);
+
+			swal({
+				title: "An input!",
+				text: "Write something interesting:",
+				type: "input",
+				showCancelButton: true,
+				closeOnConfirm: false,
+				inputPlaceholder: "Please enter your verification code",
+				cancelButtonText: "Resend Code",
+				allowEscapeKey: true,
+				allowOutsideClick : true,
+				closeOnCancel : false
+			},
+			(inputValue)=>{
+				if (inputValue === false){
+					authCode = Math.round(Math.random() * 10000)
+					Meteor.apply("sendSMS", [this.state.registerStateData.registerPhone, "Your verification code is " + authCode]);
+					swal.showInputError("Send a new code");
+					return false;
+				} else if (inputValue === "") {
+					swal.showInputError("You need to write something!");
+					return false;
+				} else if (inputValue !== authCode.toString()) {
+					swal.showInputError("Incorrect verification code");
+					return false;
+				} else if(authCode.toString() === inputValue){
+
+					swal("Registration Success!", "Let's get started", "success");
+					const user = {
+						username: this.state.registerStateData.registerUsername,
+						password: this.state.registerStateData.registerPassword,
+						profile: {
+							phone: this.state.registerStateData.registerPhone,
+							pic: null,
+							bedHour: this.state.registerStateData.registerBedHour,
+							tut : {
+								'login' : false,
+								'schedule' : false,
+								'addTasks': false,
+							}
+						}
+					};
+					try{
+						/* Try to create a new user with Meteor's account package */
+						Accounts.createUser(user, (err)=> {
+							if(err){
+								/* There was an issue with existing accounts, parameter length wasn't sufficient etc.*/
+								swal("Oops...", err.reason, "error");
+							} else {
+								/* Meteor will automagically sign in users after successful account creation so we can trigger state update in parent to escape this prison */
+								Meteor.call("addDefaultSchedule", Meteor.user(), (err)=>{
+									if(err){
+										swal("Awkward...", err.reason, "error");
+									}
+									Meteor.call("addDefaultTags", Meteor.user(), (err)=>{
+										if(err){
+											swal("Awkward...", err.reason, "error");
+										} else {
+											this.props.loggedInChange(true);
+										}
+									});
+								});
+							}
+						});				
+					} catch (e){
+						/* There was a non-meteor related issue, likely Error: 500 */
+						swal("Oops...", e, "error");
 					}
 				}
-			};
-			try{
-				/* Try to create a new user with Meteor's account package */
-				Accounts.createUser(user, (err)=> {
-					if(err){
-						/* There was an issue with existing accounts, parameter length wasn't sufficient etc.*/
-						swal("Oops...", err.reason, "error");
-					} else {
-						/* Meteor will automagically sign in users after successful account creation so we can trigger state update in parent to escape this prison */
-						Meteor.call("addDefaultSchedule", Meteor.userId(), (err)=>{
-							if(err){
-								swal("Awkward...", err, "error");
-							}
-							Meteor.call("addDefaultTags", Meteor.userId(), (err)=>{
-								if(err){
-									swal("Awkward...", err, "error");
-								} else {
-									this.props.loggedInChange(true);
-								}
-							});
-						});
-					}
-				});				
-			} catch (e){
-				/* There was a non-meteor related issue, likely Error: 500 */
-				swal("Oops...", e, "error");
-			}
-			
+			});
 		} else {
 			/* The user tried to enter invalid email or username credentials. Email addresses should contain alphanumeric characters, @, ., _, and - only */
 			swal("Sorry", "Please fill out all fields. Make sure you enter a valid email and a valid username with at least 6 characters.", "error");
@@ -156,7 +191,7 @@ export default class EntryPortal extends React.Component {
 		/* Swaps out which form should be visible based on this component's state: register or login. Also display the pirvacy policy because links don't work by default in Cordova */
 		return (
 			<div id="entry-portal"> 
-			
+
 			{this.state.showLogin ? 
 				<Login 
 				showLogin={this.state.showLogin} 

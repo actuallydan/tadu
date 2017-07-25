@@ -56,32 +56,32 @@
 * 5.0 Tadu Concierge 
 
 #### What Needs Done
-* BUG :
-	* Can't tab sometimes on login/register
-	* iOS 
-		* Splash screen & icons
-		* Alarm radio buttons don't always work (remove hover on mobile)
-		* Go to loader on "login/register" immediately
-		* Start/End Date/Times should be max 50% of div 
-		* Bump up font for usermenu.js
-		* Add permissions for images (from library worked once)
+* Loop 1
+	* Parser
+	    * Slack like comand-line create task Interface
+	    * Error Handling
+	    *  Expects Boolean Instance Variable
+	* SMS
+	    * Logic for new users and registered users
+	    * Listen for POST on /web/ and send to parser
+	    * Send SMS from parser and integrate into reminders cron
+	* Browser
+	    * Modify registration to use phone and then validate with SMS
+* Loop 2 :
+	* Parser built into AddTask pane to toggle
 
 * Improvements
-	* Reduce Redundancy in MonthView where creating calObject
 ------------ For Next Version
 * Refactor convert AddTask 1 & 2 to stateless and move refs to state in AddTask.jsx
 * Recurring Tasks
 * Add schedule and tagtypes index to user profile
 * Speed up addTag method (currently ~170ms from client)
-* Make animations faster (optimistic UI) many animations sluggish at times
+* Make animations faster
 	* Things to be async 
 		* changeThreshold (Mainlayout.jsx)
 		* updateSchedule (Schedule.jsx)
 		* Some Update Task calls
-		* Schedule best time filters in multi threading?
-* Ionicons
-* scheduleBesttime() should also check for half hour increments
-	* Requires schedule objects to be in half hour increments to add to possibleTimesBlock
+* Better Icons
 * diff colors for different types of task single
 
 

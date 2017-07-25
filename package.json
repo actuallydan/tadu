@@ -19,7 +19,8 @@
   "dependencies": {
     "animate.css": "^3.5.2",
     "babel-runtime": "^6.23.0",
-    "bcrypt": "^1.0.2",
+    "bcrypt": "*",
+    "body-parser": "^1.17.2",
     "classnames": "^2.2.5",
     "loaders.css": "^0.1.2",
     "mdi": "^1.8.36",
@@ -30,7 +31,6 @@
     "react-dom": "^15.6.1",
     "react-swipeable-views": "^0.12.4",
     "react-swipeable-views-utils": "^0.12.0",
-    "react-toastify": "^1.7.0",
     "react-tooltip": "^3.3.0",
     "swal": "^0.1.0",
     "sweetalert": "^1.1.3"

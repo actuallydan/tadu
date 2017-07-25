@@ -15,9 +15,10 @@ const Register = (props)=> {
 	}
 	const changeRegisterState = ()=>{
 		let data = {
-			'password': document.getElementById('register-password').value.trim(),
+			password: document.getElementById('register-password').value.trim(),
 			username :document.getElementById("register-username").value.trim(),
-			bedHour: document.getElementById("register-bedHour").value.trim()
+			bedHour: document.getElementById("register-bedHour").value.trim(),
+			phone : document.getElementById("register-phone").value.trim()
 		};
 		props.changeRegisterState(data);
 	}
@@ -36,6 +37,10 @@ const Register = (props)=> {
 			<div className="form-input-wrapper">
 			<label htmlFor="register-password" className="mdi mdi-lock-outline"></label>
 			<input className='form-input' type="password"  id="register-password" onChange={changeRegisterState} value={props.registerStateData.registerPassword} placeholder="Password" autoComplete="off" onFocus={highlight}/>
+			</div>
+			<div className="form-input-wrapper">
+			<label htmlFor="register-phone" className="mdi mdi-phone"></label>
+			<input className='form-input' type="phone"  id="register-phone" onChange={changeRegisterState} value={props.registerStateData.registerPhone} placeholder="12223334444" autoComplete="off" onFocus={highlight}/>
 			</div>
 			<br/>
 			<div style={{textAlign: "center", color: "#FFF", margin: 0}}> What time do you usually go to bed? {'\u00A0'}<span onClick={()=>{swal("Bed Time?", "This will help Tadu optimize your schedule when you're most awake and productive.")}} style={{color: '#33FFCC'}}>Why?</span></div>
