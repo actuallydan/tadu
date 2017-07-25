@@ -1,4 +1,4 @@
 .DS_Store
 node_modules
 .meteor-electron
-# settings.json
+settings.json
