@@ -52,6 +52,7 @@ localstorage@1.0.12
 logging@1.1.17
 meteor@1.6.1
 meteor-base@1.0.4
+meteorhacks:picker@1.0.3
 meteortoys:allthings@3.0.0
 meteortoys:authenticate@3.0.0
 meteortoys:autopub@3.0.0

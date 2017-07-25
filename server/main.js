@@ -26,35 +26,6 @@ Meteor.startup(() => {
     ]
   });
 
- //  /* Temp user fix */
- //  let users = Meteor.users.find().fetch();
-
- //  users.map((user)=>{
- //   /* for each user make sure tags are intact */
- //   let mySched = Schedules.findOne({userId : user._id});
- //   let myTags = TagTypes.findOne({userId : user._id});
- //   myTags.tags.map((tagObj)=>{
- //    if(!mySched.thresholds["Sun"]["00:00"].hasOwnProperty(tagObj.type)){
- //      console.log("repairing");
-
- //      daysOfWeek.map((day)=>{
- //        hours.map((hour)=>{
- //          mySched.thresholds[day][hour][tagObj.type] = bioCurve[hours.indexOf(hour)];
-
- //        });
- //      });
-
- //      /* update user's schedule */
- //      Schedules.update({userId: user._id}, {
- //        $set : {
- //          thresholds : mySched.thresholds
- //        }
- //      })
-
- //    }
- //  })
- // });
-
   /* Not super funcitonal SyncedCron setup */
   SyncedCron.config({
     // Log job run details to console
