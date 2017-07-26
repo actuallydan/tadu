@@ -58,12 +58,12 @@
 #### What Needs Done
 * Loop 1
 	* Parser
-	    * Slack like comand-line create task Interface
+	    * Slack like command-line create task Interface
 	    * Error Handling
-	    *  Expects Boolean Instance Variable
 	* SMS
 	    * Logic for new users and registered users
 	    * Listen for POST on /web/ and send to parser
+	    * Need way to get user's local time for accurate moment parsing
 	    * Send SMS from parser and integrate into reminders cron
 	* Browser
 	    * Modify registration to use phone and then validate with SMS

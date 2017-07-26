@@ -149,6 +149,16 @@ export default class EntryPortal extends React.Component {
 							}
 						}
 					};
+					const userProfile = {
+						phone: this.state.registerStateData.registerPhone,
+						pic: null,
+						bedHour: this.state.registerStateData.registerBedHour,
+						tut : {
+							'login' : false,
+							'schedule' : false,
+							'addTasks': false,
+						}
+					};
 					try{
 						/* Try to create a new user with Meteor's account package */
 						Accounts.createUser(user, (err)=> {
@@ -156,7 +166,11 @@ export default class EntryPortal extends React.Component {
 								/* There was an issue with existing accounts, parameter length wasn't sufficient etc.*/
 								swal("Oops...", err.reason, "error");
 							} else {
+								console.log(Meteor.user());
+
 								/* Meteor will automagically sign in users after successful account creation so we can trigger state update in parent to escape this prison */
+								// Meteor.apply("addProfile", [userProfile, Meteor.user()]);
+								
 								Meteor.call("addDefaultSchedule", Meteor.user(), (err)=>{
 									if(err){
 										swal("Awkward...", err.reason, "error");
@@ -168,7 +182,7 @@ export default class EntryPortal extends React.Component {
 											this.props.loggedInChange(true);
 										}
 									});
-								});
+								})
 							}
 						});				
 					} catch (e){

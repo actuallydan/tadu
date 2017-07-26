@@ -1,4 +1,6 @@
 import moment from 'moment';
+import Parser from './src/parser.js';
+
 const twilioClient = new Twilio({
 	from: Meteor.settings.TWILIO.FROM,
 	sid: Meteor.settings.TWILIO.SID,
@@ -7,6 +9,11 @@ const twilioClient = new Twilio({
 
 /* Server methods to be called by client */
 Meteor.methods({
+	parse(string, thisUser, userTime){
+		let task = new Parser(userTime).parse(string);
+		task.userId = thisUser._id;
+		return task;
+	},
 	/* Find a single user by userId */
 	findOneUser(id){
 		return Meteor.users.findOne({_id : id}).username;
@@ -14,16 +21,19 @@ Meteor.methods({
 	getUserByName(username){
 		return Meteor.users.findOne({username: username});
 	},
+	// getPhone(){
+
+	// },
 	sendSMS(to, message){
 		try {
-			var result = twilioClient.sendSMS({
+			let result = twilioClient.sendSMS({
 				to: to,
 				body: message
 			});
+			return result;
 		} catch (err) {
 			throw new Meteor.Error(err);     
 		}
-		return result;
 	},
 	/* takes a task object and stores it in the Tasks Collection for this user as well as increments the tag to make it more visible */
 	addTask(task, user){
@@ -165,6 +175,14 @@ Meteor.methods({
 		/* Update the schedule object */
 		Schedules.update(mySched._id, {
 			$set: {thresholds: mySched.thresholds}
+		});
+	},
+	addProfile(profile, thisUser){
+		console.log(thisUser, JSON.stringify(profile));
+		Meteor.users.update(thisUser._id, {
+			$set : {
+				profile : profile
+			}
 		});
 	},
 	/* On Setup add the nine initial tags to the user's tagTypes object */
@@ -416,14 +434,13 @@ Meteor.methods({
 		if(!thisUser._id){
 			throw new Meteor.Error('not-authorized');
 		} 
-		let usertut = thisUser.profile.tut;
-		usertut[step] = true;
+		
+		let userProfile =  thisUser.profile;
+		userProfile.tut[step] = true;
 
 		Meteor.users.update(thisUser._id, {
 			$set: { 
-				profile: { 
-					tut: usertut
-				}
+				profile: userProfile
 			}
 		});
 	}
@@ -466,8 +483,8 @@ const Block = ()=>{
 const offsetBioCurve = (offset)=>{
 	offset = 24 - offset;
 	let newCurve = [];
-	for( var i = 0; i < bioCurve.length; ++i) {
-		var pointer = (i + offset) % bioCurve.length;
+	for( let i = 0; i < bioCurve.length; ++i) {
+		let pointer = (i + offset) % bioCurve.length;
 		newCurve.push(bioCurve[pointer]);
 	}
 	return newCurve;

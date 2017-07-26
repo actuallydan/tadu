@@ -84,6 +84,7 @@ export default class Calendar extends TrackerReact(Component) {
 		this.setState({showMenu: !this.state.showMenu});
 	}
 	render(){
+		console.log(Meteor.user());
 		let tasks = Tasks.find({"dateStart" : {$regex: this.state.monthShowing.substring(0,7) + ".*"}}).fetch();
 		let notices = Notifications.find({}, {sort: {'timestamp': -1}, limit: 10}).fetch();
 

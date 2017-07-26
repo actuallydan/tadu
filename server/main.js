@@ -26,6 +26,8 @@ Meteor.startup(() => {
   //   ]
   // });
 
+console.log(Meteor.users.find({}).fetch());
+
   /* Not super funcitonal SyncedCron setup */
   SyncedCron.config({
     // Log job run details to console

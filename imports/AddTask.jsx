@@ -173,7 +173,7 @@ export default class AddTask extends Component {
 				sharingWith: this.state.sharingWith
 			};
 			task.timeUTC = alarm !== null ? moment(task.dateStart + "T" + task.timeStart).utc().subtract(alarm, 'minutes').format().substring(0, 16) : null;
-			task.timeUTCEnd = moment(task.dateEnd + "T" + task.timeEnd).utc().format().substring(0, 16);;
+			task.timeUTCEnd = moment(task.dateEnd + "T" + task.timeEnd).utc().format().substring(0, 16);
 
 			/* Call Meteor to abscond with our earthly woes and store it in the database if possible */
 			Meteor.apply("addTask", [task, Meteor.user()], (err, data)=>{

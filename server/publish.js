@@ -24,15 +24,8 @@ Meteor.publish("allUsers", function () {
 	return Meteor.users.find({_id: this.userId},
 	{fields: {
      // specific fields to return
-     '_id' : 1,
-     'username': 1,
-     'createdAt': 1,
-     'profile': {
-     	'tut' : 1,
-     	'phone': 1,
-     	'pic': 1,
-     }
-	}})
+     'services' : 0
+     	}})
 });
 //, {fields: {'everythingButThisField':0}}
 	// return Schedules.find({userId: this.userId}, {fields: {"thresholds" : 0}} );
