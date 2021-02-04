@@ -1,5 +1,6 @@
 {
-  "name": "tadu-2",
+  "name": "tadu",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
     "start": "meteor run",
