@@ -167,7 +167,7 @@ class EntryPortal extends React.Component {
               if (err) {
                 swal("Awkward...", err.reason, "error");
               } else {
-                this.props.loggedInChange(true);
+                this.props.history.push("/app");
               }
             });
           });

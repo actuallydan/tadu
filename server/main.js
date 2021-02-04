@@ -1,6 +1,7 @@
 import { Meteor } from "meteor/meteor";
 import moment from "moment";
 import { Tasks, Notifications } from "./publish";
+import "./methods.js";
 
 Meteor.startup(() => {
   // console.log(Meteor.users.find({}).fetch());

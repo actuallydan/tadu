@@ -26,3 +26,4 @@ force-ssl
 session@1.1.7
 service-configuration
 meteorhacks:picker
+accounts-password

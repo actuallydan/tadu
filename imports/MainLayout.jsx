@@ -24,10 +24,10 @@ import { ToastContainer } from "react-toastify";
 import { toast } from "react-toastify";
 
 /* Instantiate MiniMongo local database collections */
-const Tasks = new Mongo.Collection("Tasks");
-const TagTypes = new Mongo.Collection("TagTypes");
-const Notifications = new Mongo.Collection("Notifications");
-const Schedules = new Mongo.Collection("Schedules");
+Tasks = new Mongo.Collection("Tasks");
+TagTypes = new Mongo.Collection("TagTypes");
+Notifications = new Mongo.Collection("Notifications");
+Schedules = new Mongo.Collection("Schedules");
 
 let toggleTitle;
 
@@ -60,35 +60,25 @@ export default class MainLayout extends TrackerReact(React.Component) {
       taskDetail: null,
       scheduleVisible: false,
     };
-    this.handleResize = this.handleResize.bind(this);
-    this.showDetail = this.showDetail.bind(this);
-    this.showView = this.showView.bind(this);
-    this.toggleNotice = this.toggleNotice.bind(this);
-    this.showAddTask = this.showAddTask.bind(this);
-    this.selectDate = this.selectDate.bind(this);
-    this.hideAddTask = this.hideAddTask.bind(this);
-    this.loggedInChange = this.loggedInChange.bind(this);
-    this.showTasks = this.showTasks.bind(this);
-    this.hideDetail = this.hideDetail.bind(this);
   }
-  toggleNotice() {
+  toggleNotice = () => {
     this.setState({ showNotifications: !this.state.showNotifications });
-  }
-  toggleSchedule() {
+  };
+  toggleSchedule = () => {
     console.log("hideQuickTask", this.state.scheduleVisible);
     this.setState({ scheduleVisible: !this.state.scheduleVisible });
-  }
-  handleResize() {
+  };
+  handleResize = () => {
     this.setState({ width: window.innerWidth });
-  }
-  loggedInChange(flag) {
+  };
+  loggedInChange = (flag) => {
     /* Tell out app that we're changing our logged in state and that Meteor knows we're logged in / out and need to change views
      * Methods tha log the user in should provide true as a parameter or false if they're logging out
      */
     this.setState({
       loggedIn: flag,
     });
-  }
+  };
   componentWillUnmount() {
     /* Always remove window listeners when not in use, but this is not likely to be needed at the moment */
     window.removeEventListener("resize", this.handleResize);
@@ -99,49 +89,60 @@ export default class MainLayout extends TrackerReact(React.Component) {
      * This gives responsiveness to larger organizational components */
     window.addEventListener("resize", this.handleResize);
   }
+  componentDidUpdate() {
+    Meteor.user()?.profile?.tut?.login === false &&
+      swal({
+        title: "Welcome!",
+        text:
+          "Thanks for using Tadu! Get Started by entering your weekly schedule or creating a new task using the icons at the top.",
+        type: "success",
+      }).then(() => {
+        Meteor.call("toggleCompleteTour", ["login", Meteor.user()]);
+      });
+  }
   /* All purpose change view method
    * TODO: This should be used in place of show/hide addtask/tasklist/calendar
    * Use "calendar" | "addTask" | "tasksList" as parameter values
    */
-  showView(view) {
+  showView = (view) => {
     this.setState({
       viewMode: view,
     });
-  }
+  };
   /* Should be replaced with showView("addTask") */
-  showAddTask() {
+  showAddTask = () => {
     this.setState({
       viewMode: "addTask",
     });
-  }
+  };
   /* Should be replaced with showView("tasksList") */
-  showTasks() {
+  showTasks = () => {
     this.setState({
       viewMode: "tasksList",
     });
-  }
+  };
   /* Should be replaced with showView("calendar") */
-  hideAddTask() {
+  hideAddTask = () => {
     this.setState({
       viewMode: "calendar",
     });
-  }
+  };
   /* Shows Task detail Modal (Rodal) at bottom of page
    * A valid Task Object must be passed to display it's full details to the user
    * Shold maybe be condensed into a toggleDetail view?
    */
-  showDetail(task) {
+  showDetail = (task) => {
     this.setState({ taskDetail: task });
-  }
+  };
   /* Hides Task detail Modal (Rodal) at bottom of page
    * Removes task object from state to signal Rodal to close
    * See notes from showDetail()
    */
-  hideDetail() {
+  hideDetail = () => {
     this.setState({ taskDetail: null });
-  }
+  };
   /* Gets a date string in "YYYY-MM-DD" format from Calendar and updates the state so the whole app is aware of the date we're looking at as opposed to the current date */
-  selectDate(date) {
+  selectDate = (date) => {
     if (document.getElementById("new-task-date") !== null) {
       document.getElementById("new-task-date").value = date;
       document.getElementById("new-task-end-date").value = moment(
@@ -154,7 +155,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
     this.setState({
       selectedDate: date,
     });
-  }
+  };
   /* Multipurpose method for handling notifications triggered in the MainLayout component or elsewhere
    * Takes in a valid Notifications object and may contain a task, message, or system alert
    * Should implement a switch statement for how notification is handled depending on type of alert (the data property)
@@ -162,7 +163,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
    * Should also be spun into it's own functional component or imported method for brevity
    * Accomodates for both Notifcation users and otherwise
    */
-  notify(notice) {
+  notify = (notice) => {
     /* if there is already a toast on screen don't rerun script as it'll get annoying */
     if (document.querySelectorAll(".toastify-content").length > 0) {
       return false;
@@ -181,8 +182,8 @@ export default class MainLayout extends TrackerReact(React.Component) {
         this.displayTaskCheckup(notice);
         break;
     }
-  }
-  displayTaskCheckup(notice) {
+  };
+  displayTaskCheckup = (notice) => {
     document.title = "Task Check!";
     toggleTitle = setInterval(() => {
       switch (document.title) {
@@ -218,9 +219,9 @@ export default class MainLayout extends TrackerReact(React.Component) {
         }
       />
     );
-  }
+  };
 
-  updateEndTime(notice) {
+  updateEndTime = (notice) => {
     toast.dismiss();
     clearInterval(toggleTitle);
     document.title = "Tadu | The Sensible Scheduler";
@@ -242,8 +243,8 @@ export default class MainLayout extends TrackerReact(React.Component) {
       );
     });
     Meteor.apply("seeNotification", [notice, Meteor.user()]);
-  }
-  displayTaskShare(notice) {
+  };
+  displayTaskShare = (notice) => {
     Meteor.apply(
       "findOneUser",
       [notice.data.userId, Meteor.user()],
@@ -263,8 +264,8 @@ export default class MainLayout extends TrackerReact(React.Component) {
         Meteor.apply("seeNotification", [notice, Meteor.user()]);
       }
     );
-  }
-  displayTaskAlert(notice) {
+  };
+  displayTaskAlert = (notice) => {
     document.title = "Task Alert!";
     toggleTitle = setInterval(() => {
       switch (document.title) {
@@ -291,127 +292,122 @@ export default class MainLayout extends TrackerReact(React.Component) {
         secondary={moment(notice.data.timeStart, "HH:mm").format("h:mm a")}
       />
     );
-  }
-  displayNotification(notice) {
+  };
+  displayNotification = (notice) => {
     clearInterval(toggleTitle);
     document.title = "Tadu | The Sensible Scheduler";
-    swal(
-      {
-        title: notice.data.tag,
-        text: notice.data.text + "<br/> Have you completed it?",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Yes, it's done!",
-        cancelButtonText: "No, I need to reschedule",
-        closeOnConfirm: false,
-        closeOnCancel: false,
-        html: true,
-      },
-      function (isConfirm) {
-        if (isConfirm) {
-          swal("Good job!", "I'm so proud of you", "success");
-          // Update task completion status to true
-          Meteor.apply("toggleTask", [notice.data, Meteor.user()]);
-          Meteor.apply("changeThreshold", [
+    swal({
+      title: notice.data.tag,
+      text: notice.data.text + "<br/> Have you completed it?",
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, it's done!",
+      cancelButtonText: "No, I need to reschedule",
+      closeOnConfirm: false,
+      closeOnCancel: false,
+      html: true,
+    }).then(function (isConfirm) {
+      if (isConfirm) {
+        swal("Good job!", "I'm so proud of you", "success");
+        // Update task completion status to true
+        Meteor.apply("toggleTask", [notice.data, Meteor.user()]);
+        Meteor.apply("changeThreshold", [
+          {
+            tag: notice.data.tag,
+            date: notice.data.dateStart,
+            time: notice.data.timeStart,
+            amt: 0.15,
+          },
+          Meteor.user(),
+        ]);
+      } else {
+        swal(
+          "Rescheduling...",
+          "Don't worry. I'll set up a different time",
+          "success"
+        );
+        /* update task startTime */
+        Meteor.apply(
+          "scheduleBestTime",
+          [
             {
               tag: notice.data.tag,
-              date: notice.data.dateStart,
-              time: notice.data.timeStart,
-              amt: 0.15,
+              today: moment().format("YYYY-MM-DDTHH:mm:ss"),
             },
             Meteor.user(),
-          ]);
-        } else {
-          swal(
-            "Rescheduling...",
-            "Don't worry. I'll set up a different time",
-            "success"
-          );
-          /* update task startTime */
-          Meteor.apply(
-            "scheduleBestTime",
-            [
-              {
-                tag: notice.data.tag,
-                today: moment().format("YYYY-MM-DDTHH:mm:ss"),
-              },
-              Meteor.user(),
-            ],
-            (err, res) => {
-              if (err) {
-                swal(
-                  "So..",
-                  "There was an issue rescheduling..." + "<br/>" + err,
-                  "error"
-                );
-              } else {
-                /* Only get the first time */
-                res = res[0];
-                console.log(res);
-                let daysFromToday =
-                  res.day - parseInt(moment().format("e")) >= 0
-                    ? res.day - parseInt(moment().format("e"))
-                    : 7 + (res.day - parseInt(moment().format("e")));
-                let bestDate = moment(res.time, "HH:mm")
-                  .add(daysFromToday, "days")
-                  .format("YYYY-MM-DDTHH:mm");
-                console.log(bestDate);
-                /* Change threshold */
-                /* Provide tag (notice.data.tag), date and time (notice.data.dateStart, notice.data.timeStart) and signed amount to change */
-                Meteor.apply("changeThreshold", [
-                  {
-                    tag: notice.data.tag,
-                    date: notice.data.dateStart,
-                    time: notice.data.timeStart,
-                    amt: -0.15,
-                  },
-                  Meteor.user(),
-                ]);
-                /* Update task */
-                let newTask = {
-                  _id: notice.data._id,
-                  text: notice.data.text,
-                  dateStart: moment(bestDate, "YYYY-MM-DDTHH:mm").format(
-                    "YYYY-MM-DD"
-                  ),
-                  timeStart: moment(bestDate, "YYYY-MM-DDTHH:mm").format(
-                    "HH:mm"
-                  ),
-                  dateEnd: moment(bestDate, "YYYY-MM-DDTHH:mm")
-                    .add(1, "hours")
-                    .format("YYYY-MM-DD"),
-                  timeEnd: moment(bestDate, "YYYY-MM-DDTHH:mm")
-                    .add(1, "hours")
-                    .format("HH:mm"),
-                  desc: notice.data.desc,
-                  alarm: notice.data.alarm,
-                  sharingWith:
-                    notice.data.sharingWith !== undefined
-                      ? notice.data.sharingWith
-                      : [],
-                };
-                let endFull = moment(newTask.dateEnd + "T" + newTask.timeEnd)
-                  .utc()
-                  .format()
-                  .substring(0, 16);
-                (newTask.timeUTC =
-                  notice.data.alarm !== null
-                    ? moment(bestDate, "YYYY-MM-DDTHH:mm")
-                        .subtract(notice.data.alarm, "minutes")
-                        .utc()
-                        .format("YYYY-MM-DDTHH:mm")
-                    : null),
-                  (newTask.timeUTCEnd = endFull);
-                Meteor.apply("updateTask", [newTask, Meteor.user()]);
-              }
+          ],
+          (err, res) => {
+            if (err) {
+              swal(
+                "So..",
+                "There was an issue rescheduling..." + "<br/>" + err,
+                "error"
+              );
+            } else {
+              /* Only get the first time */
+              res = res[0];
+              console.log(res);
+              let daysFromToday =
+                res.day - parseInt(moment().format("e")) >= 0
+                  ? res.day - parseInt(moment().format("e"))
+                  : 7 + (res.day - parseInt(moment().format("e")));
+              let bestDate = moment(res.time, "HH:mm")
+                .add(daysFromToday, "days")
+                .format("YYYY-MM-DDTHH:mm");
+              console.log(bestDate);
+              /* Change threshold */
+              /* Provide tag (notice.data.tag), date and time (notice.data.dateStart, notice.data.timeStart) and signed amount to change */
+              Meteor.apply("changeThreshold", [
+                {
+                  tag: notice.data.tag,
+                  date: notice.data.dateStart,
+                  time: notice.data.timeStart,
+                  amt: -0.15,
+                },
+                Meteor.user(),
+              ]);
+              /* Update task */
+              let newTask = {
+                _id: notice.data._id,
+                text: notice.data.text,
+                dateStart: moment(bestDate, "YYYY-MM-DDTHH:mm").format(
+                  "YYYY-MM-DD"
+                ),
+                timeStart: moment(bestDate, "YYYY-MM-DDTHH:mm").format("HH:mm"),
+                dateEnd: moment(bestDate, "YYYY-MM-DDTHH:mm")
+                  .add(1, "hours")
+                  .format("YYYY-MM-DD"),
+                timeEnd: moment(bestDate, "YYYY-MM-DDTHH:mm")
+                  .add(1, "hours")
+                  .format("HH:mm"),
+                desc: notice.data.desc,
+                alarm: notice.data.alarm,
+                sharingWith:
+                  notice.data.sharingWith !== undefined
+                    ? notice.data.sharingWith
+                    : [],
+              };
+              let endFull = moment(newTask.dateEnd + "T" + newTask.timeEnd)
+                .utc()
+                .format()
+                .substring(0, 16);
+              (newTask.timeUTC =
+                notice.data.alarm !== null
+                  ? moment(bestDate, "YYYY-MM-DDTHH:mm")
+                      .subtract(notice.data.alarm, "minutes")
+                      .utc()
+                      .format("YYYY-MM-DDTHH:mm")
+                  : null),
+                (newTask.timeUTCEnd = endFull);
+              Meteor.apply("updateTask", [newTask, Meteor.user()]);
             }
-          );
-        }
+          }
+        );
       }
-    );
+    });
     /* Mark this notification as seen and do not re-show it */
     Meteor.apply("seeNotification", [notice, Meteor.user()]);
-  }
+  };
   render() {
     /* Based on screen size and current state, determine which windows should be open */
     let viewTaskList =
@@ -489,23 +485,6 @@ export default class MainLayout extends TrackerReact(React.Component) {
               viewMode={this.state.viewMode}
               loggedInChange={this.props.loggedInChange.bind(this)}
             />
-            {Meteor.user().profile.tut.login === false
-              ? swal(
-                  {
-                    title: "Welcome!",
-                    text:
-                      "Thanks for using Tadu! Get Started by entering your weekly schedule or creating a new task using the icons at the top.",
-                    type: "success",
-                    closeOnConfirm: true,
-                  },
-                  () => {
-                    Meteor.apply("toggleCompleteTour", [
-                      "login",
-                      Meteor.user(),
-                    ]);
-                  }
-                )
-              : ""}
           </div>
         ) : (
           <div className="wrapper">
@@ -519,26 +498,9 @@ export default class MainLayout extends TrackerReact(React.Component) {
               selectedDate={this.state.selectedDate}
               loggedInChange={this.props.loggedInChange.bind(this)}
             />
-            {Meteor.user().profile.tut.login === false
-              ? swal(
-                  {
-                    title: "Welcome!",
-                    text:
-                      "Thanks for using Tadu! Get Started by entering your weekly schedule or creating a new task using the icons at the top.",
-                    type: "success",
-                    closeOnConfirm: true,
-                  },
-                  () => {
-                    Meteor.apply("toggleCompleteTour", [
-                      "login",
-                      Meteor.user(),
-                    ]);
-                  }
-                )
-              : ""}
           </div>
         )}
-        {newNotice !== undefined ? this.notify(newNotice) : ""}
+        {newNotice && this.notify(newNotice)}
 
         <Menu
           show={this.state.taskDetail !== null}
@@ -549,9 +511,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
             id="close-task-detail"
             onClick={this.hideDetail.bind(this)}
             className="mdi mdi-close"
-          >
-            {" "}
-          </div>
+          ></div>
           <TaskDetail taskDetail={taskDetail} closeDetail={this.hideDetail} />
         </Menu>
         <ToastContainer
