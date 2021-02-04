@@ -1,6 +1,8 @@
 # Tadu (DEPRECATED)
 
-Tadu will sunset on November 10th, 2020 due to my lack of time to support Meteor's agin environment
+Tadu was sunset on November 10th, 2020 due to my lack of time to support Meteor's aging environment.
+
+Currently it runs on a free-tier at [https://tadu.meteorapp.com/](https://tadu.meteorapp.com/).
 
 (See screenshots in `public/screenshots`)
 
