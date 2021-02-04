@@ -81,7 +81,6 @@ export default class TaskDetail extends React.Component{
 			}, ()=>{
 				/* Clear search when done */
 				document.getElementById("find-user-share-text").value = "";
-			// console.log(addUser, this.state.sharingWith);
 
 		});
 		}

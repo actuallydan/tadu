@@ -7,12 +7,12 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 /* CSS Standardization */
 import "normalize-css";
-/* Import Custom CSS */
-import "./styles/main.css";
 /* 3rd party imports */
 import "react-toastify/dist/ReactToastify.min.css";
 /* Fix to change alerts to fit theme */
 import "./styles/swaloverride.css";
+/* Import Custom CSS */
+import "./styles/main.css";
 
 export default class App extends Component {
   constructor() {

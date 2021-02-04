@@ -154,8 +154,6 @@ class EntryPortal extends React.Component {
           /* There was an issue with existing accounts, parameter length wasn't sufficient etc.*/
           swal("Oops...", err.reason, "error");
         } else {
-          console.log(Meteor.user());
-
           /* Meteor will automagically sign in users after successful account creation so we can trigger state update in parent to escape this prison */
           // Meteor.apply("addProfile", [userProfile, Meteor.user()]);
 

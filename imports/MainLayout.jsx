@@ -4,7 +4,6 @@ Session.set("tagTypes_loaded", false);
 Session.set("notifications_loaded", false);
 Session.set("schedules_loaded", false);
 
-import EntryPortal from "./EntryPortal.jsx";
 import MobileLayout from "./MobileLayout.jsx";
 import DesktopLayout from "./DesktopLayout.jsx";
 import TaskSingle from "./TaskSingle.jsx";
@@ -65,7 +64,6 @@ export default class MainLayout extends TrackerReact(React.Component) {
     this.setState({ showNotifications: !this.state.showNotifications });
   };
   toggleSchedule = () => {
-    console.log("hideQuickTask", this.state.scheduleVisible);
     this.setState({ scheduleVisible: !this.state.scheduleVisible });
   };
   handleResize = () => {
@@ -89,17 +87,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
      * This gives responsiveness to larger organizational components */
     window.addEventListener("resize", this.handleResize);
   }
-  componentDidUpdate() {
-    Meteor.user()?.profile?.tut?.login === false &&
-      swal({
-        title: "Welcome!",
-        text:
-          "Thanks for using Tadu! Get Started by entering your weekly schedule or creating a new task using the icons at the top.",
-        type: "success",
-      }).then(() => {
-        Meteor.call("toggleCompleteTour", ["login", Meteor.user()]);
-      });
-  }
+
   /* All purpose change view method
    * TODO: This should be used in place of show/hide addtask/tasklist/calendar
    * Use "calendar" | "addTask" | "tasksList" as parameter values
@@ -346,7 +334,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
             } else {
               /* Only get the first time */
               res = res[0];
-              console.log(res);
+
               let daysFromToday =
                 res.day - parseInt(moment().format("e")) >= 0
                   ? res.day - parseInt(moment().format("e"))
@@ -354,7 +342,6 @@ export default class MainLayout extends TrackerReact(React.Component) {
               let bestDate = moment(res.time, "HH:mm")
                 .add(daysFromToday, "days")
                 .format("YYYY-MM-DDTHH:mm");
-              console.log(bestDate);
               /* Change threshold */
               /* Provide tag (notice.data.tag), date and time (notice.data.dateStart, notice.data.timeStart) and signed amount to change */
               Meteor.apply("changeThreshold", [
@@ -406,7 +393,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
       }
     });
     /* Mark this notification as seen and do not re-show it */
-    Meteor.apply("seeNotification", [notice, Meteor.user()]);
+    Meteor.call("seeNotification", [notice, Meteor.user()]);
   };
   render() {
     /* Based on screen size and current state, determine which windows should be open */
@@ -450,7 +437,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
             <TaskSingle
               key={task._id}
               task={task}
-              showDetail={this.showDetail.bind(this)}
+              showDetail={this.showDetail}
             />
           );
         })
@@ -465,7 +452,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
         ) : this.state.width > 992 ? (
           <div
             className={
-              this.state.viewMode === "addTask"
+              this.state.viewMode == "addTask"
                 ? "wrapper push-left"
                 : "wrapper push-right"
             }
@@ -483,7 +470,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
               selectedDate={this.state.selectedDate}
               showView={this.showView}
               viewMode={this.state.viewMode}
-              loggedInChange={this.props.loggedInChange.bind(this)}
+              loggedInChange={this.props.loggedInChange}
             />
           </div>
         ) : (
@@ -496,7 +483,7 @@ export default class MainLayout extends TrackerReact(React.Component) {
               showDetail={this.showDetail}
               hideAddTask={this.hideAddTask}
               selectedDate={this.state.selectedDate}
-              loggedInChange={this.props.loggedInChange.bind(this)}
+              loggedInChange={this.props.loggedInChange}
             />
           </div>
         )}
@@ -505,11 +492,11 @@ export default class MainLayout extends TrackerReact(React.Component) {
         <Menu
           show={this.state.taskDetail !== null}
           className="task-detail"
-          toggleMenu={this.hideDetail.bind(this)}
+          toggleMenu={this.hideDetail}
         >
           <div
             id="close-task-detail"
-            onClick={this.hideDetail.bind(this)}
+            onClick={this.hideDetail}
             className="mdi mdi-close"
           ></div>
           <TaskDetail taskDetail={taskDetail} closeDetail={this.hideDetail} />

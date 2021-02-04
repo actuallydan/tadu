@@ -1,5 +1,6 @@
 import moment from "moment";
 import Parser from "./src/parser.js";
+import { Tasks, Schedules, TagTypes, Notifications } from "./publish";
 
 /* Server methods to be called by client */
 Meteor.methods({
@@ -44,7 +45,7 @@ Meteor.methods({
       },
       (err, result) => {
         if (err) {
-          console.log(err);
+          console.error(err);
         } else {
           /* Notify other users of shared task, if any */
           Meteor.defer(() => {
@@ -183,7 +184,6 @@ Meteor.methods({
     });
   },
   addProfile(profile, thisUser) {
-    console.log(thisUser, JSON.stringify(profile));
     Meteor.users.update(thisUser._id, {
       $set: {
         profile: profile,
@@ -222,20 +222,17 @@ Meteor.methods({
         },
       });
       if (result) {
-        console.log(result);
-
         Meteor.call("addDefaultTagsRemote", result);
         Meteor.call("addDefaultScheduleRemote", {
           id: result,
           hour: user.profile.bedHour,
         });
-        console.log("finishing", result);
         return result;
       } else {
-        console.log(result, "something wrong");
+        throw "something wrong";
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
       return err;
     }
   },
@@ -278,7 +275,7 @@ Meteor.methods({
     Schedules.insert(schedule);
   },
   /* After triggering a notification and clicking on the alert, change the notice object so that we don't see the same thing twice */
-  seeNotification(notice) {
+  seeNotification([notice, thisUser]) {
     /* Make sure user is the owner */
     if (thisUser._id !== notice.userId) {
       throw new Meteor.Error("not-authorized");
@@ -484,6 +481,7 @@ Meteor.methods({
   },
   /* Takes a string indicating which step of the 'tutorial' has been completed */
   toggleCompleteTour: function ([step, thisUser]) {
+    console.log(step, thisUser);
     if (!thisUser._id) {
       throw new Meteor.Error("not-authorized");
     }
