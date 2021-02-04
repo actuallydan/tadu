@@ -1,0 +1,104 @@
+/* Sweetalert override */
+.sweet-alert {
+  font-family: "Rajdhani", sans-serif;
+  border-radius: 0;
+  border: 1px solid #33FFCC;
+  color: white !important;
+  background: #212121;
+}
+.sweet-alert h2 {
+  color: #fff !important;
+  font-weight: 400;
+}
+.sweet-alert button {
+  border-radius: 0;
+  border: 1px solid #33FFCC;
+  background: #212121 !important;
+  color: #33FFCC !important;
+}
+.sweet-alert .sa-icon.sa-error .sa-line {
+  border-radius: 0;
+  background-color: #f44336 !important;
+  height: 2px;
+  top: 40px;
+}
+.sweet-alert .sa-icon.sa-error{
+  border-color: #f44336 !important;
+}
+.sweet-alert .sa-icon {
+  border: 2px solid gray;
+}
+.sweet-alert .sa-icon.sa-success .sa-placeholder {
+  border: #33FFCC;
+}
+.sweet-alert .sa-icon.sa-success::before, .sweet-alert .sa-icon.sa-success::after {
+  background-color: #212121 !important;
+
+}
+.sweet-alert .sa-icon.sa-success .sa-fix{
+  background-color: #212121 !important;
+}
+.sweet-alert .sa-icon.sa-success .sa-line {
+  height: 2px;
+  background-color: #33FFCC !important;
+  border-radius: 0;
+}
+.sweet-alert .sa-icon.sa-success .sa-line.sa-long {
+  right: 5px;
+}
+.sweet-alert .sa-icon.sa-success {
+  border-color: #33FFCC !important;
+}
+.sweet-alert.show-input input {
+  border: none;
+  border-bottom: 1px solid #33FFCC;
+  background: none;
+  border-radius: 0;
+  color: white;
+  text-align: center;
+}
+.sweet-alert.show-input input:focus {
+  outline: none;
+  box-shadow: none;
+}
+.sweet-alert button.confirm:hover {
+  color: #424242 !important;
+  background: #33FFCC !important;
+}
+.sweet-alert button.cancel:hover {
+  color: #424242 !important;
+  background: #f44336 !important;
+  border: #f44336 1px solid;
+}
+.sweet-alert .sa-error-container{
+  background-color: transparent;
+}
+.sweet-alert .sa-error-container .icon {
+  background-color: #f44336;
+}
+.sweet-alert .sa-input-error::before, .sweet-alert .sa-input-error::after {
+  width: 1.5em;
+  border-radius: 0;
+  height: 3px;
+  background-color: #f44336;
+  display: none;
+}
+.sweet-overlay{
+  background-color: rgba(7, 60, 47, 0.36) !important;
+}
+.toastify-content{
+  background: #242424;
+    border: #33FFCC 1px solid;
+    box-shadow: none;
+    min-height: 0;
+}
+.toastify__body{
+  font-size: 1.1em;
+}
+.toastify__close {
+  color: #FFF;
+}
+.toastify__close:hover {
+    opacity: 1;
+    color: #33FFCC;
+}
